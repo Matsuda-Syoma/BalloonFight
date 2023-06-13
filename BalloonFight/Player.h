@@ -20,7 +20,7 @@ public:
 	Player();					// コンストラクタ
 	~Player();					// デストラクタ
 	void Update();				// 更新処理
-		
+	void Draw()const;			// 描画処理
 	void LoadImages();			// 画像読み込み
 	void DeleteImages();		// 画像削除
 };

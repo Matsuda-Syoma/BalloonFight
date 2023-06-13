@@ -13,4 +13,5 @@ public:
 	}
 
 	AbstractScene* Update() override;
+	void Draw()const override;
 };

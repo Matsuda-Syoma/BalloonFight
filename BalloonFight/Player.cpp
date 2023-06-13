@@ -16,6 +16,10 @@ Player::Player() {
 	LoadImages();
 }
 
+Player::~Player()
+{
+}
+
 void Player::LoadImages() {
 	for (int i = 0; i < 3; i++) {
 		images[i] = 0;

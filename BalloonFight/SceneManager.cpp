@@ -9,3 +9,8 @@ AbstractScene* SceneManager::Update() {
 
 	return p;
 }
+
+void SceneManager::Draw() const
+{
+	mScene->Draw();
+}
