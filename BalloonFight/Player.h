@@ -21,7 +21,7 @@ public:
 	~Player();					// デストラクタ
 	void Update();				// 更新処理
 		
-	void LoadImages();	// 画像読み込み
-	void DeleteImages();	// 画像削除
+	void LoadImages();			// 画像読み込み
+	void DeleteImages();		// 画像削除
 };
 
