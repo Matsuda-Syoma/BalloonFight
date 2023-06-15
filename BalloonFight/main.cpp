@@ -3,6 +3,10 @@
 #include"SceneManager.h"
 #include"Title.h"
 #include"PAD_INPUT.h"
+
+//test-------------------
+#include"GameMain.h"
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
 
 	SetMainWindowText("タイトル名");		// タイトルを設定
@@ -19,7 +23,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SetDrawScreen(DX_SCREEN_BACK);			// 描画先画面を裏にする
 
-	SceneManager scene = (dynamic_cast<AbstractScene*>(new Title()));
+	SceneManager scene = (dynamic_cast<AbstractScene*>(new GameMain()));
 
 	// ゲームループ
 	while (ProcessMessage() == 0 && scene.Update() != nullptr) {

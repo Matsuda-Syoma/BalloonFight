@@ -1,5 +1,4 @@
 #pragma once
-
 #include "BoxCollider.h"
 class Player : public BoxCollider
 {
@@ -10,12 +9,12 @@ private:
 	float w, h;					// プレイヤーの大きさ
 	float speedX, speedY;		// プレイヤーの速度
 	float speedMax;				// プレイヤーの最大速度
+	float inertiaX, inertiaY;	//プレイヤーの慣性
 	float imageX, imageY;		// プレイヤーの画像の座標
 	int images[3];
 
 	static const int WIDTH = 40;
 	static const int HEIGHT = 40;
-
 public:
 	Player();					// コンストラクタ
 	~Player();					// デストラクタ
