@@ -34,22 +34,6 @@ void Player::Update()		// プレイヤーの更新処理
 	imageX = x + (w / 2);
 	imageY = y + (h / 2);
 
-	// 画面外に出たら反対側から出てくる
-	if (x + WIDTH < 0) {
-		x = SCREEN_WIDTH;
-	}
-
-	if (x > SCREEN_WIDTH) {
-		x = 0 - WIDTH;
-	}
-
-	if (y > SCREEN_HEIGHT) {
-		y = 90;
-	}
-	if (y < 0) {
-		inertiaY *= -0.8f;
-	}
-
 	// スティック操作時に0から1の間が出るようにする------------後で整数にする
 	//speedX = round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100;
 	//speedY = round(((float)PAD_INPUT::GetPadThumbLY() / 32767) * 100) / 100;
@@ -89,19 +73,32 @@ void Player::Update()		// プレイヤーの更新処理
 	y += inertiaY / (FRAMERATE * 1.0f);		// 仮の重力(フレーム数 * 風船の数)
 	x += inertiaX;
 
-	//右
+	//右入力
 	if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 >= 0.1 && inertiaX < speedMax) {
-
 		inertiaX += 0.001f;
-
 	}
 
-	//左
+	//左入力
 	if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 <= -0.1 && inertiaX > -speedMax) {
-
 		inertiaX -= 0.001f;
-
 	}
+
+	// 画面外に出たら反対側から出てくる
+	if (x + WIDTH < 0) {
+		x = SCREEN_WIDTH;
+	}
+
+	if (x > SCREEN_WIDTH) {
+		x = 0 - WIDTH;
+	}
+
+	if (y > SCREEN_HEIGHT) {
+		y = 90;
+	}
+	if (y < 0) {
+		inertiaY *= -0.8f;
+	}
+
 }
 
 void Player::Draw() const

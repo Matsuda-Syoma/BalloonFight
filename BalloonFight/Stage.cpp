@@ -1,7 +1,6 @@
 #include "DxLib.h"
 #include "common.h"
 #include "Stage.h"
-
 Stage::Stage()
 {
 }
@@ -9,9 +8,9 @@ Stage::Stage()
 Stage::Stage(float _x, float _y, float _w, float _h)
 {
 	box.left = _x;
-	box.right = _x + _w;
+	box.right = _w;
 	box.top = _y;
-	box.bottom = _y + _h;
+	box.bottom = _h;
 }
 
 Stage::~Stage()
