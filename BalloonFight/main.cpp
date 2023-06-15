@@ -3,6 +3,7 @@
 #include"SceneManager.h"
 #include"Title.h"
 #include"PAD_INPUT.h"
+#include "FPSController.h"
 
 //test-------------------
 #include"GameMain.h"
@@ -25,6 +26,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SceneManager scene = (dynamic_cast<AbstractScene*>(new GameMain()));
 
+	FpsController FPSct(FRAMERATE,UPDATETIME);
+
 	// ゲームループ
 	while (ProcessMessage() == 0 && scene.Update() != nullptr) {
 
@@ -34,6 +37,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画処理
 
 		scene.Draw();
+
+		FPSct.All();
 
 		ScreenFlip();						// 裏画面の内容を表に表示する
 	}

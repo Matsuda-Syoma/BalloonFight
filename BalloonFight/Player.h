@@ -13,8 +13,8 @@ private:
 	float imageX, imageY;		// プレイヤーの画像の座標
 	int images[3];
 
-	static const int WIDTH = 40;
-	static const int HEIGHT = 40;
+	static const int WIDTH = 20;
+	static const int HEIGHT = 20;
 public:
 	Player();					// コンストラクタ
 	~Player();					// デストラクタ
@@ -22,5 +22,6 @@ public:
 	void Draw()const;			// 描画処理
 	void LoadImages();			// 画像読み込み
 	void DeleteImages();		// 画像削除
+	bool IsFly(BoxCollider box) const;			// 飛んでいるかどうか
 };
 
