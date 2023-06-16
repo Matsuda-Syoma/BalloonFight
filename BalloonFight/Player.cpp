@@ -6,6 +6,7 @@
 Player::Player()			// コンストラクタ
 {
 	flg = true;
+	groundflg = false;
 	life = 3;
 	x = 40;
 	y = 96;
@@ -39,8 +40,13 @@ void Player::Update()		// プレイヤーの更新処理
 	//speedY = round(((float)PAD_INPUT::GetPadThumbLY() / 32767) * 100) / 100;
 
 	// 落下処理
-	if (inertiaY < 350) {
+	if (inertiaY < 350 && !groundflg) {
 		inertiaY += 1.5;
+	}
+	else if (groundflg) {
+		inertiaY += -inertiaY;
+		inertiaY = 0;
+		inertiaX = 0;
 	}
 
 	// Aボタンを押したときに上に加速
@@ -112,9 +118,11 @@ void Player::LoadImages() {
 	}
 }
 
-bool Player::IsFly(BoxCollider box) const{
+bool Player::IsFly(BoxCollider box){
 	if (Player::HitBox(box)) {
+		groundflg = true;
 		return true;
 	}
+	groundflg = false;
 	return false;
 }

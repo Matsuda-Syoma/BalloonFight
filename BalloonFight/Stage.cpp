@@ -21,3 +21,4 @@ void Stage::Draw() const
 {
 	DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, true);
 }
+

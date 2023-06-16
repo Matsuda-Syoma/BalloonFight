@@ -4,6 +4,7 @@ class Player : public BoxCollider
 {
 private:
 	bool flg;					// プレイヤーが動かせるか
+	bool groundflg;				// プレイヤーが地面に立っているか
 	int life;					// プレイヤーの残機
 	float x, y;					// プレイヤーの座標
 	float w, h;					// プレイヤーの大きさ
@@ -22,6 +23,6 @@ public:
 	void Draw()const;			// 描画処理
 	void LoadImages();			// 画像読み込み
 	void DeleteImages();		// 画像削除
-	bool IsFly(BoxCollider box) const;			// 飛んでいるかどうか
+	bool IsFly(BoxCollider box);			// 飛んでいるかどうか
 };
 
