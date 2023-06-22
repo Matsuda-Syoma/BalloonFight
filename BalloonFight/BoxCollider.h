@@ -9,6 +9,8 @@ typedef struct Box {
 	float right;
 } Box;
 
+const float epsilon = 1.0f;
+
 class BoxCollider
 {
 protected:
@@ -17,7 +19,7 @@ protected:
 public:
 	BoxCollider();
 	void GetSize(float& top, float& bottom, float& left, float& right);
-	bool HitBox(BoxCollider boxCollider) const;
+	int HitBox(BoxCollider boxCollider) const;
 	bool HitSphere(SphereCollider sphereCollider) const;
 	void DrawCollider() const;
 };

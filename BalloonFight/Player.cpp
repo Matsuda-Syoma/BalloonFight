@@ -6,6 +6,7 @@
 Player::Player()			// コンストラクタ
 {
 	flg = true;
+	landingflg = false;
 	groundflg = false;
 	life = 3;
 	x = 40;
@@ -40,17 +41,22 @@ void Player::Update()		// プレイヤーの更新処理
 	//speedY = round(((float)PAD_INPUT::GetPadThumbLY() / 32767) * 100) / 100;
 
 	// 落下処理
-	if (inertiaY < 350 && !groundflg) {
+	if (inertiaY < 350 && !landingflg) {
 		inertiaY += 1.5;
 	}
 	else if (groundflg) {
-		inertiaY += -inertiaY;
 		inertiaY = 0;
 		inertiaX = 0;
 	}
 
 	// Aボタンを押したときに上に加速
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A)) {
+
+		if (groundflg) {
+			!groundflg;
+			inertiaY -= 100;
+			
+		}
 		if (inertiaY > 0) {
 			inertiaY -= 25 + (inertiaY / 4);
 		}
@@ -76,18 +82,25 @@ void Player::Update()		// プレイヤーの更新処理
 		}
 	}
 
-	y += inertiaY / (FRAMERATE * 1.0f);		// 仮の重力(フレーム数 * 風船の数)
-	x += inertiaX;
-
 	//右入力
-	if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 >= 0.1 && inertiaX < speedMax) {
+	if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 >= 0.1 && inertiaX < speedMax && !landingflg) {
 		inertiaX += 0.001f;
+	}
+	else if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 >= 0.1 && inertiaX < speedMax && landingflg) {
+		inertiaX = 2.0f;
 	}
 
 	//左入力
-	if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 <= -0.1 && inertiaX > -speedMax) {
+	if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 <= -0.1 && inertiaX > -speedMax && !landingflg) {
 		inertiaX -= 0.001f;
 	}
+
+	else if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 <= -0.1 && inertiaX > -speedMax && landingflg) {
+		inertiaX = - 2.0f;
+	}
+
+	y += inertiaY / (FRAMERATE * 1.0f);		// 仮の重力(フレーム数 * 風船の数)
+	x += inertiaX;
 
 	// 画面外に出たら反対側から出てくる
 	if (x + WIDTH < 0) {
@@ -101,7 +114,7 @@ void Player::Update()		// プレイヤーの更新処理
 	if (y > SCREEN_HEIGHT) {
 		y = 90;
 	}
-	if (y < 0) {
+	if (y < 0) {		// 画面上の跳ね返り
 		inertiaY *= -0.8f;
 	}
 
@@ -118,11 +131,20 @@ void Player::LoadImages() {
 	}
 }
 
-bool Player::IsFly(BoxCollider box){
-	if (Player::HitBox(box)) {
+bool Player::IsFly(Stage box){
+	int nowhit = Player::HitBox(box);
+	clsDx();
+	printfDx("%d",nowhit);
+	if (Player::HitBox(box) == 6) {
+		landingflg = true;
 		groundflg = true;
 		return true;
 	}
+	landingflg = false;
 	groundflg = false;
 	return false;
+}
+
+float Player::GetBoxTop(Stage box) {
+	return box.GetTop();
 }

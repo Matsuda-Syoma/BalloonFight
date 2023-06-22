@@ -29,8 +29,6 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 {
 	player->Update();
 	for (size_t i = 0; i < stage.size(); i++) {
-		if (player->IsFly(stage.at(i))) {
-
-		}
+		player->IsFly(stage.at(i));
 	}
 }

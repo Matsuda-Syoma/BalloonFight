@@ -1,9 +1,11 @@
 #pragma once
 #include "BoxCollider.h"
+#include "Stage.h"
 class Player : public BoxCollider
 {
 private:
 	bool flg;					// プレイヤーが動かせるか
+	bool landingflg;			// プレイヤーが着地したか
 	bool groundflg;				// プレイヤーが地面に立っているか
 	int life;					// プレイヤーの残機
 	float x, y;					// プレイヤーの座標
@@ -23,6 +25,7 @@ public:
 	void Draw()const;			// 描画処理
 	void LoadImages();			// 画像読み込み
 	void DeleteImages();		// 画像削除
-	bool IsFly(BoxCollider box);			// 飛んでいるかどうか
+	bool IsFly(Stage box);		// 飛んでいるかどうか
+	float GetBoxTop(Stage box);
 };
 
