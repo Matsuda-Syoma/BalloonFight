@@ -10,7 +10,7 @@ Player::Player()			// コンストラクタ
 	groundflg = false;
 	life = 3;
 	x = 40;
-	y = 96;
+	y = 440;
 	w = WIDTH;
 	h = HEIGHT;
 	inertiaX = 0;
@@ -18,6 +18,7 @@ Player::Player()			// コンストラクタ
 	speedX = 0;
 	speedY = 0;
 	speedMax = 3.0f;
+	jumpdelay = 0;
 	LoadImages();
 }
 
@@ -41,27 +42,28 @@ void Player::Update()		// プレイヤーの更新処理
 	//speedY = round(((float)PAD_INPUT::GetPadThumbLY() / 32767) * 100) / 100;
 
 	// 落下処理
-	if (inertiaY < 350 && !landingflg) {
-		inertiaY += 1.5;
+	if (inertiaY < 325 && !landingflg) {
+		inertiaY += 2.5;
 	}
-	else if (groundflg) {
+	else if (groundflg && jumpdelay <= 0) {
 		inertiaY = 0;
 		inertiaX = 0;
 	}
-
+	if (jumpdelay > 0) {
+		--jumpdelay;
+	}
 	// Aボタンを押したときに上に加速
-	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A)) {
-
+	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A) && jumpdelay <= 0) {
+		jumpdelay = DELAY;
 		if (groundflg) {
 			!groundflg;
-			inertiaY -= 100;
-			
+			inertiaY -= 5.0f;
 		}
 		if (inertiaY > 0) {
-			inertiaY -= 25 + (inertiaY / 4);
+			inertiaY -= 25.0f + (inertiaY / 4);
 		}
 		else {
-			inertiaY -= 50;
+			inertiaY -= 50.0f;
 		}
 
 		//右方向に入力したままAボタンを押したなら右に加速
@@ -112,11 +114,13 @@ void Player::Update()		// プレイヤーの更新処理
 	}
 
 	if (y > SCREEN_HEIGHT) {
-		y = 90;
+		y = 90;				// ミス
 	}
 	if (y < 0) {		// 画面上の跳ね返り
-		inertiaY *= -0.8f;
+		inertiaY = -inertiaY * 0.8f;
 	}
+	clsDx();
+	printfDx("%f", inertiaY);
 
 }
 
@@ -132,11 +136,21 @@ void Player::LoadImages() {
 }
 
 bool Player::IsFly(Stage box){
-	int nowhit = Player::HitBox(box);
-	if (Player::HitBox(box) == 1) {
+	int HitStage = Player::HitBox(box);
+	if (HitStage == 1) {
 		landingflg = true;
-		groundflg = true;
+		if (jumpdelay <= 0) {
+			y = GetBoxTop(box) - w;
+			groundflg = true;
+		}
+
 		return true;
+	}
+	if (HitStage == 2) {
+		inertiaY = -inertiaY * 0.8f;
+	}
+	if (HitStage == 3) {
+		inertiaX *= -0.8f;
 	}
 	landingflg = false;
 	groundflg = false;

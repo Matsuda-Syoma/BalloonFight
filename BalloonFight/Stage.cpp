@@ -5,6 +5,10 @@ Stage::Stage()
 {
 }
 
+Stage::Stage(int _stage, int _i)
+{
+}
+
 Stage::Stage(float _x, float _y, float _w, float _h)
 {
 	box.left = _x;

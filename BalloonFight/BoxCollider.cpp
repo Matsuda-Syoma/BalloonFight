@@ -16,9 +16,9 @@ void BoxCollider::GetSize(float& _top, float& _bottom, float& _left, float& _rig
 
 // Box同士が当たっているとFalseが帰る
 int BoxCollider::HitBox(BoxCollider boxCollider) const {
-	Box other;	// 相手の判定
+	Box other;			// 相手の判定
 	boxCollider.GetSize(other.top, other.bottom, other.left, other.right);
-	float epsilon = other.bottom - other.top;
+	float epsilon = other.bottom - other.top;		// 誤差
 	if (other.bottom < box.top) {
 		return 0;
 	}
@@ -31,16 +31,19 @@ int BoxCollider::HitBox(BoxCollider boxCollider) const {
 	if (other.left > box.right) {
 		return 0;
 	}
-	if (fabsf(box.bottom-other.top)< epsilon) {
+	if (fabsf(box.bottom - other.top) < epsilon) {	// 上に当たったとき1を返す
 		return 1;
 	}
-	if (fabsf(box.top - other.bottom) < epsilon) {
+	if (fabsf(box.right - other.left) < epsilon) {	// 左に当たったとき3を返す
+		return 3;
+	}
+	if (fabsf(box.left - other.right) < epsilon) {	// 右に当たったとき4を返す
+		return 4;
+	}
+	if (fabsf(box.top - other.bottom) < epsilon) {	// 下に当たったとき2を返す
 		return 2;
 	}
-	//if (other.bottom > box.top) {
-	//	return 2;
-	//}
-	///////////// 今数値が2しか出力されないのでそれの修正
+
 
 
 	//if (box.bottom < other.top) {

@@ -18,7 +18,9 @@ private:
 
 	static const int WIDTH = 20;
 	static const int HEIGHT = 20;
+	static const int DELAY = 7;
 public:
+	int jumpdelay;
 	Player();					// コンストラクタ
 	~Player();					// デストラクタ
 	void Update();				// 更新処理

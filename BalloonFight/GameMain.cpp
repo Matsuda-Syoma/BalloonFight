@@ -3,8 +3,9 @@
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	player = new Player;
-	stage.emplace_back(200,210,350,220);
-	stage.emplace_back(100,210,150,220);
+	stage.emplace_back(0,440,160,480);
+	stage.emplace_back(480,440,640,480);
+	stage.emplace_back(200,320,440,330);
 }
 
 GameMain::~GameMain()				// ‚±‚±‚Ådelete‚È‚Ç‚ð‚·‚é
@@ -28,8 +29,12 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 {
-	player->Update();
+
+
 	for (size_t i = 0; i < stage.size(); i++) {
-		player->IsFly(stage.at(i));
+		if (player->IsFly(stage.at(i))) {
+			break;
+		}
 	}
+	player->Update();
 }
