@@ -133,9 +133,7 @@ void Player::LoadImages() {
 
 bool Player::IsFly(Stage box){
 	int nowhit = Player::HitBox(box);
-	clsDx();
-	printfDx("%d",nowhit);
-	if (Player::HitBox(box) == 6) {
+	if (Player::HitBox(box) == 1) {
 		landingflg = true;
 		groundflg = true;
 		return true;

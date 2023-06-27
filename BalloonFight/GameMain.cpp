@@ -4,6 +4,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	player = new Player;
 	stage.emplace_back(200,210,350,220);
+	stage.emplace_back(100,210,150,220);
 }
 
 GameMain::~GameMain()				// ‚±‚±‚Ådelete‚È‚Ç‚ğ‚·‚é

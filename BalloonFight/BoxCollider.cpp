@@ -18,10 +18,7 @@ void BoxCollider::GetSize(float& _top, float& _bottom, float& _left, float& _rig
 int BoxCollider::HitBox(BoxCollider boxCollider) const {
 	Box other;	// 相手の判定
 	boxCollider.GetSize(other.top, other.bottom, other.left, other.right);
-	//printfDx(" %f", fabsf(other.bottom - box.top));
-	printfDx(" %f %f",box.top , other.bottom);
-	int i = 0;
-	std::vector<int> j;
+	float epsilon = other.bottom - other.top;
 	if (other.bottom < box.top) {
 		return 0;
 	}
@@ -34,14 +31,15 @@ int BoxCollider::HitBox(BoxCollider boxCollider) const {
 	if (other.left > box.right) {
 		return 0;
 	}
-	if (other.top < box.bottom) {
-		i = 1;
+	if (fabsf(box.bottom-other.top)< epsilon) {
 		return 1;
 	}
-	if (other.bottom > box.top) {
-		i = 2;
+	if (fabsf(box.top - other.bottom) < epsilon) {
 		return 2;
 	}
+	//if (other.bottom > box.top) {
+	//	return 2;
+	//}
 	///////////// 今数値が2しか出力されないのでそれの修正
 
 
@@ -58,7 +56,7 @@ int BoxCollider::HitBox(BoxCollider boxCollider) const {
 	//	return 4;
 	//}
 
-	return 2;
+	return 0;
 }
 
 //// 矩形Aの右端が矩形Bの左端よりも左にある場合

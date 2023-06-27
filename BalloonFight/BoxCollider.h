@@ -9,10 +9,10 @@ typedef struct Box {
 	float right;
 } Box;
 
-const float epsilon = 1.0f;
-
 class BoxCollider
 {
+private:
+
 protected:
 	Box box; // “–‚½‚è”»’è
 
