@@ -5,3 +5,5 @@
 #define SCREEN_COLORBIT 32
 #define FRAMERATE 60.0			//フレームレート
 #define UPDATETIME 800
+
+#define MAP 5
