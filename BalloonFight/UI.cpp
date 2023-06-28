@@ -1,5 +1,5 @@
 #include "UI.h"
-
+#include "DxLib.h"
 //コンストラクタ
 UI::UI()
 {
@@ -13,7 +13,7 @@ UI::~UI()
 }
 
 //更新
-AbstractScene* UI::Update()
+void UI::Update()
 {
 	
 }
