@@ -1,7 +1,5 @@
 #include "UI.h"
-#include"common.h"
-#include"DxLib.h"
-
+#include "DxLib.h"
 //コンストラクタ
 UI::UI()
 {
@@ -15,13 +13,13 @@ UI::~UI()
 }
 
 //更新
-AbstractScene* UI::Update()
+void UI::Update()
 {
-	return this;
+	
 }
 
 //描画
 void UI::Draw() const
 {
-	
+	DrawString(100, 100, "test title", 0xff0000);
 }
