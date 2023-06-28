@@ -11,13 +11,15 @@ typedef struct Box {
 
 class BoxCollider
 {
+private:
+
 protected:
 	Box box; // “–‚½‚è”»’è
 
 public:
 	BoxCollider();
 	void GetSize(float& top, float& bottom, float& left, float& right);
-	bool HitBox(BoxCollider boxCollider) const;
+	int HitBox(BoxCollider boxCollider) const;
 	bool HitSphere(SphereCollider sphereCollider) const;
 	void DrawCollider() const;
 };
