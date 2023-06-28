@@ -15,7 +15,7 @@ UI::~UI()
 //XV
 AbstractScene* UI::Update()
 {
-	
+	return this;
 }
 
 //•`‰æ
