@@ -1,11 +1,22 @@
 #include "GameMain.h"
+#include "Map.h"
 
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	player = new Player;
-	stage.emplace_back(0,440,160,480);
-	stage.emplace_back(480,340,640,480);
 
+	int MapCount = 0;
+	for (int i = 0; i < MAP_COUNT; i++) {
+		float work[MAP_SIZE];
+		for (int j = 0; j < MAP_SIZE; j++) {
+			work[j] = LoadMap[MapCount][i][j];
+		}
+
+		// “Ç‚İ‚ñ‚¾À•W‚ªã‰ºA¶‰E‘«‚µ‚Ä‚Ç‚¿‚ç‚Æ‚à0‚æ‚è‘å‚«‚¢‚È‚ç‘«ê‚Éî•ñ‚ğ“n‚·
+		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
+			stage.emplace_back(work[0], work[1], work[2], work[3]);
+		}
+	}
 	stage.emplace_back(200,320,440,330);
 
 	NowScore = 0;
