@@ -26,6 +26,9 @@ GameMain::GameMain()				// ここで初期化
 
 	Stage = 1;
 	PhaseCount = 0;
+
+	// サンプルステージ画像読み込み
+	StageImage_1 = LoadGraph("Resources/images/StageSample/Stage_1.png",TRUE);
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -45,6 +48,8 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
+	DrawGraph(0, 0, StageImage_1, TRUE);// サンプル画像表示
+
 	//スコア
 	DrawString(20,10,"I-",0xff0000);
 	DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
@@ -72,10 +77,13 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	}
 
 	player->Draw();
+	
 	bubble->Draw();
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
+	
+	
 }
 
 void GameMain::Game()				// ここでゲームの判定などの処理をする

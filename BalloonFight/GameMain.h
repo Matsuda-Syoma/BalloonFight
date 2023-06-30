@@ -6,6 +6,8 @@
 #include <vector>
 class GameMain : public AbstractScene
 {
+public:
+	int StageImage_1 = 0;
 private:
 	std::vector<Stage> stage;
 public:
