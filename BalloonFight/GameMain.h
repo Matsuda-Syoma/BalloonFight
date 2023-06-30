@@ -7,7 +7,7 @@
 class GameMain : public AbstractScene
 {
 public:
-	int StageImage_1 = 0;
+	int StageImage = 0;
 private:
 	std::vector<Stage> stage;
 public:

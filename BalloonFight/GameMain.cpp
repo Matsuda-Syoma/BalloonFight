@@ -6,7 +6,7 @@ GameMain::GameMain()				// ここで初期化
 {
 	player = new Player;
 	bubble = new Bubble;
-	int MapCount = 0;
+	int MapCount = 1;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
@@ -28,7 +28,23 @@ GameMain::GameMain()				// ここで初期化
 	PhaseCount = 0;
 
 	// サンプルステージ画像読み込み
-	StageImage_1 = LoadGraph("Resources/images/StageSample/Stage_1.png",TRUE);
+	switch (MapCount)
+	{
+	case(0):
+		StageImage = LoadGraph("Resources/images/StageSample/Stage_1.png", TRUE);
+		break;
+	case(1):
+		StageImage = LoadGraph("Resources/images/StageSample/Stage_2.png", TRUE);
+		break;
+	case(2):
+		StageImage = LoadGraph("Resources/images/StageSample/Stage_3.png", TRUE);
+		break;
+	case(3):
+		StageImage = LoadGraph("Resources/images/StageSample/Stage_4.png", TRUE);
+		break;
+	case(4):
+		StageImage = LoadGraph("Resources/images/StageSample/Stage_4.png", TRUE);
+	}
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -48,7 +64,7 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
-	DrawGraph(0, 0, StageImage_1, TRUE);// サンプル画像表示
+	DrawGraph(0, 0, StageImage, TRUE);// サンプル画像表示
 
 	//スコア
 	DrawString(20,10,"I-",0xff0000);
