@@ -1,5 +1,8 @@
 #pragma once
-class UI {
+#include"common.h"
+#include"AbstractScene.h"
+
+class UI{
 public:
 	UI();							// コンストラクタ
 	~UI();							// デストラクタ

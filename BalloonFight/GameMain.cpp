@@ -1,12 +1,11 @@
 #include "GameMain.h"
 #include "Map.h"
+#include "UI.h"
 
 GameMain::GameMain()				// ここで初期化
 {
 	player = new Player;
 	bubble = new Bubble;
-	stage.emplace_back(0,440,160,480);
-	stage.emplace_back(480,340,640,480);
 	int MapCount = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		float work[MAP_SIZE];
@@ -19,16 +18,14 @@ GameMain::GameMain()				// ここで初期化
 			stage.emplace_back(work[0], work[1], work[2], work[3]);
 		}
 	}
-	stage.emplace_back(200,320,440,330);
 
 	NowScore = 0;
 	HighScore = 10000;
 
-	PlayerLife = 3;
+	PlayerLife = 0;
 
 	Stage = 1;
 	PhaseCount = 0;
-
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -49,8 +46,11 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
 	//スコア
-	DrawFormatString(20, 10, 0xFFFFFF, "I-%06d", NowScore);
-	DrawFormatString(275, 10, 0xFFFFFF, "TOP-%06d", HighScore);
+	DrawString(20,10,"I-",0xff0000);
+	DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
+
+	DrawString(270, 10, "TOP-", 0xffa500);
+	DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
 
 	
 
@@ -67,8 +67,16 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
 	}
 
+	if (PlayerLife == 0) {
+		DrawString(280, 230, "GameOver", 0xffffff);
+	}
+
 	player->Draw();
-	bubble->Draw();
+
+	if (bubble != nullptr) {
+		bubble->Draw();
+	}
+
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
@@ -89,11 +97,17 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		player->Miss(0);
 	}
 
-	bubble->Update();
+	if (bubble != nullptr) {
+		bubble->Update();
+		if (!bubble->GetFlg()) {		// 画面外に行ったならdeleteしてnullptr
+			delete bubble;
+			bubble = nullptr;
+		}
+	}
 
 	if (PhaseCount < 240) {
 		PhaseCount++;
-		if (PhaseCount % 40 < 20) {
+		if (PhaseCount % 20 < 10) {
 			PhaseFlg = true;
 		}
 		else {
@@ -105,6 +119,5 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	if (NowScore > HighScore) {
 		HighScore = NowScore;
 	}
-
 
 }
