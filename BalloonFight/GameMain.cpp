@@ -72,7 +72,11 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	}
 
 	player->Draw();
-	bubble->Draw();
+
+	if (bubble != nullptr) {
+		bubble->Draw();
+	}
+
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
@@ -93,7 +97,13 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		player->Miss(0);
 	}
 
-	bubble->Update();
+	if (bubble != nullptr) {
+		bubble->Update();
+		if (!bubble->GetFlg()) {		// 画面外に行ったならdeleteしてnullptr
+			delete bubble;
+			bubble = nullptr;
+		}
+	}
 
 	if (PhaseCount < 240) {
 		PhaseCount++;
