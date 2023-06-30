@@ -1,5 +1,6 @@
 #include "GameMain.h"
 #include "Map.h"
+#include "UI.h"
 
 GameMain::GameMain()				// ここで初期化
 {
@@ -28,11 +29,10 @@ GameMain::GameMain()				// ここで初期化
 	NowScore = 0;
 	HighScore = 10000;
 
-	PlayerLife = 3;
+	PlayerLife = 0;
 
 	Stage = 1;
 	PhaseCount = 0;
-
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -53,8 +53,11 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
 	//スコア
-	DrawFormatString(20, 10, 0xFFFFFF, "I-%06d", NowScore);
-	DrawFormatString(275, 10, 0xFFFFFF, "TOP-%06d", HighScore);
+	DrawString(20,10,"I-",0xff0000);
+	DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
+
+	DrawString(270, 10, "TOP-", 0xffa500);
+	DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
 
 	
 
@@ -69,6 +72,10 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 
 	if (!PhaseFlg) {
 	DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
+	}
+
+	if (PlayerLife == 0) {
+		DrawString(280, 230, "GameOver", 0xffffff);
 	}
 
 	player->Draw();
@@ -98,7 +105,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 
 	if (PhaseCount < 240) {
 		PhaseCount++;
-		if (PhaseCount % 40 < 20) {
+		if (PhaseCount % 20 < 10) {
 			PhaseFlg = true;
 		}
 		else {
