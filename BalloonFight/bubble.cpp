@@ -5,10 +5,14 @@
 // コンストラクタ
 Bubble::Bubble()
 {
-	x = 40;
-	y = 96;
+	x = 400;
+	y = 306;
 	w = WIDTH;
 	h = HEIGHT;
+
+	SpeedX = 0.0f; 
+	SpeedY = -1.0f;
+	moveX = 3.0f;
 }
 
 // デストラクタ
@@ -24,9 +28,13 @@ void Bubble::Update()
 	box.right = x + w;
 	box.top = y;
 	box.bottom = y + h;
+	// 移動
+	x += SpeedX;
+	y += SpeedY;
+
 }
 
 void Bubble::Draw() const
 {
-	DrawBox(10,10,100,100,0xffffff,1);
+	DrawBox(box.left, box.top, box.right, box.bottom,0xffffff,1);
 }

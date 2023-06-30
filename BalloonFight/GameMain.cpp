@@ -64,6 +64,6 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	else {
 		player->Miss(0);
 	}
-
+	bubble->Update();
 
 }

@@ -8,6 +8,9 @@ private:
 	float w, h;					// プレイヤーの大きさ
 	static const int WIDTH = 20;
 	static const int HEIGHT = 20;
+	float SpeedX;
+	float SpeedY;
+	float moveX;
 public:
 
 	//コンストラクタ
