@@ -4,6 +4,7 @@
 class Bubble : public BoxCollider
 {
 private:
+	bool flg;
 	float x, y;					// プレイヤーの座標
 	float w, h;					// プレイヤーの大きさ
 	static const int WIDTH = 20;
@@ -11,6 +12,7 @@ private:
 	float SpeedX;
 	float SpeedY;
 	float moveX;
+	bool moveSwitch;
 public:
 
 	//コンストラクタ
@@ -21,5 +23,7 @@ public:
 	void Update();
 
 	void Draw() const;					// 描画に関することを実装
+
+	bool GetFlg();
 };
 
