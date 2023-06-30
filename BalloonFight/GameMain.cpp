@@ -1,18 +1,37 @@
 #include "GameMain.h"
+#include "Map.h"
 
 GameMain::GameMain()				// ここで初期化
 {
 	player = new Player;
+<<<<<<< HEAD
 	bubble = new Bubble;
 	stage.emplace_back(0,440,160,480);
 	stage.emplace_back(480,340,640,480);
+=======
+>>>>>>> main
 
+	int MapCount = 0;
+	for (int i = 0; i < MAP_COUNT; i++) {
+		float work[MAP_SIZE];
+		for (int j = 0; j < MAP_SIZE; j++) {
+			work[j] = LoadMap[MapCount][i][j];
+		}
+
+		// 読み込んだ座標が上下、左右足してどちらとも0より大きいなら足場に情報を渡す
+		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
+			stage.emplace_back(work[0], work[1], work[2], work[3]);
+		}
+	}
 	stage.emplace_back(200,320,440,330);
 
 	NowScore = 0;
 	HighScore = 10000;
 
 	PlayerLife = 3;
+
+	Stage = 1;
+	PhaseCount = 0;
 
 }
 
@@ -22,8 +41,13 @@ GameMain::~GameMain()				// ここでdeleteなどをする
 
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
+
+
 	Game();
 	return this;
+
+	
+
 }
 
 void GameMain::Draw() const			// ここでゲームメインの描画
@@ -32,16 +56,20 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	DrawFormatString(20, 10, 0xFFFFFF, "I-%06d", NowScore);
 	DrawFormatString(275, 10, 0xFFFFFF, "TOP-%06d", HighScore);
 
+	
+
 	if (PlayerLife == 3) {
 		DrawBox(60, 30, 70, 40, 0xFF0000, TRUE);
 		DrawBox(75, 30, 85, 40, 0xFF0000, TRUE);
 	}
 
-	if (PlayerLife == 3) {
+	if (PlayerLife == 2) {
 		DrawBox(75, 30, 85, 40, 0xFF0000, TRUE);
 	}
 
-
+	if (!PhaseFlg) {
+	DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
+	}
 
 	player->Draw();
 	bubble->Draw();
@@ -64,6 +92,25 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	else {
 		player->Miss(0);
 	}
+<<<<<<< HEAD
 	bubble->Update();
+=======
+
+	if (PhaseCount < 240) {
+		PhaseCount++;
+		if (PhaseCount % 40 < 20) {
+			PhaseFlg = true;
+		}
+		else {
+			PhaseFlg = false;
+		}
+	}
+
+	//ハイスコアを更新
+	if (NowScore > HighScore) {
+		HighScore = NowScore;
+	}
+
+>>>>>>> main
 
 }

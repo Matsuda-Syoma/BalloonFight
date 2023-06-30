@@ -45,6 +45,7 @@ void Player::Update()		// プレイヤーの更新処理
 	box.top = y;
 	box.bottom = y + h;
 
+		// 落下処理
 	if (inertiaY < 325 && !landingflg || missflg) {
 		inertiaY += 1.5 * (3 - ballon);
 	}
@@ -57,11 +58,6 @@ void Player::Update()		// プレイヤーの更新処理
 	if (flg == true) {
 
 		groundflg = landingflg;		// 滑らないようにする
-
-		// 落下処理
-		//if (inertiaY < 325 && !landingflg) {
-		//	inertiaY += 2.5 * (2 - ballon);
-		//}
 
 		// ジャンプのクールタイム
 		if (jumpdelay > 0) {
@@ -80,7 +76,7 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaY -= 25.0f + (inertiaY / 4);
 			}
 			else {
-				inertiaY -= 50.0f;
+				inertiaY -= 50.0f;				// 速度調整、いま上がるのが遅い
 			}
 			// 右方向に入力したままAボタンを押したなら右に加速
 			if (round(((float)PAD_INPUT::GetPadThumbLX() / 32767) * 100) / 100 >= 0.1) {
@@ -148,7 +144,9 @@ void Player::Update()		// プレイヤーの更新処理
 }
 void Player::Draw() const
 {
+	DrawFormatString(x +(w / 3), y - 20, 0xffffff, "%d", ballon);
 	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, true);
+	
 }
 
 void Player::LoadImages() {

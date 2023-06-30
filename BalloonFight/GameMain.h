@@ -25,5 +25,9 @@ private:
 	int HighScore;					//ハイスコア
 
 	int PlayerLife;					//残機
+
+	int Stage;
+	int PhaseCount;
+	bool PhaseFlg;
 };
 
