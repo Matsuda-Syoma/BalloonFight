@@ -3,6 +3,7 @@
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	player = new Player;
+	bubble = new Bubble;
 	stage.emplace_back(0,440,160,480);
 	stage.emplace_back(480,340,640,480);
 
@@ -22,6 +23,7 @@ AbstractScene* GameMain::Update()	// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚ÌXV‚ð‚·‚é
 void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 {
 	player->Draw();
+	bubble->Draw();
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}

@@ -15,7 +15,7 @@ UI::~UI()
 //XV
 void UI::Update()
 {
-	return this;
+	return ;
 }
 
 //•`‰æ

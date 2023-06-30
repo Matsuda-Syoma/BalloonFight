@@ -28,5 +28,5 @@ void Bubble::Update()
 
 void Bubble::Draw() const
 {
-	DrawBox(box.left, box.top, box.right, box.bottom, 0xffff00, true);
+	DrawBox(10,10,100,100,0xffffff,1);
 }

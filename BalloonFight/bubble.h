@@ -1,5 +1,6 @@
 #pragma once
 #include "BoxCollider.h"
+#include "DxLib.h"
 class Bubble : public BoxCollider
 {
 private:
