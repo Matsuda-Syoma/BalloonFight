@@ -5,13 +5,7 @@
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	player = new Player;
-<<<<<<< HEAD
 	bubble = new Bubble;
-	stage.emplace_back(0,440,160,480);
-	stage.emplace_back(480,340,640,480);
-=======
->>>>>>> main
-
 	int MapCount = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		float work[MAP_SIZE];
@@ -98,9 +92,8 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 	else {
 		player->Miss(0);
 	}
-<<<<<<< HEAD
+
 	bubble->Update();
-=======
 
 	if (PhaseCount < 240) {
 		PhaseCount++;
@@ -116,7 +109,5 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 	if (NowScore > HighScore) {
 		HighScore = NowScore;
 	}
-
->>>>>>> main
 
 }
