@@ -17,7 +17,6 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 			stage.emplace_back(work[0], work[1], work[2], work[3]);
 		}
 	}
-	stage.emplace_back(200,320,440,330);
 
 	NowScore = 0;
 	HighScore = 10000;
