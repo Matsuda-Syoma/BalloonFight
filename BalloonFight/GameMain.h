@@ -26,6 +26,7 @@ private:
 
 	int Stage;
 	int PhaseCount;
+
 	bool PhaseFlg;
 };
 
