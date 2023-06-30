@@ -17,6 +17,13 @@ GameMain::GameMain()				// ここで初期化
 			stage.emplace_back(work[0], work[1], work[2], work[3]);
 		}
 	}
+	stage.emplace_back(200,320,440,330);
+
+	NowScore = 0;
+	HighScore = 10000;
+
+	PlayerLife = 3;
+
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -31,6 +38,21 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
+	//スコア
+	DrawFormatString(20, 10, 0xFFFFFF, "I-%06d", NowScore);
+	DrawFormatString(275, 10, 0xFFFFFF, "TOP-%06d", HighScore);
+
+	if (PlayerLife == 3) {
+		DrawBox(60, 30, 70, 40, 0xFF0000, TRUE);
+		DrawBox(75, 30, 85, 40, 0xFF0000, TRUE);
+	}
+
+	if (PlayerLife == 3) {
+		DrawBox(75, 30, 85, 40, 0xFF0000, TRUE);
+	}
+
+
+
 	player->Draw();
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
