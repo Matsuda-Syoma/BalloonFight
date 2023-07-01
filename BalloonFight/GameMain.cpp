@@ -6,7 +6,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	player = new Player;
 	bubble = new Bubble;
-	int MapCount = 1;
+	int MapCount = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
@@ -43,7 +43,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 		StageImage = LoadGraph("Resources/images/StageSample/Stage_4.png", TRUE);
 		break;
 	case(4):
-		StageImage = LoadGraph("Resources/images/StageSample/Stage_4.png", TRUE);
+		StageImage = LoadGraph("Resources/images/StageSample/Stage_5.png", TRUE);
 	}
 }
 
