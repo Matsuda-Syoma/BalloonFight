@@ -18,10 +18,10 @@ private:
 	float GroundspeedMax;		// プレイヤーの地上最大速度
 	float inertiaX, inertiaY;	//プレイヤーの慣性
 	float imageX, imageY;		// プレイヤーの画像の座標
-	int images[3];
+	int images[40];
 
-	static const int WIDTH = 20;
-	static const int HEIGHT = 20;
+	static const int WIDTH = 64;
+	static const int HEIGHT = 64;
 	static const int DELAY = 7;
 public:
 	int jumpdelay;
@@ -31,7 +31,9 @@ public:
 	void Update();						// 更新処理
 	void Draw()const;					// 描画処理
 	void LoadImages();					// 画像読み込み
+	void LoadSounds();					// サウンド読み込み
 	void DeleteImages();				// 画像削除
+	void DeleteSounds();				// サウンド削除
 	void Miss(int i);					// ミスの関数
 	void BallonBreak(int i);			// 風船を減らして0以下だったらFlgを切る
 

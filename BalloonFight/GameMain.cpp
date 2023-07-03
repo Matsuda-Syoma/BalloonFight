@@ -22,8 +22,6 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	NowScore = 0;
 	HighScore = 10000;
 
-	PlayerLife = 0;
-
 	Stage = 1;
 	PhaseCount = 0;
 }
@@ -52,24 +50,24 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	DrawString(270, 10, "TOP-", 0xffa500);
 	DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
 
-	
+	int PlayerLife = player->GetLife();
 
-	if (PlayerLife == 3) {
-		DrawBox(60, 30, 70, 40, 0xFF0000, TRUE);
-		DrawBox(75, 30, 85, 40, 0xFF0000, TRUE);
-	}
-
-	if (PlayerLife == 2) {
-		DrawBox(75, 30, 85, 40, 0xFF0000, TRUE);
-	}
-
-	if (!PhaseFlg) {
-	DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
+	if (PlayerLife > 0) {
+		for (int i = 0; i < PlayerLife; i++) {
+			DrawBox(60 + (15 * i), 30, 70 + (15 * i)
+				, 40, 0xFF0000, TRUE);
+		}
 	}
 
 	if (PlayerLife == 0) {
 		DrawString(280, 230, "GameOver", 0xffffff);
 	}
+
+
+	if (!PhaseFlg) {
+		DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
+	}
+
 
 	player->Draw();
 

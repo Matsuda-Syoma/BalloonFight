@@ -142,17 +142,19 @@ void Player::Update()		// プレイヤーの更新処理
 
 
 }
+// プレイヤーの描画
 void Player::Draw() const
 {
+	DrawGraph(x, y, images[0], true);
 	DrawFormatString(x +(w / 3), y - 20, 0xffffff, "%d", ballon);
-	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, true);
+	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, false);
+	DrawCircle(x, y, 2, 0xffffff);
+	
 	
 }
 
 void Player::LoadImages() {
-	for (int i = 0; i < 3; i++) {
-		images[i] = 0;
-	}
+	LoadDivGraph("Resources/images/Player/Player_animation_d.png",32,8,4,64,64,images);
 }
 
 bool Player::IsFly(Stage box){
