@@ -22,7 +22,7 @@ private:
 
 	static const int WIDTH = 64;
 	static const int HEIGHT = 64;
-	static const int DELAY = 7;
+	static const int DELAY = 9;
 public:
 	int jumpdelay;
 	Player();							// コンストラクタ
@@ -31,9 +31,7 @@ public:
 	void Update();						// 更新処理
 	void Draw()const;					// 描画処理
 	void LoadImages();					// 画像読み込み
-	void LoadSounds();					// サウンド読み込み
 	void DeleteImages();				// 画像削除
-	void DeleteSounds();				// サウンド削除
 	void Miss(int i);					// ミスの関数
 	void BallonBreak(int i);			// 風船を減らして0以下だったらFlgを切る
 

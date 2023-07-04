@@ -1,5 +1,6 @@
 #include "common.h"
 #include "Player.h"
+#include "LoadSounds.h"
 #include "PAD_INPUT.h"
 #include <math.h>
 
@@ -67,6 +68,7 @@ void Player::Update()		// プレイヤーの更新処理
 		// Aボタンを押したときに上に加速
 		//if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A) && jumpdelay <= 0) {
 		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0) {	//////////自動連打
+			PlaySoundMem(Sounds::SE_PlayerJump, DX_PLAYTYPE_BACK, true);
 			jumpdelay = DELAY;
 			if (groundflg) {
 				groundflg = false;
@@ -156,6 +158,7 @@ void Player::Draw() const
 void Player::LoadImages() {
 	LoadDivGraph("Resources/images/Player/Player_animation_d.png",32,8,4,64,64,images);
 }
+
 
 bool Player::IsFly(Stage box){
 	HitStage = Player::HitBox(box);

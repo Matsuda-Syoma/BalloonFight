@@ -4,6 +4,7 @@
 
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
+	Sounds::LoadSounds();
 	player = new Player;
 	bubble = new Bubble;
 	int MapCount = 0;
