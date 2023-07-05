@@ -27,24 +27,6 @@ GameMain::GameMain()				// ここで初期化
 	Stage = 1;
 	PhaseCount = 0;
 
-	// サンプルステージ画像読み込み
-	switch (MapCount)
-	{
-	case(0):
-		StageImage = LoadGraph("Resources/images/StageSample/Stage_1.png", TRUE);
-		break;
-	case(1):
-		StageImage = LoadGraph("Resources/images/StageSample/Stage_2.png", TRUE);
-		break;
-	case(2):
-		StageImage = LoadGraph("Resources/images/StageSample/Stage_3.png", TRUE);
-		break;
-	case(3):
-		StageImage = LoadGraph("Resources/images/StageSample/Stage_4.png", TRUE);
-		break;
-	case(4):
-		StageImage = LoadGraph("Resources/images/StageSample/Stage_5.png", TRUE);
-	}
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -64,7 +46,6 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
-	DrawGraph(0, 0, StageImage, TRUE);// サンプル画像表示
 
 	//スコア
 	DrawString(20,10,"I-",0xff0000);
