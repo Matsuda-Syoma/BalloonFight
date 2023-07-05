@@ -7,5 +7,5 @@
 #define UPDATETIME 800
 
 #define MAP 5
-#define MAP_COUNT 10
+#define MAP_COUNT 11  //Œ³‚Í10
 #define MAP_SIZE 4
