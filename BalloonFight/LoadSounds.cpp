@@ -34,4 +34,6 @@ void Sounds::LoadSounds() {
 	SE_Splash = LoadSoundMem("Resources/sounds/SE_Splash.wav");
 	SE_StageClear = LoadSoundMem("Resources/sounds/SE_StageClear.wav");
 	SE_Start = LoadSoundMem("Resources/sounds/SE_Start.wav");
+
+	ChangeVolumeSoundMem(127, SE_PlayerJump);
 }
