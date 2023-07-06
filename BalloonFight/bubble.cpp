@@ -49,6 +49,7 @@ void Bubble::Update()
 	x += SpeedX;
 	y += SpeedY;
 
+	// ƒvƒŒƒCƒ„[‚Æ–A‚Ì“–‚½‚è”»’è
 	
 }
 

@@ -71,6 +71,9 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 			}
 		}
 	}
+	if (player->HitBox(*bubble)) {
+		//score
+	}
 	else {
 		player->Miss(0);
 	}
