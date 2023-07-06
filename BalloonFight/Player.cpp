@@ -70,8 +70,8 @@ void Player::Update()		// プレイヤーの更新処理
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_Y)) {
 		BallonBreak(1);
 	}
-	clsDx();
-	printfDx("%02d %02d %d %d %f",AnimUpdateTime, AnimImg, state, jumpdelay ,inertiaX);
+	/*clsDx();
+	printfDx("%02d %02d %d %d %f",AnimUpdateTime, AnimImg, state, jumpdelay ,inertiaX);*/
 
 	if (flg == true) {
 
