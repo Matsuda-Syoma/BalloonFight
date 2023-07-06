@@ -1,5 +1,6 @@
 #pragma once
 #include "AbstractScene.h"
+#include "LoadSounds.h"
 #include "Player.h"
 #include "Stage.h"
 #include"bubble.h"
