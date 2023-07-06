@@ -81,9 +81,6 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 			}
 		}
 	}
-	if (player->GetLife() <= 0) {
-		ui->GameOver();
-	}
 	else {
 		player->Miss(0);
 	}
@@ -94,6 +91,10 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 			bubble = nullptr;
 			Score += 500;
 		}
+	}
+
+	if (player->GetLife() <= 0) {
+		ui->GameOver();
 	}
 
 	if (bubble != nullptr) {
