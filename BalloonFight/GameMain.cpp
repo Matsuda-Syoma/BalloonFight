@@ -8,6 +8,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	bubble = new Bubble;
 	ui = new UI;
 	int MapCount = 0;
+	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
@@ -72,11 +73,16 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 			}
 		}
 	}
-	if (player->HitBox(*bubble)) {
-		//score
-	}
 	else {
 		player->Miss(0);
+	}
+
+	if (bubble != nullptr) {
+		if (player->HitBox(*bubble)) {
+			delete bubble;
+			bubble = nullptr;
+			Score += 500;
+		}
 	}
 
 	if (bubble != nullptr) {
@@ -87,6 +93,6 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 		}
 	}
 
-	ui->Update();
+	ui->Update(Score);
 
 }
