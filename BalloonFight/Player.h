@@ -19,6 +19,7 @@ private:
 	float inertiaX, inertiaY;	//プレイヤーの慣性
 	float imageX, imageY;		// プレイヤーの画像の座標
 	int images[40];
+	int LifeImg;
 
 	static const int WIDTH = 64;
 	static const int HEIGHT = 64;

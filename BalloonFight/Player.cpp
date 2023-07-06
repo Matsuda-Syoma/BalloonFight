@@ -9,7 +9,7 @@ Player::Player()			// コンストラクタ
 	h = HEIGHT;
 	GroundspeedMax = 2.0f;
 	FlyspeedMax = 3.0f;
-	Init(2);
+	Init(3);
 	LoadImages();
 }
 

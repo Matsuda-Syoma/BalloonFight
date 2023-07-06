@@ -25,6 +25,9 @@ public:
 	void Game();								// ƒQ[ƒ€‚Ìˆ—
 
 private:
-	
+	int NowScore;
+	int HighScore;
+
+	int LifeImg;
 };
 
