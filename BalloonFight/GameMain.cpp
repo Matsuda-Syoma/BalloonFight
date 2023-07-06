@@ -3,6 +3,7 @@
 
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
+	Sounds::LoadSounds();
 	player = new Player;
 	bubble = new Bubble;
 	ui = new UI;

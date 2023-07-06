@@ -59,5 +59,4 @@ float LoadMap[MAP][MAP_COUNT][MAP_SIZE] =
 	},
 
 	// 640,480
-
 };
