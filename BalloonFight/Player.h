@@ -26,6 +26,7 @@ private:
 	int AnimWork;
 	int AnimSelect;
 	int AnimUpdateTime;
+	int AnimFlg = 0b0000;
 	bool imageReverse;
 	int images[40];
 	int LifeImg;

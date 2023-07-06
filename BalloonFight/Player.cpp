@@ -70,8 +70,8 @@ void Player::Update()		// プレイヤーの更新処理
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_Y)) {
 		BallonBreak(1);
 	}
-	/*clsDx();
-	printfDx("%02d %02d %d %d %f",AnimUpdateTime, AnimImg, state, jumpdelay ,inertiaX);*/
+	clsDx();
+	printfDx("%02d %02d %d %d %f",AnimUpdateTime, AnimImg, state, jumpdelay ,inertiaX);
 
 	if (flg == true) {
 
@@ -127,10 +127,12 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaX += 0.001f;
 			}
 			else if (inertiaX < GroundspeedMax && landingflg) {
+				state = STATE::walk;
 				inertiaX += startX - 0.05f;
 			}
 		}
 		else if (inputX() == 0 && inertiaX > 0 && landingflg) {
+			state = STATE::stay;
 			inertiaX += -startX;
 		}
 
@@ -141,14 +143,17 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaX -= 0.001f;
 			}
 			else if (inertiaX > -GroundspeedMax && landingflg) {
+				state = STATE::walk;
 				inertiaX += -startX + 0.05f;
 			}
 		}
 		else if (inputX() == 0 && inertiaX < 0 && landingflg) {
+			state = STATE::stay;
 			inertiaX += startX;
 		}
 
-		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f) {
+		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f && inertiaY == 0) {
+			state = STATE::stay;
 			inertiaX = 0;
 		}
 
@@ -211,7 +216,6 @@ bool Player::IsFly(Stage box){
 	// 上側に当たったときの判定
 	if (HitStage == 1) {
 		landingflg = true;
-		state = STATE::stay;
 		if (!groundflg && jumpdelay <= 0) {
 			inertiaY = 0;
 			//inertiaX = 0;
@@ -260,7 +264,12 @@ float Player::GetBoxSide(Stage box ,int i) {
 void Player::BallonBreak(int i) {
 	PlaySoundMem(Sounds::SE_Splash, DX_PLAYTYPE_BACK, true);
 	AnimUpdateTime = 31;
-	AnimImg += 8;
+	if (state == STATE::stay) {
+		AnimImg += 3;
+	}
+	if (state == STATE::fly) {
+		AnimImg += 8;
+	}
 	balloon -= i;
 	if (balloon <= 0) {
 		flg = false;
@@ -294,7 +303,7 @@ void Player::AnimUpdate() {
 	{
 	case STATE::stay:
 		animflg = false;
-		if (AnimUpdateTime > 17) {
+		if (AnimUpdateTime % 17 == 0) {
 			if (AnimWork % 2 == 0) {
 				if (balloon == 2) {
 					AnimImg = 1;
@@ -324,24 +333,37 @@ void Player::AnimUpdate() {
 		}
 		break;
 	case STATE::walk:
-
+		if (AnimUpdateTime < 3 * 4) {
+			if (AnimUpdateTime % 3 == 0) {
+				if (balloon == 2) {
+					AnimImg--;
+				}
+				if (balloon == 1) {
+					AnimImg--;
+				}
+			}
+		}
+		else {
+			AnimImg = 11;
+			AnimUpdateTime = 15;
+		}
 		break;
 	case STATE::fly:
 		if (animflg == false) {
 			if (balloon == 2) {
-				AnimImg = 21;
+				AnimImg = 19;
 			}
 			if (balloon == 1) {
-				AnimImg = 21 + 8;
+				AnimImg = 19 + 8;
 			}
 			AnimUpdateTime = 0;
 			animflg = true;
 			if (!groundflg && jumpdelay <= 0) {
 				if (balloon == 2) {
-					AnimImg = 20;
+					AnimImg = 18;
 				}
 				if (balloon == 1) {
-					AnimImg = 20 + 8;
+					AnimImg = 18 + 8;
 				}
 				AnimUpdateTime = 50;
 			}
@@ -349,7 +371,7 @@ void Player::AnimUpdate() {
 		if (animflg == false && !groundflg) {
 			
 		}
-		if (AnimUpdateTime < 10) {
+		if (AnimUpdateTime < 6) {
 			if (AnimUpdateTime % 2 == 0) {
 				if (balloon == 2) {
 					AnimImg--;
@@ -360,7 +382,7 @@ void Player::AnimUpdate() {
 				//AnimUpdateTime = 0;
 			}
 		}
-		else if (AnimUpdateTime < 18) {
+		else if (AnimUpdateTime < 12) {
 			if (AnimUpdateTime % 2 == 0) {
 				if (balloon == 2) {
 					AnimImg++;
@@ -370,6 +392,34 @@ void Player::AnimUpdate() {
 				}
 				//AnimUpdateTime = 0;
 			}
+		}
+
+		else if (AnimUpdateTime % 17 == 0) {
+			if (AnimWork % 2 == 0) {
+				if (balloon == 2) {
+					AnimImg = 19;
+				}
+				if (balloon == 1) {
+					AnimImg = 19 + 8;
+				}
+			}
+			else if (AnimWork % 4 == 1) {
+				if (balloon == 2) {
+					AnimImg = 20;
+				}
+				if (balloon == 1) {
+					AnimImg = 20 + 8;
+				}
+			}
+			else {
+				if (balloon == 2) {
+					AnimImg = 18;
+				}
+				if (balloon == 1) {
+					AnimImg = 18 + 8;
+				}
+			}
+			AnimWork++;
 		}
 		break;
 	case STATE::miss:
