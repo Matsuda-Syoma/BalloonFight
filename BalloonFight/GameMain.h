@@ -12,7 +12,6 @@ public:
 	int StageImage = 0;
 private:
 	std::vector<Stage> stage;
-	int Score;
 public:
 	GameMain();									// コンストラクタ
 	~GameMain();								// デストラクタ

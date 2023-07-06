@@ -16,9 +16,8 @@ UI::~UI()
 }
 
 //çXêV
-void UI::Update(int _score)
+void UI::Update()
 {
-	NowScore = _score;
 	if (PhaseCount < 240) {
 		PhaseCount++;
 		if (PhaseCount % 20 < 10) {

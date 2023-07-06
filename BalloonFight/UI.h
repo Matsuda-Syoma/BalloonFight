@@ -8,7 +8,7 @@ class UI{
 public:
 	UI();							// コンストラクタ
 	~UI();							// デストラクタ
-	void Update(int _score);		// 描画以外の更新を実行
+	void Update();				// 描画以外の更新を実行
 	void Draw() const;			// 描画に関することを実装
 	void LoadImages();
 
