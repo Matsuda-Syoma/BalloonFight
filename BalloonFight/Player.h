@@ -12,7 +12,7 @@ private:
 	bool missflg;				// ミスしたときのフラグ
 	bool animflg;				// ミスしたときのフラグ
 	int life;					// プレイヤーの残機
-	int ballon;					// プレイヤーの風船の数
+	int balloon;					// プレイヤーの風船の数
 	int HitStage;				// プレイヤーがどこに当たったか
 	float x, y;					// プレイヤーの座標
 	float w, h;					// プレイヤーの大きさ
@@ -28,9 +28,10 @@ private:
 	int AnimUpdateTime;
 	bool imageReverse;
 	int images[40];
+	int LifeImg;
 
-	static const int WIDTH = 64;
-	static const int HEIGHT = 64;
+	static const int WIDTH = 32;
+	static const int HEIGHT = 48;
 	static const int DELAY = 9;
 	
 public:

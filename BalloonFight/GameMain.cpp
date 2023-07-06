@@ -21,6 +21,12 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 			stage.emplace_back(work[0], work[1], work[2], work[3]);
 		}
 	}
+
+	NowScore = 0;
+	HighScore = 10000;
+
+	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
+
 }
 
 GameMain::~GameMain()				// ‚±‚±‚Ådelete‚È‚Ç‚ð‚·‚é
@@ -43,9 +49,11 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	int PlayerLife = player->GetLife();
 
 	if (PlayerLife > 0) {
-		for (int i = 0; i < PlayerLife; i++) {
-			DrawBox(60 + (15 * i), 30, 70 + (15 * i)
-				, 40, 0xFF0000, TRUE);
+		for (int i = 0; i < PlayerLife - 1; i++) {
+			/*DrawBox(60 + (15 * i), 30, 70 + (15 * i)
+				, 40, 0xFF0000, TRUE);*/
+
+			DrawGraph(75 - (15 * i), 30, LifeImg, true);
 		}
 	}
 
@@ -74,6 +82,9 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 				break;
 			}
 		}
+	}
+	if (player->GetLife() <= 0) {
+		ui->GameOver();
 	}
 	else {
 		player->Miss(0);
