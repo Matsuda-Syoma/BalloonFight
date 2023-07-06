@@ -8,6 +8,7 @@ GameMain::GameMain()				// ここで初期化
 	bubble = new Bubble;
 	ui = new UI;
 	int MapCount = 0;
+	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
@@ -88,6 +89,14 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	}
 
 	if (bubble != nullptr) {
+		if (player->HitBox(*bubble)) {
+			delete bubble;
+			bubble = nullptr;
+			Score += 500;
+		}
+	}
+
+	if (bubble != nullptr) {
 		bubble->Update();
 		if (!bubble->GetFlg()) {		// 画面外に行ったならdeleteしてnullptr
 			delete bubble;
@@ -95,6 +104,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 
-	ui->Update();
+	ui->Update(Score);
 
 }

@@ -7,8 +7,8 @@ Bubble::Bubble()
 {
 	flg = true;
 
-	x = 400;
-	y = 306;
+	x = 40;
+	y = 400;
 	w = WIDTH;
 	h = HEIGHT;
 
@@ -49,8 +49,10 @@ void Bubble::Update()
 	x += SpeedX;
 	y += SpeedY;
 
-
+	// ƒvƒŒƒCƒ„[‚Æ–A‚Ì“–‚½‚è”»’è
+	
 }
+
 
 void Bubble::Draw() const
 {
