@@ -1,6 +1,8 @@
 #pragma once
 #include "BoxCollider.h"
 #include "Stage.h"
+#include "PAD_INPUT.h"
+#include <math.h>
 class Player : public BoxCollider
 {
 private:
@@ -8,6 +10,7 @@ private:
 	bool landingflg;			// プレイヤーが地面に立っているか
 	bool groundflg;				// プレイヤーが着地したか
 	bool missflg;				// ミスしたときのフラグ
+	bool animflg;				// ミスしたときのフラグ
 	int life;					// プレイヤーの残機
 	int ballon;					// プレイヤーの風船の数
 	int HitStage;				// プレイヤーがどこに当たったか
@@ -29,6 +32,7 @@ private:
 	static const int WIDTH = 64;
 	static const int HEIGHT = 64;
 	static const int DELAY = 9;
+	
 public:
 	int jumpdelay;
 	Player();							// コンストラクタ
@@ -46,6 +50,7 @@ public:
 	bool IsFlg();						// プレイヤーが生きているか
 
 	float GetBoxSide(Stage box, int i);	// 引数で数値を返す(1:上、2:下、3:左、4:右)
+	float inputX();						// スティックの入力値を返す
 
 	int GetLife();				// 残機を返す
 	
