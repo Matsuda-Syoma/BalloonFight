@@ -28,6 +28,7 @@ private:
 	int AnimUpdateTime;
 	bool imageReverse;
 	int images[40];
+	int LifeImg;
 
 	static const int WIDTH = 32;
 	static const int HEIGHT = 48;
