@@ -51,6 +51,9 @@ public:
 	bool IsFly(Stage box);				// 飛んでいるかどうか
 	bool IsFlg();						// プレイヤーが生きているか
 
+	float GetX();
+	float GetY();
+
 	float GetBoxSide(Stage box, int i);	// 引数で数値を返す(1:上、2:下、3:左、4:右)
 	float inputX();						// スティックの入力値を返す
 

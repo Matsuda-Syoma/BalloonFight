@@ -67,6 +67,10 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		stage.at(i).Draw();
 	}
 
+	for (size_t i = 0; i < scoreUP.size(); i++) {
+		scoreUP.at(i).Draw();
+	}
+
 	ui->Draw();
 }
 
@@ -85,16 +89,17 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		player->Miss(0);
 	}
 
+	if (player->GetLife() <= 0) {
+		ui->GameOver();
+	}
+
 	if (bubble != nullptr) {
 		if (player->HitBox(*bubble)) {
 			delete bubble;
 			bubble = nullptr;
 			Score += 500;
+			scoreUP.emplace_back(500, player->GetX(), player->GetY());
 		}
-	}
-
-	if (player->GetLife() <= 0) {
-		ui->GameOver();
 	}
 
 	if (bubble != nullptr) {
@@ -102,6 +107,13 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		if (!bubble->GetFlg()) {		// 画面外に行ったならdeleteしてnullptr
 			delete bubble;
 			bubble = nullptr;
+		}
+	}
+
+	for (size_t i = 0; i < scoreUP.size(); i++) {
+		if (scoreUP.at(i).Update()) {
+			scoreUP.erase(scoreUP.begin() + i);
+			continue;
 		}
 	}
 

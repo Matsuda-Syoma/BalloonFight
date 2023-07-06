@@ -39,6 +39,7 @@ void Player::Init(int _life) {
 	speedX = 0;
 	startX = 0.15f;
 	jumpdelay = 0;
+	AnimFlg = 0;
 	state = STATE::stay;
 	AnimUpdateTime = 0;
 	AnimImg = 0;
@@ -60,7 +61,8 @@ void Player::Update()		// プレイヤーの更新処理
 
 		// 落下処理
 	if (inertiaY < 150 && !landingflg || missflg) {
-		if (flg) {	
+		if (flg && groundflg) {	
+			AnimFlg = 0;
 			state = STATE::fly;
 		}
 		inertiaY += 2.0 * (3 - balloon);
@@ -71,7 +73,7 @@ void Player::Update()		// プレイヤーの更新処理
 		BallonBreak(1);
 	}
 	clsDx();
-	printfDx("%02d %02d %d %d %f",AnimUpdateTime, AnimImg, state, jumpdelay ,inertiaX);
+	printfDx("%02d %02d %d %d %d",AnimUpdateTime, AnimImg, state, jumpdelay ,AnimFlg);
 
 	if (flg == true) {
 
@@ -86,6 +88,7 @@ void Player::Update()		// プレイヤーの更新処理
 		//if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A) && jumpdelay <= 0) {
 		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0) {	//////////自動連打
 			animflg = false;
+			AnimFlg = 0;
 			state = STATE::fly;
 			PlaySoundMem(Sounds::SE_PlayerJump, DX_PLAYTYPE_BACK, true);
 			jumpdelay = DELAY;
@@ -132,6 +135,7 @@ void Player::Update()		// プレイヤーの更新処理
 			}
 		}
 		else if (inputX() == 0 && inertiaX > 0 && landingflg) {
+			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX += -startX;
 		}
@@ -148,11 +152,13 @@ void Player::Update()		// プレイヤーの更新処理
 			}
 		}
 		else if (inputX() == 0 && inertiaX < 0 && landingflg) {
+			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX += startX;
 		}
 
 		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f && inertiaY == 0) {
+			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX = 0;
 		}
@@ -255,6 +261,14 @@ bool Player::IsFlg() {
 	return flg;
 }
 
+float Player::GetX() {
+	return x;
+}
+
+float Player::GetY() {
+	return y;
+}
+
 // 引数で数値を返す(1:上、2:下、3:左、4:右)
 float Player::GetBoxSide(Stage box ,int i) {
 	return box.GetSide(i);
@@ -282,6 +296,7 @@ void Player::Miss(int i) {
 	switch (i) {
 		case 0:
 			if (!missflg) {
+				AnimFlg = 0;
 				state = STATE::miss;
 				inertiaX = 0.0f;
 				inertiaY = -150.0f;
@@ -302,7 +317,7 @@ void Player::AnimUpdate() {
 	switch (state)
 	{
 	case STATE::stay:
-		animflg = false;
+		AnimFlg = 0;
 		if (AnimUpdateTime % 17 == 0) {
 			if (AnimWork % 2 == 0) {
 				if (balloon == 2) {
@@ -333,6 +348,16 @@ void Player::AnimUpdate() {
 		}
 		break;
 	case STATE::walk:
+		if (AnimFlg == 0b0000) {
+			if (balloon == 2) {
+				AnimImg = 12;
+			}
+			if (balloon == 1) {
+				AnimImg = 12 + 4;
+			}	
+			AnimUpdateTime = 0;
+			AnimFlg = 0b0010;
+		}
 		if (AnimUpdateTime < 3 * 4) {
 			if (AnimUpdateTime % 3 == 0) {
 				if (balloon == 2) {
@@ -346,10 +371,11 @@ void Player::AnimUpdate() {
 		else {
 			AnimImg = 11;
 			AnimUpdateTime = 15;
+			AnimFlg = 0b0000;
 		}
 		break;
 	case STATE::fly:
-		if (animflg == false) {
+		if (AnimFlg == 0b0000) {
 			if (balloon == 2) {
 				AnimImg = 19;
 			}
@@ -357,7 +383,7 @@ void Player::AnimUpdate() {
 				AnimImg = 19 + 8;
 			}
 			AnimUpdateTime = 0;
-			animflg = true;
+			AnimFlg = 0b0100;
 			if (!groundflg && jumpdelay <= 0) {
 				if (balloon == 2) {
 					AnimImg = 18;
@@ -368,8 +394,8 @@ void Player::AnimUpdate() {
 				AnimUpdateTime = 50;
 			}
 		}
-		if (animflg == false && !groundflg) {
-			
+		if (AnimFlg == 0b0100 && groundflg) {
+			state = STATE::walk;
 		}
 		if (AnimUpdateTime < 6) {
 			if (AnimUpdateTime % 2 == 0) {
@@ -379,7 +405,6 @@ void Player::AnimUpdate() {
 				if (balloon == 1) {
 					AnimImg--;
 				}
-				//AnimUpdateTime = 0;
 			}
 		}
 		else if (AnimUpdateTime < 12) {
@@ -390,7 +415,6 @@ void Player::AnimUpdate() {
 				if (balloon == 1) {
 					AnimImg++;
 				}
-				//AnimUpdateTime = 0;
 			}
 		}
 

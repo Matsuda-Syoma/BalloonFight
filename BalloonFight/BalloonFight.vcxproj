@@ -28,6 +28,7 @@
     <ClCompile Include="PAD_INPUT.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScoreUP.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="PAD_INPUT.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScoreUP.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Title.h" />

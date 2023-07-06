@@ -5,6 +5,7 @@
 #include "Stage.h"
 #include"bubble.h"
 #include"UI.h"
+#include "ScoreUP.h"
 #include <vector>
 class GameMain : public AbstractScene
 {
@@ -12,6 +13,7 @@ public:
 	int StageImage = 0;
 private:
 	std::vector<Stage> stage;
+	std::vector<ScoreUP>scoreUP;
 	int Score;
 public:
 	GameMain();									// コンストラクタ
