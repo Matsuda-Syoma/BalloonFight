@@ -4,6 +4,7 @@
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	Sounds::LoadSounds();
+	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	bubble = new Bubble;
 	ui = new UI;
@@ -99,6 +100,7 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 			bubble = nullptr;
 			Score += 500;
 			scoreUP.emplace_back(500, player->GetX(), player->GetY());
+			PlaySoundMem(Sounds::SE_Bubble, DX_PLAYTYPE_BACK, true);
 		}
 	}
 

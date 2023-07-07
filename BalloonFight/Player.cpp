@@ -84,9 +84,8 @@ void Player::Update()		// プレイヤーの更新処理
 			--jumpdelay;
 		}
 
-		// Aボタンを押したときに上に加速
-		//if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A) && jumpdelay <= 0) {
-		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0) {	//////////自動連打
+		// Aボタンを押したときに上に加速、Bで1回のみ
+		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0 || PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_B) && jumpdelay <= 0) {
 			animflg = false;
 			AnimFlg = 0;
 			state = STATE::fly;
@@ -157,7 +156,7 @@ void Player::Update()		// プレイヤーの更新処理
 			inertiaX += startX;
 		}
 
-		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f && inertiaY == 0) {
+		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f && landingflg) {
 			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX = 0;

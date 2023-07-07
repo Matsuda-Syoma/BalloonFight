@@ -24,6 +24,12 @@ Stage::~Stage()
 void Stage::Draw() const
 {
 	DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, false);
+	DrawRotaGraph()
+}
+
+void Stage::LoadImage()
+{
+
 }
 
 // 引数で数値を返す(1:上、2:下、3:左、4:右)
