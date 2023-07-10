@@ -14,6 +14,8 @@ public:
 
 	void DeleteImages();
 
+	void GameOver();
+
 private:
 	int NowScore;					//現在のスコア
 	int HighScore;					//ハイスコア
@@ -24,12 +26,12 @@ private:
 	int PhaseCount;
 
 	bool PhaseFlg;
+	bool GameOverFlg;
 
-	/*int LifeImg;
 	int NumImg[10];
-	int IImg;
-	int TopImg;
+	int ScoreImg;
+	int HighScoreImg;
 	int GameOImg;
-	int PhaseImg;*/
+	int PhaseImg;
 };
 
