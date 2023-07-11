@@ -6,6 +6,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	Sounds::LoadSounds();
 	player = new Player;
 	bubble = new Bubble;
+	fish = new Fish;
 	ui = new UI;
 	int MapCount = 0;
 	Score = 0;
@@ -68,6 +69,8 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	}
 
 	ui->Draw();
+
+	fish->Draw();
 }
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
@@ -104,6 +107,8 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 			bubble = nullptr;
 		}
 	}
+
+	fish->Update();
 
 	ui->Update(Score);
 

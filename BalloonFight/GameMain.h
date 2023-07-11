@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Stage.h"
 #include"bubble.h"
+#include"Fish.h"
 #include"UI.h"
 #include <vector>
 class GameMain : public AbstractScene
@@ -20,6 +21,7 @@ public:
 	// クラスのオブジェクト
 	Player* player;		// プレイヤーのクラス
 	Bubble* bubble;
+	Fish* fish;
 	UI* ui;
 	//Stage* stage;		// ステージのクラス
 	virtual AbstractScene* Update() override;	// 描画以外の更新を実行
