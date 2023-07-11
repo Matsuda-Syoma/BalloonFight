@@ -8,4 +8,4 @@
 
 #define MAP 5
 #define MAP_COUNT 11  //Œ³‚Í10
-#define MAP_SIZE 4
+#define MAP_SIZE 5

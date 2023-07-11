@@ -4,13 +4,18 @@
 GameMain::GameMain()				// Ç±Ç±Ç≈èâä˙âª
 {
 	Sounds::LoadSounds();
+	StageImages::LoadImages();
+	printfDx("%d %d", StageImages::Image[0], LoadMapImage[0][0]);
+	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	bubble = new Bubble;
-	fish = new Fish;
 	ui = new UI;
 	int MapCount = 0;
 	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
+		int imagework[MAP_COUNT];
+		//imagework[i] = LoadMapImage[MapCount][i];
+		imagework[i] = StageImages::Image[i];
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
 			work[j] = LoadMap[MapCount][i][j];
@@ -18,7 +23,7 @@ GameMain::GameMain()				// Ç±Ç±Ç≈èâä˙âª
 
 		// ì«Ç›çûÇÒÇæç¿ïWÇ™è„â∫ÅAç∂âEë´ÇµÇƒÇ«ÇøÇÁÇ∆Ç‡0ÇÊÇËëÂÇ´Ç¢Ç»ÇÁë´èÍÇ…èÓïÒÇìnÇ∑
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
-			stage.emplace_back(work[0], work[1], work[2], work[3]);
+			stage.emplace_back(work[0], work[1], work[2], work[3],imagework[0]);
 		}
 	}
 
@@ -68,9 +73,11 @@ void GameMain::Draw() const			// Ç±Ç±Ç≈ÉQÅ[ÉÄÉÅÉCÉìÇÃï`âÊ
 		stage.at(i).Draw();
 	}
 
-	ui->Draw();
+	for (size_t i = 0; i < scoreUP.size(); i++) {
+		scoreUP.at(i).Draw();
+	}
 
-	fish->Draw();
+	ui->Draw();
 }
 
 void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
@@ -88,16 +95,18 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 		player->Miss(0);
 	}
 
+	if (player->GetLife() <= 0) {
+		ui->GameOver();
+	}
+
 	if (bubble != nullptr) {
 		if (player->HitBox(*bubble)) {
 			delete bubble;
 			bubble = nullptr;
 			Score += 500;
+			scoreUP.emplace_back(500, player->GetX(), player->GetY());
+			PlaySoundMem(Sounds::SE_Bubble, DX_PLAYTYPE_BACK, true);
 		}
-	}
-
-	if (player->GetLife() <= 0) {
-		ui->GameOver();
 	}
 
 	if (bubble != nullptr) {
@@ -108,7 +117,12 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 		}
 	}
 
-	fish->Update();
+	for (size_t i = 0; i < scoreUP.size(); i++) {
+		if (scoreUP.at(i).Update()) {
+			scoreUP.erase(scoreUP.begin() + i);
+			continue;
+		}
+	}
 
 	ui->Update(Score);
 

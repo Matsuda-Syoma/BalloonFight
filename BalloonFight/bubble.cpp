@@ -7,8 +7,8 @@ Bubble::Bubble()
 {
 	flg = true;
 
-	x = 40;
-	y = 400;
+	x = 400;
+	y = 500;
 	w = WIDTH;
 	h = HEIGHT;
 

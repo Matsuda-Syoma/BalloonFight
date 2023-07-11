@@ -26,6 +26,7 @@ private:
 	int AnimWork;
 	int AnimSelect;
 	int AnimUpdateTime;
+	int AnimFlg = 0b0000;
 	bool imageReverse;
 	int images[40];
 	int LifeImg;
@@ -45,10 +46,13 @@ public:
 	void DeleteImages();				// 画像削除
 	void Miss(int i);					// ミスの関数
 	void BallonBreak(int i);			// 風船を減らして0以下だったらFlgを切る
-	void AnimUpdate();
+	void AnimUpdate();					// アニメーションの更新
 
 	bool IsFly(Stage box);				// 飛んでいるかどうか
 	bool IsFlg();						// プレイヤーが生きているか
+
+	float GetX();
+	float GetY();
 
 	float GetBoxSide(Stage box, int i);	// 引数で数値を返す(1:上、2:下、3:左、4:右)
 	float inputX();						// スティックの入力値を返す
