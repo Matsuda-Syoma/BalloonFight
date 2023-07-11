@@ -4,6 +4,8 @@
 GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 {
 	Sounds::LoadSounds();
+	StageImages::LoadImages();
+	printfDx("%d %d", StageImages::Image[0], LoadMapImage[0][0]);
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	bubble = new Bubble;
@@ -11,6 +13,9 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	int MapCount = 0;
 	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
+		int imagework[MAP_COUNT];
+		//imagework[i] = LoadMapImage[MapCount][i];
+		imagework[i] = StageImages::Image[i];
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
 			work[j] = LoadMap[MapCount][i][j];
@@ -18,7 +23,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 
 		// “Ç‚İ‚ñ‚¾À•W‚ªã‰ºA¶‰E‘«‚µ‚Ä‚Ç‚¿‚ç‚Æ‚à0‚æ‚è‘å‚«‚¢‚È‚ç‘«ê‚Éî•ñ‚ğ“n‚·
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
-			stage.emplace_back(work[0], work[1], work[2], work[3]);
+			stage.emplace_back(work[0], work[1], work[2], work[3],imagework[0]);
 		}
 	}
 

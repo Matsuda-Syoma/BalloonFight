@@ -1,6 +1,6 @@
 #pragma once
 #include "common.h"
-
+#include "LoadImages.h"
 // 左の座標、上の座標、右の座標、下の座標
 float LoadMap[MAP][MAP_COUNT][MAP_SIZE] =
 {
@@ -59,4 +59,13 @@ float LoadMap[MAP][MAP_COUNT][MAP_SIZE] =
 	},
 
 	// 640,480
+};
+
+int LoadMapImage[MAP][MAP_COUNT] =
+{
+	{0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0}
 };

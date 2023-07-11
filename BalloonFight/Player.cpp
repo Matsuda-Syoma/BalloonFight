@@ -6,6 +6,7 @@ enum class STATE {
 	stay = 0,
 	walk,
 	fly,
+	thunder,
 	miss,
 };
 STATE state;
@@ -72,8 +73,8 @@ void Player::Update()		// プレイヤーの更新処理
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_Y)) {
 		BallonBreak(1);
 	}
-	clsDx();
-	printfDx("%02d %02d %d %d %d",AnimUpdateTime, AnimImg, state, jumpdelay ,AnimFlg);
+	//clsDx();
+	//printfDx("%02d %02d %d %d %d",AnimUpdateTime, AnimImg, state, jumpdelay ,AnimFlg);
 
 	if (flg == true) {
 
@@ -211,7 +212,7 @@ float Player::inputX() {
 
 // 画像の読み込み
 void Player::LoadImages() {
-	LoadDivGraph("Resources/images/Player/Player_animation_d.png",32,8,4,64,64,images);
+	LoadDivGraph("Resources/images/Player/Player_animation.png",32,8,4,64,64,images);
 }
 
 // プレイヤーが飛んでるか返す(1:上、2:下、3:左、4:右)
@@ -281,7 +282,7 @@ void Player::BallonBreak(int i) {
 		AnimImg += 3;
 	}
 	if (state == STATE::fly) {
-		AnimImg += 8;
+		AnimImg += 5;
 	}
 	balloon -= i;
 	if (balloon <= 0) {
@@ -323,7 +324,7 @@ void Player::AnimUpdate() {
 					AnimImg = 1;
 				}
 				if (balloon == 1) {
-					AnimImg = 1 + 3;
+					AnimImg = 1 + 4;
 				}
 			}
 			else if (AnimWork % 4 == 1) {
@@ -331,7 +332,7 @@ void Player::AnimUpdate() {
 					AnimImg = 2;
 				}
 				if (balloon == 1) {
-					AnimImg = 2 + 3;
+					AnimImg = 2 + 4;
 				}
 			}
 			else {
@@ -339,7 +340,7 @@ void Player::AnimUpdate() {
 					AnimImg = 0;
 				}
 				if (balloon == 1) {
-					AnimImg = 0 + 3;
+					AnimImg = 0 + 4;
 				}
 			}
 			AnimWork++;
@@ -352,7 +353,7 @@ void Player::AnimUpdate() {
 				AnimImg = 12;
 			}
 			if (balloon == 1) {
-				AnimImg = 12 + 4;
+				AnimImg = 12 + 5;
 			}	
 			AnimUpdateTime = 0;
 			AnimFlg = 0b0010;
@@ -376,19 +377,19 @@ void Player::AnimUpdate() {
 	case STATE::fly:
 		if (AnimFlg == 0b0000) {
 			if (balloon == 2) {
-				AnimImg = 19;
+				AnimImg = 20;
 			}
 			if (balloon == 1) {
-				AnimImg = 19 + 8;
+				AnimImg = 20 + 5;
 			}
 			AnimUpdateTime = 0;
 			AnimFlg = 0b0100;
 			if (!groundflg && jumpdelay <= 0) {
 				if (balloon == 2) {
-					AnimImg = 18;
+					AnimImg = 19;
 				}
 				if (balloon == 1) {
-					AnimImg = 18 + 8;
+					AnimImg = 19 + 5;
 				}
 				AnimUpdateTime = 50;
 			}
@@ -420,26 +421,26 @@ void Player::AnimUpdate() {
 		else if (AnimUpdateTime % 17 == 0) {
 			if (AnimWork % 2 == 0) {
 				if (balloon == 2) {
-					AnimImg = 19;
+					AnimImg = 20;
 				}
 				if (balloon == 1) {
-					AnimImg = 19 + 8;
+					AnimImg = 20 + 5;
 				}
 			}
 			else if (AnimWork % 4 == 1) {
 				if (balloon == 2) {
-					AnimImg = 20;
+					AnimImg = 21;
 				}
 				if (balloon == 1) {
-					AnimImg = 20 + 8;
+					AnimImg = 21 + 5;
 				}
 			}
 			else {
 				if (balloon == 2) {
-					AnimImg = 18;
+					AnimImg = 19;
 				}
 				if (balloon == 1) {
-					AnimImg = 18 + 8;
+					AnimImg = 19 + 5;
 				}
 			}
 			AnimWork++;
@@ -448,7 +449,7 @@ void Player::AnimUpdate() {
 	case STATE::miss:
 		if (AnimUpdateTime > 2) {
 			if (AnimWork % 3 == 0) {
-					AnimImg = 23;
+					AnimImg = 29;
 			}
 			else {
 				AnimImg--;

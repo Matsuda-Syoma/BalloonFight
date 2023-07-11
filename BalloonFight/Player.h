@@ -46,7 +46,7 @@ public:
 	void DeleteImages();				// 画像削除
 	void Miss(int i);					// ミスの関数
 	void BallonBreak(int i);			// 風船を減らして0以下だったらFlgを切る
-	void AnimUpdate();
+	void AnimUpdate();					// アニメーションの更新
 
 	bool IsFly(Stage box);				// 飛んでいるかどうか
 	bool IsFlg();						// プレイヤーが生きているか
