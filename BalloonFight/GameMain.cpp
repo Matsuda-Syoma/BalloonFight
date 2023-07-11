@@ -19,7 +19,6 @@ GameMain::GameMain()				// ここで初期化
 		for (int j = 0; j < MAP_SIZE; j++) {
 			work[j] = LoadMap[MapCount][i][j];
 		}
-
 		// 読み込んだ座標が上下、左右足してどちらとも0より大きいなら足場に情報を渡す
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
 			stage.emplace_back(work[0], work[1], work[2], work[3],imagework);
@@ -29,6 +28,7 @@ GameMain::GameMain()				// ここで初期化
 	NowScore = 0;
 	HighScore = 10000;
 
+	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
 
 }
@@ -39,13 +39,13 @@ GameMain::~GameMain()				// ここでdeleteなどをする
 
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
-
-	
-	Game();
+	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
+		Pause = !Pause;
+	}
+	if (!Pause) {
+		Game();
+	}
 	return this;
-
-	
-
 }
 
 void GameMain::Draw() const			// ここでゲームメインの描画

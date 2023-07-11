@@ -16,6 +16,7 @@ private:
 	std::vector<Stage> stage;
 	std::vector<ScoreUP>scoreUP;
 	int Score;
+	bool Pause;
 public:
 	GameMain();									// コンストラクタ
 	~GameMain();								// デストラクタ
