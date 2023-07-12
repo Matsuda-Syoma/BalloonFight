@@ -45,13 +45,13 @@ void UI::Draw() const
 	DrawGraph(20, 10, ScoreImg, true);
 	//DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
 	for (int i = 0; i < 6; i++) {
-		DrawRotaGraph(40 + (20 * i), 10, 1.0, 0.0, NumImg[NowScore],TRUE);
+		DrawRotaGraph(50 + (20 * i), 18, 1.0, 0.0, NumImg[NowScore],TRUE);
 	}
 
 
 	DrawGraph(260, 10, HighScoreImg, true);
 	//DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
-	DrawGraph(310, 10, NumImg[5], true);
+	//DrawGraph(310, 10, NumImg[0], true);
 
 	if (GameOverFlg) {
 		//DrawString(280, 230, "GameOver", 0xffffff);
