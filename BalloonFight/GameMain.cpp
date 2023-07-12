@@ -40,7 +40,8 @@ GameMain::~GameMain()				// ‚±‚±‚Ådelete‚È‚Ç‚ð‚·‚é
 AbstractScene* GameMain::Update()	// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚ÌXV‚ð‚·‚é
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
-		Pause = !Pause;
+		//Pause = !Pause;
+		return new GameMain();
 	}
 	if (!Pause) {
 		Game();
@@ -64,13 +65,14 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 
 	player->Draw();
 
+	for (size_t i = 0; i < stage.size(); i++) {
+		stage.at(i).Draw();
+	}
+
 	if (bubble != nullptr) {
 		bubble->Draw();
 	}
 
-	for (size_t i = 0; i < stage.size(); i++) {
-		stage.at(i).Draw();
-	}
 
 	for (size_t i = 0; i < scoreUP.size(); i++) {
 		scoreUP.at(i).Draw();
