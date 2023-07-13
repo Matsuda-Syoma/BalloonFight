@@ -222,7 +222,8 @@ void Player::LoadImages() {
 // プレイヤーが飛んでるか返す(1:上、2:下、3:左、4:右)
 bool Player::IsFly(Stage box){
 	HitStage = Player::HitBox(box);
-
+	clsDx();
+	printfDx("%d", HitStage);
 	// 上側に当たったときの判定
 	if (HitStage == 1) {
 		landingflg = true;
