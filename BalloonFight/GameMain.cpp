@@ -10,6 +10,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	player = new Player;
 	bubble = new Bubble;
 	ui = new UI;
+	fish = new Fish;
 	int MapCount = 0;
 	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
@@ -82,13 +83,13 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 
 	ui->Draw();
 
-	
+	fish->Draw();
 
 }
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 {
-	
+	fish->Update();
 	player->Update();
 	if (player->IsFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {
