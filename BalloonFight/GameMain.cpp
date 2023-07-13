@@ -126,4 +126,5 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 
 	ui->Update(Score);
 
+
 }
