@@ -81,11 +81,14 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	DrawGraph(160,444,StageImages::Image[4],true);
 
 	ui->Draw();
+
+	
+
 }
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 {
-
+	
 	player->Update();
 	if (player->IsFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {

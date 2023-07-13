@@ -13,6 +13,7 @@ Fish::Fish()
 	w = WIDTH;
 	h = HEIGHT;
 
+	
 }
 
 Fish::~Fish()
