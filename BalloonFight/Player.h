@@ -11,6 +11,7 @@ private:
 	bool groundflg;				// プレイヤーが着地したか
 	bool missflg;				// ミスしたときのフラグ
 	bool misssoundflg;			// ミスしたときの効果音のフラグ
+	bool spawnflg;
 	int life;					// プレイヤーの残機
 	int balloon;					// プレイヤーの風船の数
 	int HitStage;				// プレイヤーがどこに当たったか
@@ -49,7 +50,11 @@ public:
 	void AnimUpdate();					// アニメーションの更新
 
 	bool IsFly(Stage box);				// 飛んでいるかどうか
-	bool IsFlg();						// プレイヤーが生きているか
+	bool GetFlg();						// プレイヤーが生きているか
+
+	bool GetSpawnFlg();
+
+	void SetSpawnFlg(bool _flg);
 
 	float GetX();
 	float GetY();

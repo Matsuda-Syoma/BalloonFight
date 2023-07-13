@@ -5,7 +5,7 @@ GameMain::GameMain()				// ここで初期化
 {
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
-	//printfDx("%d %d", StageImages::Image[0], LoadMapImage[0][0]);
+	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	bubble = new Bubble;
@@ -37,6 +37,7 @@ GameMain::GameMain()				// ここで初期化
 
 GameMain::~GameMain()				// ここでdeleteなどをする
 {
+	StopSoundMem(Sounds::BGM_Trip);
 }
 
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
@@ -64,13 +65,12 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		}
 	}
 
-
-	player->Draw();
-	enemy->Draw();
-
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
+
+	player->Draw();
+	enemy->Draw();
 
 	if (bubble != nullptr) {
 		bubble->Draw();
@@ -81,7 +81,14 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		scoreUP.at(i).Draw();
 	}
 
-	DrawGraph(160,444,StageImages::Image[4],true);
+	DrawGraph(-80, 455, StageImages::Image[4], true);
+	DrawGraph(400, 455, StageImages::Image[4], true);
+
+	DrawGraph(160,450,StageImages::Image[4],true);
+
+	for (size_t i = 0; i < splash.size(); i++) {
+		splash.at(i).Draw();
+	}
 
 	ui->Draw();
 }
@@ -90,7 +97,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 {
 	enemy->Update();
 	player->Update();
-	if (player->IsFlg()) {
+	if (player->GetFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {
 			if (player->IsFly(stage.at(i))) {
 				break;
@@ -99,6 +106,13 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	}
 	else {
 		player->Miss(0);
+	}
+
+	// 画面下に行った場合ミス
+	if (player->GetY() > SCREEN_HEIGHT && !player->GetSpawnFlg()) {
+		player->SetSpawnFlg(true);
+		StopSoundMem(Sounds::SE_Falling);
+		splash.emplace_back(player->GetX());
 	}
 
 	if (player->GetLife() <= 0) {
@@ -131,6 +145,17 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	for (size_t i = 0; i < scoreUP.size(); i++) {
 		if (scoreUP.at(i).Update()) {
 			scoreUP.erase(scoreUP.begin() + i);
+			continue;
+		}
+	}
+
+	for (size_t i = 0; i < splash.size(); i++) {
+		if (splash.at(i).Update()) {
+			if (player->GetSpawnFlg()) {
+				player->Init(player->GetLife() - 1);
+				PlaySoundMem(Sounds::SE_Restart, DX_PLAYTYPE_BACK, true);
+			}
+			splash.erase(splash.begin() + i);
 			continue;
 		}
 	}

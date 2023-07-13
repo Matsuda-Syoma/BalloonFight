@@ -8,6 +8,7 @@
 #include"bubble.h"
 #include"UI.h"
 #include "ScoreUP.h"
+#include "Splash.h"
 #include <vector>
 class GameMain : public AbstractScene
 {
@@ -16,6 +17,7 @@ public:
 private:
 	std::vector<Stage> stage;
 	std::vector<ScoreUP>scoreUP;
+	std::vector<Splash>splash;
 	int Score;
 	bool Pause;
 public:

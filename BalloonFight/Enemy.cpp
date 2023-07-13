@@ -54,7 +54,6 @@ void Enemy::Draw() const
 	// 画像設定　画像表示番号　画像種別フラグ
 	DrawRotaGraph(Enemy_imageX, Enemy_imageY, 1.0f, 0, E_images[E_AnimImg], true, Eimg_Reverse);
 	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xffffff, false);
-	printfDx("%d %d",(int)box.left,(int)box.top);
 }
 
 void Enemy::Enemy_LoadImg()

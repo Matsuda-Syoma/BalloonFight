@@ -32,6 +32,7 @@ void Player::Init(int _life) {
 	groundflg = false;
 	missflg = false;
 	misssoundflg = false;
+	spawnflg = false;
 	life = _life;
 	balloon = 2;
 	x = 40;
@@ -79,8 +80,6 @@ void Player::Update()		// プレイヤーの更新処理
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_X)) {
 		Miss(2);
 	}
-	clsDx();
-	printfDx("%02d %02d %d %d ",AnimUpdateTime, AnimImg, AnimWork,AnimFlg);
 
 	if (flg == true) {
 
@@ -189,11 +188,6 @@ void Player::Update()		// プレイヤーの更新処理
 		}
 	}
 
-	// 画面下に行った場合ミス
-	if (y > SCREEN_HEIGHT) {
-		Init(--life);
-		PlaySoundMem(Sounds::SE_Restart, DX_PLAYTYPE_BACK, true);
-	}
 
 	if (state == STATE::miss && !misssoundflg) {
 			PlaySoundMem(Sounds::SE_Falling, DX_PLAYTYPE_BACK, true);
@@ -212,7 +206,7 @@ void Player::Update()		// プレイヤーの更新処理
 void Player::Draw() const
 {
 	DrawRotaGraph(imageX, imageY, 1.0f, 0, images[AnimImg],true, imageReverse);
-	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, false);
+	//DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, false);
 }
 
 // コントローラの入力を返す
@@ -267,8 +261,16 @@ bool Player::IsFly(Stage box){
 }
 
 // プレイヤーのフラグを返す
-bool Player::IsFlg() {
+bool Player::GetFlg() {
 	return flg;
+}
+
+bool Player::GetSpawnFlg() {
+	return spawnflg;
+}
+
+void Player::SetSpawnFlg(bool _flg) {
+	spawnflg = _flg;
 }
 
 float Player::GetX() {
