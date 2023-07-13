@@ -10,7 +10,12 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	player = new Player;
 	bubble = new Bubble;
 	ui = new UI;
+<<<<<<< HEAD
 	fish = new Fish;
+=======
+	enemy = new Enemy;
+
+>>>>>>> main
 	int MapCount = 0;
 	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
@@ -65,6 +70,7 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 
 
 	player->Draw();
+	enemy->Draw();
 
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
@@ -89,7 +95,11 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 {
+<<<<<<< HEAD
 	fish->Update();
+=======
+	enemy->Update();
+>>>>>>> main
 	player->Update();
 	if (player->IsFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {

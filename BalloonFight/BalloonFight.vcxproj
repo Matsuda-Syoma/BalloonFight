@@ -21,7 +21,11 @@
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="bubble.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="Fish.cpp" />
+=======
+    <ClCompile Include="Enemy.cpp" />
+>>>>>>> main
     <ClCompile Include="FPSController.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="LoadImages.cpp" />
@@ -41,7 +45,11 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="bubble.h" />
     <ClInclude Include="common.h" />
+<<<<<<< HEAD
     <ClInclude Include="Fish.h" />
+=======
+    <ClInclude Include="Enemy.h" />
+>>>>>>> main
     <ClInclude Include="FPSController.h" />
     <ClInclude Include="GameMain.h" />
     <ClInclude Include="LoadImages.h" />
