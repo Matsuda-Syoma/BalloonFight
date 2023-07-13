@@ -3,9 +3,12 @@
 //コンストラクタ
 UI::UI()
 {
+	NowScore = 0;
+	HighScore = 10000;
 	Stage = 1;
 	PhaseCount = 0;
 	GameOverFlg = false;
+
 	LoadImages();
 }
 
@@ -40,11 +43,15 @@ void UI::Draw() const
 {
 	//スコア
 	DrawGraph(20, 10, ScoreImg, true);
-	DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
+	//DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
+	for (int i = 0; i < 6; i++) {
+		DrawRotaGraph(50 + (20 * i), 18, 1.0, 0.0, NumImg[NowScore],TRUE);
+	}
+
 
 	DrawGraph(260, 10, HighScoreImg, true);
 	//DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
-	DrawGraph(310, 10, NumImg[5], true);
+	//DrawGraph(310, 10, NumImg[0], true);
 
 	if (GameOverFlg) {
 		//DrawString(280, 230, "GameOver", 0xffffff);
@@ -66,7 +73,7 @@ void UI::LoadImages()
 	HighScoreImg = LoadGraph("Resources/images/UI/UI_HiScore.png");
 	GameOImg = LoadGraph("Resources/images/UI/UI_GameOver.png");
 	PhaseImg = LoadGraph("Resources/images/UI/UI_Phase.png");
-	LoadDivGraph("Resources/images/Player/UI_NumAnimation.png", 10, 10, 1, 64, 64, NumImg);
+	LoadDivGraph("Resources/images/UI/UI_NumAnimation.png", 10, 10, 1, 32, 32, NumImg);
 
 
 }

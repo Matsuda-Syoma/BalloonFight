@@ -10,7 +10,7 @@ private:
 	bool landingflg;			// プレイヤーが地面に立っているか
 	bool groundflg;				// プレイヤーが着地したか
 	bool missflg;				// ミスしたときのフラグ
-	bool animflg;				// ミスしたときのフラグ
+	bool misssoundflg;			// ミスしたときの効果音のフラグ
 	int life;					// プレイヤーの残機
 	int balloon;					// プレイヤーの風船の数
 	int HitStage;				// プレイヤーがどこに当たったか
