@@ -1,5 +1,8 @@
 #pragma once
 #include "AbstractScene.h"
+#include"DxLib.h"
+
+
 class Title : public AbstractScene {
 private:
 	int TitleImg_Logo;					// タイトルロゴ画像
@@ -7,7 +10,7 @@ private:
 	int TitleImg_Credit;				// タイトルクレジット画像
 	int TitleImg_Cursor[4];				// タイトルカーソル画像
 	int CursorNum;
-	int CursorY = 330;
+	int CursorY = 285;
 
 	int WaitTime;
 public:

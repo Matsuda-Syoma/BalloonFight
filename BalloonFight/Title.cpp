@@ -1,4 +1,5 @@
 #include "Title.h"
+#include"DxLib.h"
 
 Title::Title()
 {
@@ -10,6 +11,8 @@ Title::Title()
 	TitleImg_Select = LoadGraph("Resources/images/Title/Title_ModeSelect.png");
 	TitleImg_Credit = LoadGraph("Resources/images/Title/Title_Credit.png");
 	/*TitleImg_Cursor = LoadGraph("Resources/images/Title/Title_CursorAnimation.png");*/
+	
+	LoadDivGraph("Resources/images/Title/Title_CursorAnimation.png", 4, 4, 1, 64, 64, TitleImg_Cursor);
 }
 
 Title::~Title()
@@ -28,10 +31,8 @@ void Title::Draw() const
 	DrawRotaGraph(340, 330, 1, 0, TitleImg_Select, TRUE);
 	DrawRotaGraph(340, 450, 1, 0, TitleImg_Credit, TRUE);
 
-	DrawRotaGraph(340, CursorY, 1.0f, 0, TitleImg_Cursor[CursorNum], TRUE, 0);
-
-	/*DrawRotaGraph(imageX, imageY, 1.0f, 0, images[AnimImg], true, 0);*/
-
+	DrawRotaGraph(340, CursorY, 1, 0, TitleImg_Cursor[1], TRUE, 0);
+	/* DrawString(150, CursorY, "Åú", 0xff0000); */
 }
 
 void Title::LoadImage()
