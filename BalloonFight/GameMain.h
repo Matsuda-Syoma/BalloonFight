@@ -25,6 +25,7 @@ private:
 	bool Pause;
 	int StageNum;
 public:
+	GameMain();
 	GameMain(int _score, int _stage);
 	// コンストラクタ
 	~GameMain();								// デストラクタ
@@ -39,7 +40,6 @@ public:
 	void Game();								// ゲームの処理
 
 private:
-	int NowScore;
 	int HighScore;
 
 	int LifeImg;

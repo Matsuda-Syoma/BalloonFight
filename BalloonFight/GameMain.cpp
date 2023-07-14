@@ -1,6 +1,5 @@
 #include "GameMain.h"
 #include "Map.h"
-
 GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 {
 	Sounds::LoadSounds();
