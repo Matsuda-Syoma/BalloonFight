@@ -26,7 +26,7 @@ private:
 	bool missflg;				// ミスしたときのフラグ
 	bool animflg;				// ミスしたときのフラグ
 	int life;					// 適の残機
-	int ballon;					// 適の風船の数
+	int balloon;					// 適の風船の数
 	int HitStage;				// 適がどこに当たったか
 	float x, y;					// 適の座標
 	float w, h;					// 適の大きさ
@@ -72,6 +72,7 @@ public:
 	void SetFlg(bool _flg);
 	void ChangeInertia(BoxCollider _player, int i);
 	int HitEnemy(BoxCollider _enemy);
+	void BallonBreak(int i);
 	void AnimUpdate();					// アニメーションの更新
 };
 

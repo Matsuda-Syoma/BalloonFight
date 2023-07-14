@@ -18,6 +18,8 @@ Enemy::Enemy(float _x,float _y)
 	x = _x;
 	y = _y - WIDTH;
 
+	balloon = 1;
+
 	FlyspeedMax = 0.5;
 	inertiaX = 0;
 	inertiaY = 0;
@@ -138,6 +140,7 @@ void Enemy::Draw() const
 	// 画像設定　画像表示番号　画像種別フラグ
 	DrawRotaGraph(imageX, imageY, 1.0f, 0, images[AnimImg], true, imageReverse);
 	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xffffff, false);
+	DrawFormatString((int)box.left + 14, (int)box.top,0xffffff, "%d", balloon);
 }
 
 void Enemy::LoadImages()
@@ -290,6 +293,26 @@ int Enemy::HitEnemy(BoxCollider _enemy) {
 	}
 
 }
+
+void Enemy::BallonBreak(int i) {
+	PlaySoundMem(Sounds::SE_Splash, DX_PLAYTYPE_BACK, true);
+	//AnimUpdateTime = 31;
+	if (state == STATE::stay) {
+		//AnimImg += 3;
+	}
+	if (state == STATE::fly) {
+		//AnimImg += 5;
+	}
+	balloon -= i;
+	if (balloon <= 0) {
+		//Miss(0);
+	}
+}
+
+
+
+
+
 
 void Enemy::AnimUpdate()
 {

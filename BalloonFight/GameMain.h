@@ -25,7 +25,6 @@ private:
 	bool Pause;
 	int StageNum;
 public:
-	GameMain();
 	GameMain(int _score, int _stage);
 	// コンストラクタ
 	~GameMain();								// デストラクタ

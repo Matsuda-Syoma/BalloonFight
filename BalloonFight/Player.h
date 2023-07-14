@@ -52,6 +52,8 @@ public:
 
 	int HitEnemy(BoxCollider _enemy);
 
+	bool DamageCheck(BoxCollider _enemy);
+
 	bool IsFly(Stage box);				// ”ò‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©
 	bool GetFlg();						// ƒvƒŒƒCƒ„[‚ª¶‚«‚Ä‚¢‚é‚©
 

@@ -101,10 +101,10 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaY -= 15.0f;
 			}
 			if (inertiaY > 0) {
-				inertiaY -= 40.0f + (inertiaY / 6);
+				inertiaY -= 20.0f * (4 - balloon) + (inertiaY / 6);
 			}
 			else {
-				inertiaY -= 40.0f;				// 速度調整、いま上がるのが遅い
+				inertiaY -= 20.0f * (4 - balloon);				// 速度調整、いま上がるのが遅い
 			}
 			if (inertiaY < -150) {
 				inertiaY = -150;
@@ -307,6 +307,7 @@ void Player::Miss(int i) {
 	switch (i) {
 		case 0:
 			if (!missflg) {
+				AnimUpdateTime = 0;
 				AnimFlg = 0;
 				state = STATE::miss;
 				inertiaX = 0.0f;
@@ -316,6 +317,7 @@ void Player::Miss(int i) {
 			break;
 		case 2:
 			if (!missflg) {
+				AnimUpdateTime = 0;
 				AnimFlg = 0;
 				state = STATE::thunder;
 				inertiaX = 0.0f;
@@ -535,4 +537,17 @@ int Player::HitEnemy(BoxCollider _enemy) {
 		break;
 	}
 
+}
+
+bool Player::DamageCheck(BoxCollider _enemy) {
+	float thisY = y - h / 2;
+	float otherY = _enemy.GetCenterY();
+	if (thisY - otherY > 20) {
+		BallonBreak(1);
+		return false;
+	}
+	else if (thisY - otherY < -20) {
+		return true;
+	}
+	return false;
 }

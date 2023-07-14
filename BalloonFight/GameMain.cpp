@@ -129,17 +129,25 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 				break;
 			}
 		}
+		// プレイヤーのフラグが立っているなら当たり判定がある
 		if (player->GetFlg()) {
-			enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+			int Hit = player->HitEnemy(enemy.at(i));
+			enemy.at(i).ChangeInertia(*player, Hit);
+			if (Hit != 0) {
+				player->DamageCheck(enemy.at(i));
+			}
 		}
+		// 敵同士跳ね返るようにする
 		for (size_t j = 0; j < enemy.size(); j++) {
 			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
 		}
+		// 画面外に行ったらしぶきと泡がでる
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
 			splash.emplace_back(enemy.at(i).GetX());
 			bubble.emplace_back(enemy.at(i).GetX());
 			enemy.at(i).SetFlg(false);
 		}
+		// フラグがたってないなら削除
 		if (!enemy.at(i).GetFlg()) {
 			enemy.erase(enemy.begin() + i);
 			continue;
