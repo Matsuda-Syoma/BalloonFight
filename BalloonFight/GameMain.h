@@ -18,6 +18,8 @@ private:
 	std::vector<Stage> stage;
 	std::vector<ScoreUP>scoreUP;
 	std::vector<Splash>splash;
+	std::vector<Enemy>enemy;
+
 	int Score;
 	bool Pause;
 public:
@@ -28,7 +30,6 @@ public:
 	Player* player;		// プレイヤーのクラス
 	Bubble* bubble;
 	UI* ui;
-	Enemy* enemy;		// 敵のクラス
 
 	//Stage* stage;		// ステージのクラス
 	virtual AbstractScene* Update() override;	// 描画以外の更新を実行

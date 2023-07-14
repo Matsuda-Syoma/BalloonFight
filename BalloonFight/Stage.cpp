@@ -33,31 +33,3 @@ int Stage::GetImage()
 {
 	return Image;
 }
-
-// 引数で数値を返す(1:上、2:下、3:左、4:右)
-float Stage::GetSide(int i)
-{
-	switch (i)
-	{
-	case 1:
-		return box.top;
-		break;
-
-	case 2:
-		return box.bottom;
-		break;
-
-	case 3:
-		return box.left;
-		break;
-
-	case 4:
-		return box.right;
-		break;
-
-	default:
-	return 0;
-	}
-
-}
-

@@ -183,7 +183,7 @@ void Player::Update()		// プレイヤーの更新処理
 
 		// 画面上の跳ね返り
 		if (y < 0 - (WIDTH / 2)) {
-			y = 0 - ((WIDTH / 2));
+			y = 0 - (WIDTH / 2);
 			inertiaY *= -0.8f;
 		}
 	}
@@ -222,8 +222,6 @@ void Player::LoadImages() {
 // プレイヤーが飛んでるか返す(1:上、2:下、3:左、4:右)
 bool Player::IsFly(Stage box){
 	HitStage = Player::HitBox(box);
-	clsDx();
-	printfDx("%d", HitStage);
 	// 上側に当たったときの判定
 	if (HitStage == 1) {
 		landingflg = true;
@@ -283,7 +281,7 @@ float Player::GetY() {
 }
 
 // 引数で数値を返す(1:上、2:下、3:左、4:右)
-float Player::GetBoxSide(Stage box ,int i) {
+float Player::GetBoxSide(BoxCollider box ,int i) {
 	return box.GetSide(i);
 }
 
@@ -504,4 +502,37 @@ void Player::AnimUpdate() {
 	default:
 		break;
 	}
+}
+
+int Player::HitEnemy(BoxCollider _enemy) {
+
+	int HitEnemy = HitBox(_enemy);
+
+	switch (HitEnemy)
+	{
+	case 1:
+		y = GetBoxSide(_enemy, 1) - (h + 1);
+		inertiaY *= -0.8f;
+		return 1;
+		break;
+	case 2:
+		y = GetBoxSide(_enemy, 2) + 1;
+		inertiaY *= -0.8f;
+		return 2;
+		break;
+	case 3:
+		x = GetBoxSide(_enemy, 3) - (w + 1);
+		inertiaX *= -0.8f;
+		return 3;
+		break;
+	case 4:
+		x = GetBoxSide(_enemy, 4) + 1;
+		inertiaX *= -0.8f;
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+
 }
