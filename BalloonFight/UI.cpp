@@ -21,9 +21,10 @@ UI::~UI()
 }
 
 //XV
-void UI::Update(int _score)
+void UI::Update(int _score, int _stage)
 {
 	NowScore = _score;
+	Stage = _stage;
 	if (PhaseCount < 240) {
 		PhaseCount++;
 		if (PhaseCount % 20 < 10) {
@@ -66,6 +67,7 @@ void UI::Draw() const
 	if (!PhaseFlg) {
 		//DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
 		DrawGraph(260, 30, PhaseImg, TRUE);
+		DrawGraph(380, 20, NumImg[Stage], TRUE);
 	}
 
 }

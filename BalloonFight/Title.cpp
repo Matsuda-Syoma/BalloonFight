@@ -56,7 +56,7 @@ AbstractScene* Title::Update()
 	}
 
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_A) && CursorY == 300) {
-		return new GameMain;
+		return new GameMain(0,0);
 	}
 
 	return this;

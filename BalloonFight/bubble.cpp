@@ -17,6 +17,7 @@ Bubble::Bubble(float _x)
 	SpeedY = -1.0f;
 	moveX = 3.0f;
 	moveSwitch = false;
+	MoveWaitTime = 0;
 
 	LoadImage();
 	WaitTime = 0;
@@ -49,18 +50,18 @@ void Bubble::Update()
 	if (SpeedX > 2.0f || SpeedX < -2.0f) {
 		moveSwitch = !moveSwitch;
 	}
-	if (moveSwitch) {
-		SpeedX += -0.05f;
-	}
-	else {
-		SpeedX += 0.05f;
+	if (++MoveWaitTime > 40) {
+		if (moveSwitch) {
+			SpeedX += -0.05f;
+		}
+		else {
+			SpeedX += 0.05f;
+		}
 	}
 
 	if (!Hitflg) {
-		if (++MoveWaitTime > 40) {
-			x += SpeedX;
-		}
-	y += SpeedY;
+		x += SpeedX;
+		y += SpeedY;
 	}
 
 	

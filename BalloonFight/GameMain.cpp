@@ -1,7 +1,7 @@
 #include "GameMain.h"
 #include "Map.h"
 
-GameMain::GameMain()				// ここで初期化
+GameMain::GameMain(int _score, int _stage)				// ここで初期化
 {
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
@@ -12,14 +12,17 @@ GameMain::GameMain()				// ここで初期化
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
-	int MapCount = 0;
-	Score = 0;
+	StageNum = _stage;
+	if (StageNum > 4) {
+		StageNum = 0;
+	}
+	Score = _score;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		int imagework;
-		imagework = StageImages::Image[LoadMapImage[MapCount][i]];
+		imagework = StageImages::Image[LoadMapImage[StageNum][i]];
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
-			work[j] = LoadMap[MapCount][i][j];
+			work[j] = LoadMap[StageNum][i][j];
 		}
 		// 読み込んだ座標が上下、左右足してどちらとも0より大きいなら足場に情報を渡す
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
@@ -27,7 +30,6 @@ GameMain::GameMain()				// ここで初期化
 		}
 	}
 
-	NowScore = 0;
 	HighScore = 10000;
 
 	Pause = false;
@@ -44,7 +46,7 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
-		return new GameMain();
+		return new GameMain(Score,++StageNum);
 	}
 	if (!Pause) {
 		Game();
@@ -186,6 +188,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 
-	ui->Update(Score);
+	ui->Update(Score,StageNum + 1);
 
 }

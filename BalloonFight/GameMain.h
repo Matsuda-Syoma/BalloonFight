@@ -23,8 +23,10 @@ private:
 
 	int Score;
 	bool Pause;
+	int StageNum;
 public:
-	GameMain();									// コンストラクタ
+	GameMain(int _score, int _stage);
+	// コンストラクタ
 	~GameMain();								// デストラクタ
 
 	// クラスのオブジェクト

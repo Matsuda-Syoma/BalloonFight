@@ -224,6 +224,7 @@ void Enemy::ChangeInertia(BoxCollider _player, int i) {
 	{
 	case 1:
 		y = GetBoxSide(_player, 2) + 1;
+		inertiaY *= -0.8f;
 		break;
 	case 2:
 		y = GetBoxSide(_player, 1) - (h + 1);
