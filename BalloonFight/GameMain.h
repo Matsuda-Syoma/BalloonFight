@@ -19,6 +19,7 @@ private:
 	std::vector<ScoreUP>scoreUP;
 	std::vector<Splash>splash;
 	std::vector<Enemy>enemy;
+	std::vector<Bubble>bubble;
 
 	int Score;
 	bool Pause;
@@ -28,7 +29,6 @@ public:
 
 	// クラスのオブジェクト
 	Player* player;		// プレイヤーのクラス
-	Bubble* bubble;
 	UI* ui;
 
 	//Stage* stage;		// ステージのクラス

@@ -1,14 +1,15 @@
+#include "common.h"
 #include "bubble.h"
 #include "Player.h"
 #include"DxLib.h"
 
 // コンストラクタ
-Bubble::Bubble()
+Bubble::Bubble(float _x)
 {
 	flg = true;
 
-	x = 400;
-	y = 500;
+	x = _x;
+	y = SCREEN_HEIGHT;
 	w = WIDTH;
 	h = HEIGHT;
 
@@ -56,7 +57,9 @@ void Bubble::Update()
 	}
 
 	if (!Hitflg) {
-	x += SpeedX;
+		if (++MoveWaitTime > 40) {
+			x += SpeedX;
+		}
 	y += SpeedY;
 	}
 

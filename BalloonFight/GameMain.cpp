@@ -8,7 +8,6 @@ GameMain::GameMain()				// ここで初期化
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
-	bubble = new Bubble;
 	ui = new UI;
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
@@ -76,8 +75,9 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		enemy.at(i).Draw();
 	}
 
-	if (bubble != nullptr) {
-		bubble->Draw();
+
+	for (size_t i = 0; i < bubble.size(); i++) {
+		bubble.at(i).Draw();
 	}
 
 
@@ -134,8 +134,9 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		for (size_t j = 0; j < enemy.size(); j++) {
 			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
 		}
-		if (enemy.at(i).GetY() > SCREEN_HEIGHT) {
+		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
 			splash.emplace_back(enemy.at(i).GetX());
+			bubble.emplace_back(enemy.at(i).GetX());
 			enemy.at(i).SetFlg(false);
 		}
 		if (!enemy.at(i).GetFlg()) {
@@ -144,26 +145,26 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 
-	if (bubble != nullptr) {
-		if (player->HitBox(*bubble) && !bubble->GetHitFlg()) {
+	for (size_t i = 0; i < bubble.size(); i++) {
+		if (player->HitBox(bubble.at(i)) && !bubble.at(i).GetHitFlg()) {
 			Score += 500;
 			scoreUP.emplace_back(500, player->GetX(), player->GetY());
 			PlaySoundMem(Sounds::SE_Bubble, DX_PLAYTYPE_BACK, true);
-			bubble->SetHitFlg(true);
+			bubble.at(i).SetHitFlg(true);
 		}
-		if (bubble->GetHitFlg()) {
-			if (bubble->PlayAnim()) {
-				delete bubble;
-				bubble = nullptr;
+		if (bubble.at(i).GetHitFlg()) {
+			if (bubble.at(i).PlayAnim()) {
+				bubble.erase(bubble.begin() + i);
+				continue;
 			}
 		}
 	}
 
-	if (bubble != nullptr) {
-		bubble->Update();
-		if (!bubble->GetFlg()) {		// 画面外に行ったならdeleteしてnullptr
-			delete bubble;
-			bubble = nullptr;
+	for (size_t i = 0; i < bubble.size(); i++) {
+		bubble.at(i).Update();
+		if (!bubble.at(i).GetFlg()) {
+			bubble.erase(bubble.begin() + i);
+			continue;
 		}
 	}
 
