@@ -61,7 +61,7 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 			/*DrawBox(60 + (15 * i), 30, 70 + (15 * i)
 				, 40, 0xFF0000, TRUE);*/
 
-			DrawGraph(75 - (15 * i), 30, LifeImg, true);
+			DrawGraph(150 - (15 * i), 30, LifeImg, TRUE);
 		}
 	}
 

@@ -20,6 +20,9 @@ private:
 	int NowScore;					//現在のスコア
 	int HighScore;					//ハイスコア
 
+	int TmpScore;					//スコア
+	int PosX;
+
 	int PlayerLife;					//残機
 
 	int Stage;
@@ -33,5 +36,6 @@ private:
 	int HighScoreImg;
 	int GameOImg;
 	int PhaseImg;
+	int SampleImg;
 };
 
