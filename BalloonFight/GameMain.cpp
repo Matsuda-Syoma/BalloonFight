@@ -134,7 +134,9 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 			int Hit = player->HitEnemy(enemy.at(i));
 			enemy.at(i).ChangeInertia(*player, Hit);
 			if (Hit != 0) {
-				player->DamageCheck(enemy.at(i));
+				if (player->DamageCheck(enemy.at(i))) {
+					//敵にダメージ
+				}
 			}
 		}
 		// 敵同士跳ね返るようにする
