@@ -5,31 +5,32 @@ GameMain::GameMain()				// Ç±Ç±Ç≈èâä˙âª
 {
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
-	printfDx("%d %d", StageImages::Image[0], LoadMapImage[0][0]);
+	//printfDx("%d %d", StageImages::Image[0], LoadMapImage[0][0]);
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	bubble = new Bubble;
 	ui = new UI;
+	enemy = new Enemy;
+
 	int MapCount = 0;
 	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
-		int imagework[MAP_COUNT];
-		//imagework[i] = LoadMapImage[MapCount][i];
-		imagework[i] = StageImages::Image[i];
+		int imagework;
+		imagework = StageImages::Image[LoadMapImage[MapCount][i]];
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
 			work[j] = LoadMap[MapCount][i][j];
 		}
-
 		// ì«Ç›çûÇÒÇæç¿ïWÇ™è„â∫ÅAç∂âEë´ÇµÇƒÇ«ÇøÇÁÇ∆Ç‡0ÇÊÇËëÂÇ´Ç¢Ç»ÇÁë´èÍÇ…èÓïÒÇìnÇ∑
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
-			stage.emplace_back(work[0], work[1], work[2], work[3],imagework[0]);
+			stage.emplace_back(work[0], work[1], work[2], work[3],imagework);
 		}
 	}
 
 	NowScore = 0;
 	HighScore = 10000;
 
+	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
 
 }
@@ -40,13 +41,14 @@ GameMain::~GameMain()				// Ç±Ç±Ç≈deleteÇ»Ç«ÇÇ∑ÇÈ
 
 AbstractScene* GameMain::Update()	// Ç±Ç±Ç≈ÉQÅ[ÉÄÉÅÉCÉìÇÃçXêVÇÇ∑ÇÈ
 {
-
-	
-	Game();
+	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
+		//Pause = !Pause;
+		return new GameMain();
+	}
+	if (!Pause) {
+		Game();
+	}
 	return this;
-
-	
-
 }
 
 void GameMain::Draw() const			// Ç±Ç±Ç≈ÉQÅ[ÉÄÉÅÉCÉìÇÃï`âÊ
@@ -64,25 +66,29 @@ void GameMain::Draw() const			// Ç±Ç±Ç≈ÉQÅ[ÉÄÉÅÉCÉìÇÃï`âÊ
 
 
 	player->Draw();
-
-	if (bubble != nullptr) {
-		bubble->Draw();
-	}
+	enemy->Draw();
 
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
 
+	if (bubble != nullptr) {
+		bubble->Draw();
+	}
+
+
 	for (size_t i = 0; i < scoreUP.size(); i++) {
 		scoreUP.at(i).Draw();
 	}
+
+	DrawGraph(160,444,StageImages::Image[4],true);
 
 	ui->Draw();
 }
 
 void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 {
-
+	enemy->Update();
 	player->Update();
 	if (player->IsFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {
@@ -100,12 +106,17 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 	}
 
 	if (bubble != nullptr) {
-		if (player->HitBox(*bubble)) {
-			delete bubble;
-			bubble = nullptr;
+		if (player->HitBox(*bubble) && !bubble->GetHitFlg()) {
 			Score += 500;
 			scoreUP.emplace_back(500, player->GetX(), player->GetY());
 			PlaySoundMem(Sounds::SE_Bubble, DX_PLAYTYPE_BACK, true);
+			bubble->SetHitFlg(true);
+		}
+		if (bubble->GetHitFlg()) {
+			if (bubble->PlayAnim()) {
+				delete bubble;
+				bubble = nullptr;
+			}
 		}
 	}
 
