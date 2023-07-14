@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "common.h"
 #include "DxLib.h"
+#include "LoadSounds.h"
 // 画像モード分け
 
 // コンストラクタ
@@ -17,9 +18,16 @@ Enemy::Enemy(float _x,float _y)
 	x = _x;
 	y = _y - WIDTH;
 
-	inertiaX = 1;
-	inertiaY = -100;
+	FlyspeedMax = 0.5;
+	inertiaX = 0;
+	inertiaY = 0;
+	MoveX = 0;
+	MoveY = GetRand(1);
+	RandomMoveX = 0;
+	RandomMoveY = 0;
 
+	MaxRandomMoveX = GetRand(5) + 1 * FRAMERATE;
+	MaxRandomMoveY = GetRand(2) + 2* FRAMERATE;
 	jumpdelay = 0;
 
 	LoadImages();
@@ -47,15 +55,64 @@ void Enemy::Update()
 	box.top = y;
 	box.bottom = y + h;
 
-	if (inertiaY < 150 && !landingflg || missflg) {
+	if (inertiaY < 75 && !landingflg || missflg) {
 		if (flg && groundflg) {
 			//AnimFlg = 0;
 			state = STATE::fly;
 		}
-			inertiaY += 1.0;
+		inertiaY += 1.0;
 	}
 
 	groundflg = landingflg;
+
+	if (jumpdelay > 0) {
+		--jumpdelay;
+	}
+	// 横移動するかどうかを決める
+	if (++RandomMoveX > MaxRandomMoveX || MoveX == 0) {
+		MoveX = GetRand(2) - 1;
+		RandomMoveX = 0;
+		MaxRandomMoveX = GetRand(2) + 3 * FRAMERATE;
+	}
+	// 横移動する
+	inertiaX += MoveX * 0.01;
+	// 速度上限を超えたら速度を固定する
+	if (inertiaX > FlyspeedMax) {
+		inertiaX = FlyspeedMax;
+	}
+	if (inertiaX < -FlyspeedMax) {
+		inertiaX = -FlyspeedMax;
+	}
+	// 上昇するかどうかを決める
+	if (++RandomMoveY > MaxRandomMoveY) {
+		MoveY = GetRand(1);
+		RandomMoveY = 0;
+		MaxRandomMoveY = GetRand(3) + 2 * FRAMERATE;
+	}
+	// 上昇する
+	if (MoveY == 1 && jumpdelay <= 0) {
+		//AnimFlg = 0;
+		state = STATE::fly;
+		if (!CheckSoundMem(Sounds::SE_EnemyMove)) {
+			PlaySoundMem(Sounds::SE_EnemyMove, DX_PLAYTYPE_BACK, true);
+		}
+		jumpdelay = DELAY;
+		if (groundflg) {
+			groundflg = false;
+			inertiaY -= 15.0f;
+		}
+		if (inertiaY > 0) {
+			inertiaY -= 10.0f + (inertiaY / 6);
+		}
+		else {
+			inertiaY -= 10.0f;				// 速度調整、いま上がるのが遅い
+		}
+		// 上昇速度上限を超えたら速度を固定する
+		if (inertiaY < -75) {
+			inertiaY = -75;
+		}
+
+	}
 
 	// 画面外に出たら反対側から出てくる
 	if (x + WIDTH < 0) {
@@ -74,7 +131,6 @@ void Enemy::Update()
 
 	y += inertiaY / FRAMERATE;		// 仮の重力(フレーム数 * 風船の数)
 	x += inertiaX;
-	printfDx("%d ", (int)inertiaY);
 }
 
 void Enemy::Draw() const

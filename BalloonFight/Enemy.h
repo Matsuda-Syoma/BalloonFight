@@ -39,6 +39,12 @@ private:
 	bool imageReverse;						// Œü‚¢‚Ä‚é•ûŒü
 	int images[40];
 	int AnimImg;
+	int MoveX;
+	int MoveY;
+	int RandomMoveX;
+	int RandomMoveY;
+	int MaxRandomMoveX;
+	int MaxRandomMoveY;
 
 	int jumpdelay;
 

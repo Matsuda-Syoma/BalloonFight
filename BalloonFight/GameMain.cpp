@@ -120,7 +120,7 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
-	clsDx();
+	clsDx();/////////////////////////////////////////////////////////////
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
 		for (size_t j = 0; j < stage.size(); j++) {
@@ -128,7 +128,9 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 				break;
 			}
 		}
-		enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+		if (player->GetFlg()) {
+			enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+		}
 		for (size_t j = 0; j < enemy.size(); j++) {
 			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
 		}
