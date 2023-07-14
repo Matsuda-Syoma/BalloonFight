@@ -3,14 +3,14 @@
 //コンストラクタ
 UI::UI()
 {
-	
+	NowScore = 0;
 	HighScore = 10000;
 	Stage = 1;
 	PhaseCount = 0;
 	GameOverFlg = false;
-
-	PosX = 89;
-
+	for (int i = 0; i < 6; i++) {
+		Score[i] = 0;
+	}
 	LoadImages();
 }
 
@@ -33,29 +33,29 @@ void UI::Update(int _score)
 			PhaseFlg = false;
 		}
 	}
-
 	//ハイスコアを更新
 	if (NowScore > HighScore) {
 		HighScore = NowScore;
+	}
+
+	for (int i = 0; i < 6; i++) {
+		Score[i] = NowScore % 10;
+		NowScore /= 10;
 	}
 }
 
 //描画
 void UI::Draw() const
 {
-	//サンプル
-	//DrawGraph(0, 0, SampleImg, FALSE);
 	//スコア
-	DrawGraph(60, 14, ScoreImg, true);
+	DrawGraph(20, 10, ScoreImg, true);
 	//DrawFormatString(40, 10, 0xFFFFFF, "%06d", NowScore);
 	for (int i = 0; i < 6; i++) {
-		DrawRotaGraph(PosX + (20 * i), 22, 1.0, 0.0, NumImg[NowScore],TRUE);
+		DrawRotaGraph(30 + (20 * (6 - i)), 18, 1.0, 0.0, NumImg[Score[i]],TRUE);
 	}
-
-
-	DrawGraph(240, 15, HighScoreImg, true);
+	DrawGraph(260, 10, HighScoreImg, true);
 	//DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
-	//DrawGraph(310, 10, NumImg[HighScore], true);
+	//DrawGraph(310, 10, NumImg[0], true);
 
 	if (GameOverFlg) {
 		//DrawString(280, 230, "GameOver", 0xffffff);
@@ -65,9 +65,7 @@ void UI::Draw() const
 
 	if (!PhaseFlg) {
 		//DrawFormatString(290, 30, 0xffa500, "PHASE-%d", Stage);
-		DrawGraph(240, 32, PhaseImg, TRUE);
-		DrawRotaGraph(369, 40, 1.0, 0.0, NumImg[0], TRUE);
-		DrawRotaGraph(390,40, 1.0, 0.0, NumImg[Stage], TRUE);
+		DrawGraph(260, 30, PhaseImg, TRUE);
 	}
 
 }
@@ -75,7 +73,6 @@ void UI::Draw() const
 //画像読込
 void UI::LoadImages()
 {
-	SampleImg = LoadGraph("Resources/images_alp/StageSample/Stage_1.png");
 	ScoreImg = LoadGraph("Resources/images/UI/UI_Score.png");
 	HighScoreImg = LoadGraph("Resources/images/UI/UI_HiScore.png");
 	GameOImg = LoadGraph("Resources/images/UI/UI_GameOver.png");

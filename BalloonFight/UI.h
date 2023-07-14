@@ -31,6 +31,7 @@ private:
 	bool PhaseFlg;
 	bool GameOverFlg;
 
+	int Score[6];
 	int NumImg[10];
 	int ScoreImg;
 	int HighScoreImg;
