@@ -65,6 +65,7 @@ public:
 	bool GetFlg();
 	void SetFlg(bool _flg);
 	void ChangeInertia(BoxCollider _player, int i);
+	int HitEnemy(BoxCollider _enemy);
 	void AnimUpdate();					// アニメーションの更新
 };
 

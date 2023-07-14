@@ -201,6 +201,39 @@ void Enemy::ChangeInertia(BoxCollider _player, int i) {
 	}
 }
 
+int Enemy::HitEnemy(BoxCollider _enemy) {
+
+	int HitEnemy = HitBox(_enemy);
+
+	switch (HitEnemy)
+	{
+	case 1:
+		y = GetBoxSide(_enemy, 1) - (h + 1);
+		inertiaY *= -0.8f;
+		return 1;
+		break;
+	case 2:
+		y = GetBoxSide(_enemy, 2) + 1;
+		inertiaY *= -0.8f;
+		return 2;
+		break;
+	case 3:
+		x = GetBoxSide(_enemy, 3) - (w + 1);
+		inertiaX *= -0.8f;
+		return 3;
+		break;
+	case 4:
+		x = GetBoxSide(_enemy, 4) + 1;
+		inertiaX *= -0.8f;
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+
+}
+
 void Enemy::AnimUpdate()
 {
 	switch (state)

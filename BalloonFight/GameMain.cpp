@@ -13,9 +13,6 @@ GameMain::GameMain()				// Ç±Ç±Ç≈èâä˙âª
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
-	enemy.emplace_back(300,150);
-	enemy.emplace_back(400,150);
-	enemy.emplace_back(500,150);
 	int MapCount = 0;
 	Score = 0;
 	for (int i = 0; i < MAP_COUNT; i++) {
@@ -132,6 +129,9 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 			}
 		}
 		enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+		for (size_t j = 0; j < enemy.size(); j++) {
+			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
+		}
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT) {
 			splash.emplace_back(enemy.at(i).GetX());
 			enemy.at(i).SetFlg(false);
