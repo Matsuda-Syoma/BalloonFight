@@ -11,6 +11,7 @@ private:
 	static const int HEIGHT = 40;
 	float SpeedX;
 	float SpeedY;
+	int MoveWaitTime;
 	float moveX;
 	bool moveSwitch;
 	int images[4];
@@ -21,7 +22,7 @@ private:
 public:
 
 	//コンストラクタ
-	Bubble();
+	Bubble(float _x);
 	//デストラクタ
 	~Bubble();
 

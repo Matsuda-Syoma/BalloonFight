@@ -19,8 +19,9 @@ protected:
 public:
 	BoxCollider();
 	void GetSize(float& top, float& bottom, float& left, float& right);
-	int HitBox(BoxCollider boxCollider) const;
+	int HitBox(BoxCollider boxCollider) const;								// 上、下、右、左
 	bool HitSphere(SphereCollider sphereCollider) const;
 	void DrawCollider() const;
+	float GetSide(int i);
 };
 

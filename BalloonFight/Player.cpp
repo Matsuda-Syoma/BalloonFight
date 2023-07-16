@@ -32,6 +32,7 @@ void Player::Init(int _life) {
 	groundflg = false;
 	missflg = false;
 	misssoundflg = false;
+	spawnflg = false;
 	life = _life;
 	balloon = 2;
 	x = 40;
@@ -79,8 +80,6 @@ void Player::Update()		// プレイヤーの更新処理
 	if (PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_X)) {
 		Miss(2);
 	}
-	clsDx();
-	printfDx("%02d %02d %d %d ",AnimUpdateTime, AnimImg, AnimWork,AnimFlg);
 
 	if (flg == true) {
 
@@ -184,16 +183,11 @@ void Player::Update()		// プレイヤーの更新処理
 
 		// 画面上の跳ね返り
 		if (y < 0 - (WIDTH / 2)) {
-			y = 0 - ((WIDTH / 2));
+			y = 0 - (WIDTH / 2);
 			inertiaY *= -0.8f;
 		}
 	}
 
-	// 画面下に行った場合ミス
-	if (y > SCREEN_HEIGHT) {
-		Init(--life);
-		PlaySoundMem(Sounds::SE_Restart, DX_PLAYTYPE_BACK, true);
-	}
 
 	if (state == STATE::miss && !misssoundflg) {
 			PlaySoundMem(Sounds::SE_Falling, DX_PLAYTYPE_BACK, true);
@@ -212,7 +206,7 @@ void Player::Update()		// プレイヤーの更新処理
 void Player::Draw() const
 {
 	DrawRotaGraph(imageX, imageY, 1.0f, 0, images[AnimImg],true, imageReverse);
-	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, false);
+	//DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xff0000, false);
 }
 
 // コントローラの入力を返す
@@ -228,7 +222,6 @@ void Player::LoadImages() {
 // プレイヤーが飛んでるか返す(1:上、2:下、3:左、4:右)
 bool Player::IsFly(Stage box){
 	HitStage = Player::HitBox(box);
-
 	// 上側に当たったときの判定
 	if (HitStage == 1) {
 		landingflg = true;
@@ -267,8 +260,16 @@ bool Player::IsFly(Stage box){
 }
 
 // プレイヤーのフラグを返す
-bool Player::IsFlg() {
+bool Player::GetFlg() {
 	return flg;
+}
+
+bool Player::GetSpawnFlg() {
+	return spawnflg;
+}
+
+void Player::SetSpawnFlg(bool _flg) {
+	spawnflg = _flg;
 }
 
 float Player::GetX() {
@@ -280,7 +281,7 @@ float Player::GetY() {
 }
 
 // 引数で数値を返す(1:上、2:下、3:左、4:右)
-float Player::GetBoxSide(Stage box ,int i) {
+float Player::GetBoxSide(BoxCollider box ,int i) {
 	return box.GetSide(i);
 }
 
@@ -501,4 +502,37 @@ void Player::AnimUpdate() {
 	default:
 		break;
 	}
+}
+
+int Player::HitEnemy(BoxCollider _enemy) {
+
+	int HitEnemy = HitBox(_enemy);
+
+	switch (HitEnemy)
+	{
+	case 1:
+		y = GetBoxSide(_enemy, 1) - (h + 1);
+		inertiaY *= -0.8f;
+		return 1;
+		break;
+	case 2:
+		y = GetBoxSide(_enemy, 2) + 1;
+		inertiaY *= -0.8f;
+		return 2;
+		break;
+	case 3:
+		x = GetBoxSide(_enemy, 3) - (w + 1);
+		inertiaX *= -0.8f;
+		return 3;
+		break;
+	case 4:
+		x = GetBoxSide(_enemy, 4) + 1;
+		inertiaX *= -0.8f;
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+
 }

@@ -1,14 +1,15 @@
+#include "common.h"
 #include "bubble.h"
 #include "Player.h"
 #include"DxLib.h"
 
 // コンストラクタ
-Bubble::Bubble()
+Bubble::Bubble(float _x)
 {
 	flg = true;
 
-	x = 400;
-	y = 500;
+	x = _x;
+	y = SCREEN_HEIGHT;
 	w = WIDTH;
 	h = HEIGHT;
 
@@ -16,6 +17,7 @@ Bubble::Bubble()
 	SpeedY = -1.0f;
 	moveX = 3.0f;
 	moveSwitch = false;
+	MoveWaitTime = 0;
 
 	LoadImage();
 	WaitTime = 0;
@@ -48,16 +50,18 @@ void Bubble::Update()
 	if (SpeedX > 2.0f || SpeedX < -2.0f) {
 		moveSwitch = !moveSwitch;
 	}
-	if (moveSwitch) {
-		SpeedX += -0.05f;
-	}
-	else {
-		SpeedX += 0.05f;
+	if (++MoveWaitTime > 40) {
+		if (moveSwitch) {
+			SpeedX += -0.05f;
+		}
+		else {
+			SpeedX += 0.05f;
+		}
 	}
 
 	if (!Hitflg) {
-	x += SpeedX;
-	y += SpeedY;
+		x += SpeedX;
+		y += SpeedY;
 	}
 
 	

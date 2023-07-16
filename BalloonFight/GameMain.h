@@ -6,9 +6,9 @@
 #include"Enemy.h"
 #include "Stage.h"
 #include"bubble.h"
-#include"Fish.h"
 #include"UI.h"
 #include "ScoreUP.h"
+#include "Splash.h"
 #include <vector>
 class GameMain : public AbstractScene
 {
@@ -17,18 +17,21 @@ public:
 private:
 	std::vector<Stage> stage;
 	std::vector<ScoreUP>scoreUP;
+	std::vector<Splash>splash;
+	std::vector<Enemy>enemy;
+	std::vector<Bubble>bubble;
+
 	int Score;
 	bool Pause;
+	int StageNum;
 public:
-	GameMain();									// コンストラクタ
+	GameMain(int _score, int _stage);
+	// コンストラクタ
 	~GameMain();								// デストラクタ
 
 	// クラスのオブジェクト
 	Player* player;		// プレイヤーのクラス
-	Bubble* bubble;
-	Fish* fish;
 	UI* ui;
-	Enemy* enemy;		// 敵のクラス
 
 	//Stage* stage;		// ステージのクラス
 	virtual AbstractScene* Update() override;	// 描画以外の更新を実行
