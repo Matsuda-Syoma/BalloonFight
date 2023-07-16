@@ -6,6 +6,7 @@
 #include"Enemy.h"
 #include "Stage.h"
 #include"bubble.h"
+#include"Fish.h"
 #include"UI.h"
 #include "ScoreUP.h"
 #include "Splash.h"

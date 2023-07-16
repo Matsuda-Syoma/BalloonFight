@@ -47,7 +47,7 @@ void Fish::Draw() const
 {
 	DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, false);
 	DrawRotaGraph(imageX, imageY, 1.0f, 0, image[imagecnt],true);
-	/*DrawBox(150, 400, 500, 480, 0x00ff00, 0);*/
+	DrawBox(150, 400, 500, 480, 0x00ff00, 0);
 }
 
 bool Fish::GetFlg() {
