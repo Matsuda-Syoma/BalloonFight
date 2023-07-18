@@ -9,6 +9,7 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	ui = new UI;
+	fish = new Fish;
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -96,6 +97,8 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 		splash.at(i).Draw();
 	}
 
+	fish->Draw();
+
 	ui->Draw();
 }
 
@@ -122,6 +125,9 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
+
+	fish->Update();
+
 	clsDx();/////////////////////////////////////////////////////////////
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();

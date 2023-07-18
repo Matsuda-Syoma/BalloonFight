@@ -1,5 +1,5 @@
 #include "Fish.h"
-
+#include"Player.h"
 #include"DxLib.h"
 
 // コンストラクタ
@@ -41,6 +41,9 @@ void Fish::Update()
 	box.right = x + w;
 	box.top = y;
 	box.bottom = y + h;
+
+	
+
 }
 
 void Fish::Draw() const
