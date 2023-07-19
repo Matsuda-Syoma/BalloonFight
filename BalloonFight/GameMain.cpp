@@ -11,6 +11,7 @@ GameMain::GameMain()				// ‚±‚±‚Å‰Šú‰»
 	bubble = new Bubble;
 	ui = new UI;
 	enemy = new Enemy;
+	thunder = new Thunder;
 
 	int MapCount = 0;
 	Score = 0;
@@ -84,6 +85,7 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	DrawGraph(160,444,StageImages::Image[4],true);
 
 	ui->Draw();
+	thunder->Draw();
 }
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
@@ -136,5 +138,7 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	}
 
 	ui->Update(Score);
+
+	thunder->Update();
 
 }

@@ -33,6 +33,7 @@
     <ClCompile Include="ScoreUP.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="Thunder.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
@@ -53,6 +54,7 @@
     <ClInclude Include="ScoreUP.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="Thunder.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
