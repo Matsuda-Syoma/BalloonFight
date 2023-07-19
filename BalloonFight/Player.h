@@ -11,6 +11,7 @@ private:
 	bool groundflg;				// プレイヤーが着地したか
 	bool missflg;				// ミスしたときのフラグ
 	bool misssoundflg;			// ミスしたときの効果音のフラグ
+	bool spawnflg;
 	int life;					// プレイヤーの残機
 	int balloon;					// プレイヤーの風船の数
 	int HitStage;				// プレイヤーがどこに当たったか
@@ -30,13 +31,14 @@ private:
 	bool imageReverse;
 	int images[40];
 	int LifeImg;
+	int jumpdelay;
 
 	static const int WIDTH = 32;
 	static const int HEIGHT = 48;
 	static const int DELAY = 9;
 	
 public:
-	int jumpdelay;
+
 	Player();							// コンストラクタ
 	~Player();							// デストラクタ
 	void Init(int _life);				// 数値の初期化
@@ -48,13 +50,19 @@ public:
 	void BallonBreak(int i);			// 風船を減らして0以下だったらFlgを切る
 	void AnimUpdate();					// アニメーションの更新
 
+	int HitEnemy(BoxCollider _enemy);
+
 	bool IsFly(Stage box);				// 飛んでいるかどうか
-	bool IsFlg();						// プレイヤーが生きているか
+	bool GetFlg();						// プレイヤーが生きているか
+
+	bool GetSpawnFlg();
+
+	void SetSpawnFlg(bool _flg);
 
 	float GetX();
 	float GetY();
 
-	float GetBoxSide(Stage box, int i);	// 引数で数値を返す(1:上、2:下、3:左、4:右)
+	float GetBoxSide(BoxCollider box, int i);	// 引数で数値を返す(1:上、2:下、3:左、4:右)
 	float inputX();						// スティックの入力値を返す
 
 	int GetLife();				// 残機を返す

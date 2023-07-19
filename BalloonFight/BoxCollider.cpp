@@ -124,3 +124,30 @@ bool BoxCollider::HitSphere(SphereCollider sphereCollider) const {
 void BoxCollider::DrawCollider() const {
 	DrawBox(box.left, box.top, box.right, box.bottom, 0xFF, TRUE);
 }
+
+float BoxCollider::GetSide(int i)
+{
+	switch (i)
+	{
+	case 1:
+		return box.top;
+		break;
+
+	case 2:
+		return box.bottom;
+		break;
+
+	case 3:
+		return box.left;
+		break;
+
+	case 4:
+		return box.right;
+		break;
+
+	default:
+		return 0;
+	}
+
+}
+

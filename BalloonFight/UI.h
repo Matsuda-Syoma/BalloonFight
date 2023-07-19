@@ -8,7 +8,7 @@ class UI{
 public:
 	UI();							// コンストラクタ
 	~UI();							// デストラクタ
-	void Update(int _score);		// 描画以外の更新を実行
+	void Update(int _score, int _stage);	// 描画以外の更新を実行
 	void Draw() const;			// 描画に関することを実装
 	void LoadImages();
 
@@ -31,6 +31,7 @@ private:
 	bool PhaseFlg;
 	bool GameOverFlg;
 
+	int Score[6];
 	int NumImg[10];
 	int ScoreImg;
 	int HighScoreImg;

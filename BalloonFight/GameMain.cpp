@@ -1,26 +1,28 @@
 #include "GameMain.h"
 #include "Map.h"
 
-GameMain::GameMain()				// ここで初期化
+GameMain::GameMain(int _score, int _stage)				// ここで初期化
 {
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
-	//printfDx("%d %d", StageImages::Image[0], LoadMapImage[0][0]);
+	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
-	bubble = new Bubble;
 	ui = new UI;
-	enemy = new Enemy;
-	thunder = new Thunder;
-
-	int MapCount = 0;
-	Score = 0;
+	enemy.emplace_back(0,150);
+	enemy.emplace_back(100,150);
+	enemy.emplace_back(200,150);
+	StageNum = _stage;
+	if (StageNum > 4) {
+		StageNum = 0;
+	}
+	Score = _score;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		int imagework;
-		imagework = StageImages::Image[LoadMapImage[MapCount][i]];
+		imagework = StageImages::Image[LoadMapImage[StageNum][i]];
 		float work[MAP_SIZE];
 		for (int j = 0; j < MAP_SIZE; j++) {
-			work[j] = LoadMap[MapCount][i][j];
+			work[j] = LoadMap[StageNum][i][j];
 		}
 		// 読み込んだ座標が上下、左右足してどちらとも0より大きいなら足場に情報を渡す
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
@@ -28,7 +30,6 @@ GameMain::GameMain()				// ここで初期化
 		}
 	}
 
-	NowScore = 0;
 	HighScore = 10000;
 
 	Pause = false;
@@ -38,13 +39,14 @@ GameMain::GameMain()				// ここで初期化
 
 GameMain::~GameMain()				// ここでdeleteなどをする
 {
+	StopSoundMem(Sounds::BGM_Trip);
 }
 
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
-		return new GameMain();
+		return new GameMain(Score,++StageNum);
 	}
 	if (!Pause) {
 		Game();
@@ -65,16 +67,19 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		}
 	}
 
-
-	player->Draw();
-	enemy->Draw();
-
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
 
-	if (bubble != nullptr) {
-		bubble->Draw();
+	player->Draw();
+
+	for (size_t i = 0; i < enemy.size(); i++) {
+		enemy.at(i).Draw();
+	}
+
+
+	for (size_t i = 0; i < bubble.size(); i++) {
+		bubble.at(i).Draw();
 	}
 
 
@@ -82,17 +87,22 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		scoreUP.at(i).Draw();
 	}
 
-	DrawGraph(160,444,StageImages::Image[4],true);
+	DrawGraph(-80, 455, StageImages::Image[4], true);
+	DrawGraph(400, 455, StageImages::Image[4], true);
+
+	DrawGraph(160,450,StageImages::Image[4],true);
+
+	for (size_t i = 0; i < splash.size(); i++) {
+		splash.at(i).Draw();
+	}
 
 	ui->Draw();
-	thunder->Draw();
 }
 
 void GameMain::Game()				// ここでゲームの判定などの処理をする
 {
-	enemy->Update();
 	player->Update();
-	if (player->IsFlg()) {
+	if (player->GetFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {
 			if (player->IsFly(stage.at(i))) {
 				break;
@@ -103,30 +113,60 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		player->Miss(0);
 	}
 
+	// 画面下に行った場合ミス
+	if (player->GetY() > SCREEN_HEIGHT && !player->GetSpawnFlg()) {
+		player->SetSpawnFlg(true);
+		StopSoundMem(Sounds::SE_Falling);
+		splash.emplace_back(player->GetX());
+	}
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
+	clsDx();/////////////////////////////////////////////////////////////
+	for (size_t i = 0; i < enemy.size(); i++) {
+		enemy.at(i).Update();
+		for (size_t j = 0; j < stage.size(); j++) {
+			if (enemy.at(i).IsFly(stage.at(j))) {
+				break;
+			}
+		}
+		if (player->GetFlg()) {
+			enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+		}
+		for (size_t j = 0; j < enemy.size(); j++) {
+			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
+		}
+		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
+			splash.emplace_back(enemy.at(i).GetX());
+			bubble.emplace_back(enemy.at(i).GetX());
+			enemy.at(i).SetFlg(false);
+		}
+		if (!enemy.at(i).GetFlg()) {
+			enemy.erase(enemy.begin() + i);
+			continue;
+		}
+	}
 
-	if (bubble != nullptr) {
-		if (player->HitBox(*bubble) && !bubble->GetHitFlg()) {
+	for (size_t i = 0; i < bubble.size(); i++) {
+		if (player->HitBox(bubble.at(i)) && !bubble.at(i).GetHitFlg()) {
 			Score += 500;
 			scoreUP.emplace_back(500, player->GetX(), player->GetY());
 			PlaySoundMem(Sounds::SE_Bubble, DX_PLAYTYPE_BACK, true);
-			bubble->SetHitFlg(true);
+			bubble.at(i).SetHitFlg(true);
 		}
-		if (bubble->GetHitFlg()) {
-			if (bubble->PlayAnim()) {
-				delete bubble;
-				bubble = nullptr;
+		if (bubble.at(i).GetHitFlg()) {
+			if (bubble.at(i).PlayAnim()) {
+				bubble.erase(bubble.begin() + i);
+				continue;
 			}
 		}
 	}
 
-	if (bubble != nullptr) {
-		bubble->Update();
-		if (!bubble->GetFlg()) {		// 画面外に行ったならdeleteしてnullptr
-			delete bubble;
-			bubble = nullptr;
+	for (size_t i = 0; i < bubble.size(); i++) {
+		bubble.at(i).Update();
+		if (!bubble.at(i).GetFlg()) {
+			bubble.erase(bubble.begin() + i);
+			continue;
 		}
 	}
 
@@ -137,8 +177,17 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 
-	ui->Update(Score);
+	for (size_t i = 0; i < splash.size(); i++) {
+		if (splash.at(i).Update()) {
+			if (player->GetSpawnFlg()) {
+				player->Init(player->GetLife() - 1);
+				PlaySoundMem(Sounds::SE_Restart, DX_PLAYTYPE_BACK, true);
+			}
+			splash.erase(splash.begin() + i);
+			continue;
+		}
+	}
 
-	thunder->Update();
+	ui->Update(Score,StageNum + 1);
 
 }

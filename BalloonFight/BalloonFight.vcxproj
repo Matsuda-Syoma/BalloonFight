@@ -32,6 +32,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreUP.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="Splash.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Thunder.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScoreUP.h" />
     <ClInclude Include="SphereCollider.h" />
+    <ClInclude Include="Splash.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Thunder.h" />
     <ClInclude Include="Title.h" />
