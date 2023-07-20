@@ -11,9 +11,6 @@ UI::UI()
 	for (int i = 0; i < 6; i++) {
 		Score[i] = 0;
 	}
-	for (int i = 0; i < 6; i++) {
-		HiScore[i] = 0;
-	}
 	LoadImages();
 }
 
@@ -26,24 +23,8 @@ UI::~UI()
 //更新
 void UI::Update(int _score, int _stage)
 {
-	HighScoreWork = HighScore;
 	NowScore = _score;
 	Stage = _stage;
-
-	//ハイスコアを更新
-	if (NowScore > HighScore) {
-		HighScore = NowScore;
-	}
-
-	for (int i = 0; i < 6; i++) {
-		Score[i] = NowScore % 10;
-		NowScore /= 10;
-	}
-	for (int i = 0; i < 6; i++) {
-		HiScore[i] = HighScoreWork % 10;
-		HighScoreWork /= 10;
-	}
-
 	if (PhaseCount < 240) {
 		PhaseCount++;
 		if (PhaseCount % 20 < 10) {
@@ -52,6 +33,15 @@ void UI::Update(int _score, int _stage)
 		else {
 			PhaseFlg = false;
 		}
+	}
+	//ハイスコアを更新
+	if (NowScore > HighScore) {
+		HighScore = NowScore;
+	}
+
+	for (int i = 0; i < 6; i++) {
+		Score[i] = NowScore % 10;
+		NowScore /= 10;
 	}
 }
 
@@ -65,10 +55,7 @@ void UI::Draw() const
 		DrawRotaGraph(30 + (20 * (6 - i)), 18, 1.0, 0.0, NumImg[Score[i]],TRUE);
 	}
 	DrawGraph(260, 10, HighScoreImg, true);
-	for (int i = 0; i < 6; i++) {
-		DrawRotaGraph(290 + (20 * (6 - i)), 18, 1.0, 0.0, NumImg[HiScore[i]], TRUE);
-	}
-	//DrawFormatString(310, 40, 0xFFFFFF, "%06d", HighScore);
+	//DrawFormatString(310, 10, 0xFFFFFF, "%06d", HighScore);
 	//DrawGraph(310, 10, NumImg[0], true);
 
 	if (GameOverFlg) {

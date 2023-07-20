@@ -23,6 +23,5 @@ public:
 	bool HitSphere(SphereCollider sphereCollider) const;
 	void DrawCollider() const;
 	float GetSide(int i);
-	float GetCenterY();
 };
 

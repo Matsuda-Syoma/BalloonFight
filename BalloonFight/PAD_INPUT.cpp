@@ -12,6 +12,7 @@ XINPUT_STATE PAD_INPUT::Input;
 void PAD_INPUT::UpdateInput() {
 	// Œ»İ‚Ì“ü—Í‚Ìæ“¾
 	GetJoypadXInputState(DX_INPUT_KEY_PAD1, &Input);
+
 	// “ü—Íî•ñ‚Ì”½‰f
 	for (int i = 0; i < BUTTONS; i++)
 	{

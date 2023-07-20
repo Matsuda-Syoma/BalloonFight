@@ -50,9 +50,7 @@ public:
 	void BallonBreak(int i);			// 風船を減らして0以下だったらFlgを切る
 	void AnimUpdate();					// アニメーションの更新
 
-	int HitEnemy(BoxCollider _enemy, int _state);
-
-	bool DamageCheck(BoxCollider _enemy, int _balloon, int _state);
+	int HitEnemy(BoxCollider _enemy);
 
 	bool IsFly(Stage box);				// 飛んでいるかどうか
 	bool GetFlg();						// プレイヤーが生きているか
@@ -68,8 +66,6 @@ public:
 	float inputX();						// スティックの入力値を返す
 
 	int GetLife();				// 残機を返す
-
-	void SetLife(int _life);
 	
 };
 
