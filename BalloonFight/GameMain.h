@@ -44,5 +44,7 @@ private:
 	int HighScore;
 
 	int LifeImg;
+
+	int fishflg;		// ‹›‚Ìupdateˆ——pƒtƒ‰ƒO
 };
 

@@ -18,11 +18,12 @@ private:
 	int imagecnt;
 	float imageX, imageY;
 	int WeitTime;
+	int Animflg;
 
 public:
 
 	//コンストラクタ
-	Fish(float _x);
+	Fish(float _x ,int anim_f);
 	//デストラクタ
 	~Fish();
 

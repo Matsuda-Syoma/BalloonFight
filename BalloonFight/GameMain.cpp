@@ -10,7 +10,7 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	ui = new UI;
-	fish = new Fish(0);
+	fish = new Fish(0,0);
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -132,10 +132,15 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	}
 
 // ‹›‚Ìˆ—
-	if (player->GetY() > SCREEN_HEIGHT-94  ) {
-		fish = new Fish(player->GetX());
+	if (player->GetY() > SCREEN_HEIGHT-93 && player->GetX()>170 && player->GetX()<460 && player->GetFlg() == true) {
+		player->Miss(1);
+		fishflg = true;
+		fish = new Fish(player->GetX(), fishflg);
 		fish->GetFlg();
 		StopSoundMem(Sounds::SE_Falling);
+	}
+	else if (player->GetY() < SCREEN_HEIGHT - 94) {
+		fishflg = false;
 	}
 
 	clsDx();/////////////////////////////////////////////////////////////

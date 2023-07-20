@@ -3,11 +3,12 @@
 #include"DxLib.h"
 
 // コンストラクタ
-Fish::Fish(float _x)
+Fish::Fish(float _x,int anim_f)
 {
 	imagecnt = -1;
 	WeitTime = 0;
 	flg = false;
+	Animflg = anim_f;
 
 	x = _x;
 	y = 400;
@@ -26,12 +27,12 @@ Fish::~Fish()
 
 void Fish::Update()
 {
-	if (++WeitTime % 11 == 0 && flg ==true) {
+	if (++WeitTime % 11 == 0 && Animflg == true) {
 		imagecnt = imagecnt+1;
 	}
-	if (imagecnt >= 5) {
+	/*if (imagecnt >= 5) {
 		imagecnt = 0;
-	}
+	}*/
 
 	imageX = x + (w / 2);
 	imageY = y + (h / 2);
