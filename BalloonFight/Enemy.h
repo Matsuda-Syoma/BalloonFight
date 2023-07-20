@@ -10,33 +10,24 @@ class Enemy : public BoxCollider
 {
 private:
 
-	enum class STATE {
-		stay = 0,
-		walk,
-		fly,
-		miss,
-	};
-	STATE state;
-
 	bool flg;
 
-	bool landingflg;					// 適が地面に立っているか
-	bool groundflg;					// 適が着地したか
+	bool landingflg;				// 地面に立っているか
+	bool groundflg;					// 着地したか
 
-	bool missflg;				// ミスしたときのフラグ
-	bool animflg;				// ミスしたときのフラグ
-	int life;					// 適の残機
-	int balloon;					// 適の風船の数
-	int HitStage;				// 適がどこに当たったか
-	float x, y;					// 適の座標
-	float w, h;					// 適の大きさ
-	int speedX;					// 適の速度
-	float startX;				// 適の初速
-	float FlyspeedMax;			// 適の空中最大速度
-	float GroundspeedMax;		// 適の地上最大速度
-	float inertiaX, inertiaY;	// 慣性
-	float imageX, imageY;		// 適の画像の座標
-	bool imageReverse;						// 向いてる方向
+	bool deathflg;					// ミスしたときのフラグ
+	bool animflg;					// ミスしたときのフラグ
+	int balloon;					// 風船の数
+	int HitStage;					// どこに当たったか
+	float x, y;						// 座標
+	float w, h;						// 大きさ
+	int speedX;						// 速度
+	float startX;					// 初速
+	float FlyspeedMax;				// 空中最大速度
+	float GroundspeedMax;			// 地上最大速度
+	float inertiaX, inertiaY;		// 慣性
+	float imageX, imageY;			// 画像の座標
+	bool imageReverse;				// 向いてる方向
 	int images[40];
 	int AnimImg;
 	int MoveX;
@@ -53,6 +44,15 @@ private:
 	static const int DELAY = 9;
 
 public:
+
+	enum class STATE : int {
+		stay = 0,
+		balloonspawn,
+		fly,
+		miss,
+	};
+	STATE state;
+
 	// コンストラクタ
 
 	Enemy(float _x, float _y);
@@ -70,9 +70,13 @@ public:
 	float GetY();
 	bool GetFlg();
 	void SetFlg(bool _flg);
+	bool GetDeathFlg();
+	int GetBalloon();
+	int GetState();
 	void ChangeInertia(BoxCollider _player, int i);
 	int HitEnemy(BoxCollider _enemy);
 	void BallonBreak(int i);
+	void Death(int i);
 	void AnimUpdate();					// アニメーションの更新
 };
 
