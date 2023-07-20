@@ -24,8 +24,11 @@ private:
 	int Score;
 	bool Pause;
 	int StageNum;
+	bool StageSwitch;
+	int StageSwitchTime;
+	bool parachuteflg;
 public:
-	GameMain(int _score, int _stage);
+	GameMain(int _score, int _stage, int _life);
 	// コンストラクタ
 	~GameMain();								// デストラクタ
 
@@ -39,7 +42,6 @@ public:
 	void Game();								// ゲームの処理
 
 private:
-	int NowScore;
 	int HighScore;
 
 	int LifeImg;

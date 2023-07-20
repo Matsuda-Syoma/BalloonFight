@@ -16,7 +16,6 @@ Player::Player()			// コンストラクタ
 	w = WIDTH;
 	h = HEIGHT;
 	GroundspeedMax = 3.0f;
-	FlyspeedMax = 3.0f;
 	Init(3);
 	LoadImages();
 }
@@ -61,6 +60,8 @@ void Player::Update()		// プレイヤーの更新処理
 	box.top = y;
 	box.bottom = y + h;
 
+	FlyspeedMax = (balloon + 1);
+
 		// 落下処理
 	if (inertiaY < 150 && !landingflg || missflg) {
 		if (flg && groundflg) {	
@@ -101,10 +102,10 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaY -= 15.0f;
 			}
 			if (inertiaY > 0) {
-				inertiaY -= 40.0f + (inertiaY / 6);
+				inertiaY -= 20.0f * (4 - balloon) + (inertiaY / 6);
 			}
 			else {
-				inertiaY -= 40.0f;				// 速度調整、いま上がるのが遅い
+				inertiaY -= 20.0f * (4 - balloon);				// 速度調整、いま上がるのが遅い
 			}
 			if (inertiaY < -150) {
 				inertiaY = -150;
@@ -307,6 +308,7 @@ void Player::Miss(int i) {
 	switch (i) {
 		case 0:
 			if (!missflg) {
+				AnimUpdateTime = 0;
 				AnimFlg = 0;
 				state = STATE::miss;
 				inertiaX = 0.0f;
@@ -316,6 +318,7 @@ void Player::Miss(int i) {
 			break;
 		case 2:
 			if (!missflg) {
+				AnimUpdateTime = 0;
 				AnimFlg = 0;
 				state = STATE::thunder;
 				inertiaX = 0.0f;
@@ -329,6 +332,10 @@ void Player::Miss(int i) {
 // プレイヤーのライフを返す
 int Player::GetLife() {
 	return life;
+}
+
+void Player::SetLife(int _life) {
+	life = _life;
 }
 
 // アニメーションの更新
@@ -504,10 +511,12 @@ void Player::AnimUpdate() {
 	}
 }
 
-int Player::HitEnemy(BoxCollider _enemy) {
+int Player::HitEnemy(BoxCollider _enemy,int _state) {
 
 	int HitEnemy = HitBox(_enemy);
-
+	if (HitEnemy != 0 && _state == 0) {
+		return 5;
+	}
 	switch (HitEnemy)
 	{
 	case 1:
@@ -535,4 +544,20 @@ int Player::HitEnemy(BoxCollider _enemy) {
 		break;
 	}
 
+}
+
+bool Player::DamageCheck(BoxCollider _enemy, int _balloon, int _state) {
+	float thisY = y - h / 2;
+	float otherY = _enemy.GetCenterY();
+	if (thisY - otherY > 20 && _balloon == 1) {
+		BallonBreak(1);
+		return false;
+	}
+	else if (thisY - otherY < -20) {
+		return true;
+	}
+	else if (_state == 0 && _balloon != 1) {
+		return true;
+	}
+	return false;
 }
