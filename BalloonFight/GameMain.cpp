@@ -1,5 +1,6 @@
 #include "GameMain.h"
 #include "Map.h"
+#include"DxLib.h"
 
 GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 {
@@ -9,7 +10,7 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	ui = new UI;
-	fish = new Fish;
+	fish = new Fish(0);
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -126,7 +127,16 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 		ui->GameOver();
 	}
 
-	fish->Update();
+	if (fish != nullptr) {
+		fish->Update();
+	}
+
+// ‹›‚Ìˆ—
+	if (player->GetY() > SCREEN_HEIGHT-94  ) {
+		fish = new Fish(player->GetX());
+		fish->GetFlg();
+		StopSoundMem(Sounds::SE_Falling);
+	}
 
 	clsDx();/////////////////////////////////////////////////////////////
 	for (size_t i = 0; i < enemy.size(); i++) {

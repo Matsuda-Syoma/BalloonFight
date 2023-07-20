@@ -6,6 +6,9 @@
 class Fish: public BoxCollider
 {
 private:
+
+	Player* player;
+
 	bool flg;
 	float x, y;					// プレイヤーの座標
 	float w, h;					// プレイヤーの大きさ
@@ -19,7 +22,7 @@ private:
 public:
 
 	//コンストラクタ
-	Fish();
+	Fish(float _x);
 	//デストラクタ
 	~Fish();
 

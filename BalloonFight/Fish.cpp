@@ -3,13 +3,13 @@
 #include"DxLib.h"
 
 // コンストラクタ
-Fish::Fish()
+Fish::Fish(float _x)
 {
-	imagecnt = 0;
+	imagecnt = -1;
 	WeitTime = 0;
-	flg = true;
+	flg = false;
 
-	x = 300;
+	x = _x;
 	y = 400;
 	w = WIDTH;
 	h = HEIGHT;
@@ -26,7 +26,7 @@ Fish::~Fish()
 
 void Fish::Update()
 {
-	if (++WeitTime % 11 == 0) {
+	if (++WeitTime % 11 == 0 && flg ==true) {
 		imagecnt = imagecnt+1;
 	}
 	if (imagecnt >= 5) {
@@ -49,7 +49,7 @@ void Fish::Update()
 void Fish::Draw() const
 {
 	DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, false);
-	DrawRotaGraph(imageX, imageY, 1.0f, 0, image[imagecnt],true);
+	DrawRotaGraph(imageX, imageY, 1.0f, 0, image[imagecnt], true);
 	DrawBox(150, 400, 500, 480, 0x00ff00, 0);
 }
 
