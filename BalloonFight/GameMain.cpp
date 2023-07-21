@@ -10,6 +10,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 	player = new Player;
 	player->SetLife(_life);
 	ui = new UI;
+	fish = new Fish(0,0);
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -87,6 +88,7 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 		enemy.at(i).Draw();
 	}
 
+	fish->Draw();
 
 	for (size_t i = 0; i < bubble.size(); i++) {
 		bubble.at(i).Draw();
@@ -136,6 +138,23 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
+
+	if (fish != nullptr) {
+		fish->Update();
+	}
+
+	// ‹›‚Ìˆ—
+	if (player->GetY() > SCREEN_HEIGHT - 93 && player->GetX() > 170 && player->GetX() < 460 && player->GetFlg() == true) {
+		player->Miss(1);
+		fishflg = true;
+		fish = new Fish(player->GetX(), fishflg);
+		fish->GetFlg();
+		StopSoundMem(Sounds::SE_Falling);
+	}
+	else if (player->GetY() < SCREEN_HEIGHT - 94) {
+		fishflg = false;
+	}
+
 
 	// “G‚Ìˆ—
 	for (size_t i = 0; i < enemy.size(); i++) {
