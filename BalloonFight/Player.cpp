@@ -314,6 +314,15 @@ void Player::Miss(int i) {
 				missflg = true;
 			}
 			break;
+		case 1:
+			if (!missflg) {
+				AnimFlg = 0;
+				state = STATE::miss;
+				inertiaX = 0.0f;
+				inertiaY = -150.0f;
+				missflg = true;
+			}
+			break;
 		case 2:
 			if (!missflg) {
 				AnimFlg = 0;

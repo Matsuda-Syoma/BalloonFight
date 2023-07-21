@@ -1,5 +1,6 @@
 #include "GameMain.h"
 #include "Map.h"
+#include"DxLib.h"
 
 GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 {
@@ -9,7 +10,7 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	ui = new UI;
-	thunder = new Thunder;
+	fish = new Fish(0,0);
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -53,8 +54,6 @@ AbstractScene* GameMain::Update()	// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚ÌXV‚ğ‚·‚é
 		Game();
 	}
 	return this;
-
-	
 }
 
 void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
@@ -73,7 +72,6 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
-	thunder->Draw();
 
 	player->Draw();
 
@@ -99,6 +97,8 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	for (size_t i = 0; i < splash.size(); i++) {
 		splash.at(i).Draw();
 	}
+
+	fish->Draw();
 
 	ui->Draw();
 }
@@ -126,6 +126,23 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
+
+	if (fish != nullptr) {
+		fish->Update();
+	}
+
+// ‹›‚Ìˆ—
+	if (player->GetY() > SCREEN_HEIGHT-93 && player->GetX()>170 && player->GetX()<460 && player->GetFlg() == true) {
+		player->Miss(1);
+		fishflg = true;
+		fish = new Fish(player->GetX(), fishflg);
+		fish->GetFlg();
+		StopSoundMem(Sounds::SE_Falling);
+	}
+	else if (player->GetY() < SCREEN_HEIGHT - 94) {
+		fishflg = false;
+	}
+
 	clsDx();/////////////////////////////////////////////////////////////
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
@@ -193,5 +210,5 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 	}
 
 	ui->Update(Score,StageNum + 1);
-	thunder->Update();
+
 }
