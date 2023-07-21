@@ -16,7 +16,6 @@ Player::Player()			// コンストラクタ
 	w = WIDTH;
 	h = HEIGHT;
 	GroundspeedMax = 3.0f;
-	FlyspeedMax = 3.0f;
 	Init(3);
 	LoadImages();
 }
@@ -61,6 +60,8 @@ void Player::Update()		// プレイヤーの更新処理
 	box.top = y;
 	box.bottom = y + h;
 
+	FlyspeedMax = (balloon + 1);
+
 		// 落下処理
 	if (inertiaY < 150 && !landingflg || missflg) {
 		if (flg && groundflg) {	
@@ -89,7 +90,6 @@ void Player::Update()		// プレイヤーの更新処理
 		if (jumpdelay > 0) {
 			--jumpdelay;
 		}
-
 		// Aボタンを押したときに上に加速、Bで1回のみ
 		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0 || PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_B) && jumpdelay <= 0) {
 			AnimFlg = 0;
@@ -101,16 +101,16 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaY -= 15.0f;
 			}
 			if (inertiaY > 0) {
-				inertiaY -= 40.0f + (inertiaY / 6);
+				inertiaY -= 20.0f * (4 - balloon) + (inertiaY / 6);
 			}
 			else {
-				inertiaY -= 40.0f;				// 速度調整、いま上がるのが遅い
+				inertiaY -= 20.0f * (4 - balloon);				// 速度調整、いま上がるのが遅い
 			}
 			if (inertiaY < -150) {
 				inertiaY = -150;
 			}
 			// 右方向に入力したままAボタンを押したなら右に加速
-			if (inputX() >= 0.1) {
+			if (inputX() >= 0.3) {
 				inertiaX += 1.0f;
 				// 加速したときに速度上限なら速度を上限で固定
 				if (inertiaX > FlyspeedMax) {
@@ -118,7 +118,7 @@ void Player::Update()		// プレイヤーの更新処理
 				}
 			}
 			// 左方向に入力したままAボタンを押したなら左に加速
-			if (inputX() <= -0.1) {
+			if (inputX() <= -0.3) {
 				inertiaX -= 1.0f;
 				// 加速したときに速度上限なら速度を上限で固定
 				if (inertiaX < -FlyspeedMax) {
@@ -128,7 +128,7 @@ void Player::Update()		// プレイヤーの更新処理
 		}
 
 		// 右入力
-		if (inputX() >= 0.1) {
+		if (inputX() >= 0.3) {
 			imageReverse = true;
 			if (inertiaX < FlyspeedMax && !landingflg) {
 				inertiaX += 0.001f;
@@ -145,7 +145,7 @@ void Player::Update()		// プレイヤーの更新処理
 		}
 
 		// 左入力
-		if (inputX() <= -0.1) {
+		if (inputX() <= -0.3) {
 			imageReverse = false;
 			if (inertiaX > -FlyspeedMax && !landingflg) {
 				inertiaX -= 0.001f;
@@ -155,13 +155,13 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaX += -startX + 0.05f;
 			}
 		}
-		else if (inputX() == 0 && inertiaX < 0 && landingflg) {
+		else if (fabsf(inputX()) < 0.1 && inertiaX < 0 && landingflg) {
 			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX += startX;
 		}
 
-		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f && landingflg) {
+		if (fabsf(inputX()) < 0.1 && inertiaX < 0.15f && inertiaX > -0.15f && landingflg) {
 			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX = 0;
@@ -240,20 +240,20 @@ bool Player::IsFly(Stage box){
 	if (HitStage == 2) {
 		//y = GetBoxSide(box, 2) - (y - GetBoxSide(box, 2));
 		y = GetBoxSide(box, 2) + 1;
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 	}
 	// 左にあたった時の判定
 	if (HitStage == 3) {
 		x = GetBoxSide(box, 3) - (w + 1);
 		imageReverse = !imageReverse;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 	}
 	// 右にあたった時の判定
 	if (HitStage == 4) {
 		//x = GetBoxSide(box, 4) - (x - GetBoxSide(box, 4));
 		x = GetBoxSide(box, 4) + 1;
 		imageReverse = !imageReverse;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 	}
 	landingflg = false;
 	return false;
@@ -307,6 +307,7 @@ void Player::Miss(int i) {
 	switch (i) {
 		case 0:
 			if (!missflg) {
+				AnimUpdateTime = 0;
 				AnimFlg = 0;
 				state = STATE::miss;
 				inertiaX = 0.0f;
@@ -325,6 +326,7 @@ void Player::Miss(int i) {
 			break;
 		case 2:
 			if (!missflg) {
+				AnimUpdateTime = 0;
 				AnimFlg = 0;
 				state = STATE::thunder;
 				inertiaX = 0.0f;
@@ -338,6 +340,10 @@ void Player::Miss(int i) {
 // プレイヤーのライフを返す
 int Player::GetLife() {
 	return life;
+}
+
+void Player::SetLife(int _life) {
+	life = _life;
 }
 
 // アニメーションの更新
@@ -513,30 +519,32 @@ void Player::AnimUpdate() {
 	}
 }
 
-int Player::HitEnemy(BoxCollider _enemy) {
+int Player::HitEnemy(BoxCollider _enemy,int _state) {
 
 	int HitEnemy = HitBox(_enemy);
-
+	if (HitEnemy != 0 && _state == 0) {
+		return 5;
+	}
 	switch (HitEnemy)
 	{
 	case 1:
 		y = GetBoxSide(_enemy, 1) - (h + 1);
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 		return 1;
 		break;
 	case 2:
 		y = GetBoxSide(_enemy, 2) + 1;
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 		return 2;
 		break;
 	case 3:
 		x = GetBoxSide(_enemy, 3) - (w + 1);
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 		return 3;
 		break;
 	case 4:
 		x = GetBoxSide(_enemy, 4) + 1;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 		return 4;
 		break;
 	default:
@@ -544,4 +552,20 @@ int Player::HitEnemy(BoxCollider _enemy) {
 		break;
 	}
 
+}
+
+bool Player::DamageCheck(BoxCollider _enemy, int _balloon, int _state) {
+	float thisY = y - h / 2;
+	float otherY = _enemy.GetCenterY();
+	if (thisY - otherY > 20 && _balloon == 1) {
+		BallonBreak(1);
+		return false;
+	}
+	else if (thisY - otherY < -20) {
+		return true;
+	}
+	else if (_state == 0 && _balloon != 1) {
+		return true;
+	}
+	return false;
 }

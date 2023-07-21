@@ -37,3 +37,22 @@ void Sounds::LoadSounds() {
 
 	ChangeVolumeSoundMem(127, SE_PlayerJump);
 }
+
+void Sounds::AllStop() {
+	StopSoundMem(BGM_Trip);
+	StopSoundMem(SE_Bubble);
+	StopSoundMem(SE_crack);
+	StopSoundMem(SE_DefeatTheEnemy);
+	StopSoundMem(SE_Eatable);
+	StopSoundMem(SE_EnemyMove);
+	StopSoundMem(SE_Falling);
+	StopSoundMem(SE_GameOver);
+	StopSoundMem(SE_parachute);
+	StopSoundMem(SE_Perfect);
+	StopSoundMem(SE_PlayerJump);
+	StopSoundMem(SE_PlayerWalk);
+	StopSoundMem(SE_Restart);
+	StopSoundMem(SE_Splash);
+	StopSoundMem(SE_StageClear);
+	StopSoundMem(SE_Start);
+}

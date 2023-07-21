@@ -1,14 +1,14 @@
 #include "GameMain.h"
 #include "Map.h"
-#include"DxLib.h"
-
-GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
+GameMain::GameMain(int _score, int _stage, int _life)				// ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½
 {
+	StageSwitch = false;
+	StageSwitchTime = 0;
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
-	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
+	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0);
 	thunder = new Thunder;
@@ -27,7 +27,7 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 		for (int j = 0; j < MAP_SIZE; j++) {
 			work[j] = LoadMap[StageNum][i][j];
 		}
-		// “Ç‚İ‚ñ‚¾À•W‚ªã‰ºA¶‰E‘«‚µ‚Ä‚Ç‚¿‚ç‚Æ‚à0‚æ‚è‘å‚«‚¢‚È‚ç‘«ê‚Éî•ñ‚ğ“n‚·
+		// ï¿½Ç‚İï¿½ï¿½ñ‚¾ï¿½ï¿½Wï¿½ï¿½ï¿½ã‰ºï¿½Aï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ç‚ï¿½ï¿½ï¿½Æ‚ï¿½0ï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½È‚ç‘«ï¿½ï¿½Éï¿½ï¿½ï¿½nï¿½ï¿½
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
 			stage.emplace_back(work[0], work[1], work[2], work[3],imagework);
 		}
@@ -40,24 +40,33 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 
 }
 
-GameMain::~GameMain()				// ‚±‚±‚Ådelete‚È‚Ç‚ğ‚·‚é
+GameMain::~GameMain()				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½deleteï¿½È‚Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	StopSoundMem(Sounds::BGM_Trip);
 }
 
-AbstractScene* GameMain::Update()	// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚ÌXV‚ğ‚·‚é
+AbstractScene* GameMain::Update()	// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
-		return new GameMain(Score,++StageNum);
+		Sounds::AllStop();
+		return new GameMain(Score,++StageNum,player->GetLife());
 	}
 	if (!Pause) {
 		Game();
 	}
+	if (StageSwitch) {
+		Pause = true;
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_StageClear, DX_PLAYTYPE_BACK, false);
+		if (++StageSwitchTime > 120) {
+			return new GameMain(Score, ++StageNum,player->GetLife());
+		}
+	}
 	return this;
 }
 
-void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
+void GameMain::Draw() const			// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Ì•`ï¿½ï¿½
 {
 	int PlayerLife = player->GetLife();
 
@@ -101,13 +110,15 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 		splash.at(i).Draw();
 	}
 
-	fish->Draw();
-
 	ui->Draw();
 }
 
-void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
+void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
+	if (CheckSoundMem(Sounds::BGM_Trip) == 0) {
+		PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
+	}
+	
 	player->Update();
 	if (player->GetFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {
@@ -120,7 +131,7 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 		player->Miss(0);
 	}
 
-	// ‰æ–Ê‰º‚És‚Á‚½ê‡ƒ~ƒX
+	// ï¿½ï¿½Ê‰ï¿½ï¿½Ésï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½~ï¿½X
 	if (player->GetY() > SCREEN_HEIGHT && !player->GetSpawnFlg()) {
 		player->SetSpawnFlg(true);
 		StopSoundMem(Sounds::SE_Falling);
@@ -130,44 +141,86 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 		ui->GameOver();
 	}
 
-	if (fish != nullptr) {
-		fish->Update();
-	}
-
-// ‹›‚Ìˆ—
-	if (player->GetY() > SCREEN_HEIGHT-93 && player->GetX()>170 && player->GetX()<460 && player->GetFlg() == true) {
-		player->Miss(1);
-		fishflg = true;
-		fish = new Fish(player->GetX(), fishflg);
-		fish->GetFlg();
-		StopSoundMem(Sounds::SE_Falling);
-	}
-	else if (player->GetY() < SCREEN_HEIGHT - 94) {
-		fishflg = false;
-	}
-
-	clsDx();/////////////////////////////////////////////////////////////
+	// ï¿½Gï¿½Ìï¿½ï¿½ï¿½
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
-		for (size_t j = 0; j < stage.size(); j++) {
-			if (enemy.at(i).IsFly(stage.at(j))) {
-				break;
+		if (!enemy.at(i).GetDeathFlg()) {
+			// ï¿½Gï¿½ÆƒXï¿½eï¿½[ï¿½Wï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
+			for (size_t j = 0; j < stage.size(); j++) {
+				if (enemy.at(i).IsFly(stage.at(j))) {
+					break;
+				}
+			}
+			// ï¿½Gï¿½ï¿½ï¿½mï¿½ï¿½ï¿½Ë•Ô‚ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½
+			for (size_t j = 0; j < enemy.size(); j++) {
+				if (!enemy.at(j).GetDeathFlg()) {
+					enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
+				}
+
+			}
+			// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½È‚ç“–ï¿½ï¿½ï¿½è”»ï¿½è‚ªï¿½ï¿½ï¿½ï¿½
+			if (player->GetFlg()) {
+				int Hit = player->HitEnemy(enemy.at(i),enemy.at(i).GetState());
+				if (Hit != 0) {
+					if (Hit != 5) {
+						if (enemy.at(i).GetBalloon() != 0) {
+							enemy.at(i).ChangeInertia(*player, Hit);
+						}
+						
+						if (player->DamageCheck(enemy.at(i), enemy.at(i).GetBalloon(), enemy.at(i).GetState())) {
+							if (enemy.at(i).GetBalloon() != 0) {
+								Score += 500;
+								scoreUP.emplace_back(500, player->GetX(), player->GetY());
+							}
+							else {
+								Score += 1000;
+								scoreUP.emplace_back(1000, player->GetX(), player->GetY());
+							}
+							enemy.at(i).BallonBreak(1);
+						}
+					}
+					// ï¿½nï¿½Ê‚É—ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Í’ï¿½ï¿½Ë•Ô‚ç‚¸ï¿½É“|ï¿½ï¿½ï¿½
+					else {
+						Score += 750;
+						scoreUP.emplace_back(750, player->GetX(), player->GetY());
+						enemy.at(i).BallonBreak(1);
+					}
+				}
 			}
 		}
-		if (player->GetFlg()) {
-			enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+
+		if (enemy.at(i).GetBalloon() != 0) {
+			parachuteflg = false;
 		}
-		for (size_t j = 0; j < enemy.size(); j++) {
-			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
+		else {
+			parachuteflg = true;
+			continue;
 		}
+		// ï¿½ï¿½ÊŠOï¿½Ésï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½Ô‚ï¿½ï¿½Æ–Aï¿½ï¿½ï¿½Å‚ï¿½
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
 			splash.emplace_back(enemy.at(i).GetX());
 			bubble.emplace_back(enemy.at(i).GetX());
 			enemy.at(i).SetFlg(false);
 		}
+		// ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚È‚ï¿½ï¿½È‚ï¿½íœ
 		if (!enemy.at(i).GetFlg()) {
 			enemy.erase(enemy.begin() + i);
 			continue;
+		}
+	}
+	if (parachuteflg) {
+		if (CheckSoundMem(Sounds::SE_parachute) == 0) {
+			PlaySoundMem(Sounds::SE_parachute, DX_PLAYTYPE_BACK, true);
+		}
+	}
+	else {
+		StopSoundMem(Sounds::SE_parachute);
+	}
+
+	StageSwitch = true;
+	for (size_t i = 0; i < enemy.size(); i++) {
+		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
+			StageSwitch = false;
 		}
 	}
 
@@ -214,4 +267,5 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 
 	ui->Update(Score,StageNum + 1);
 	thunder->Update();
+
 }
