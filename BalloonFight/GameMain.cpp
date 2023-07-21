@@ -1,6 +1,6 @@
 #include "GameMain.h"
 #include "Map.h"
-GameMain::GameMain(int _score, int _stage, int _life)				// ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½
+GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 {
 	StageSwitch = false;
 	StageSwitchTime = 0;
@@ -11,7 +11,6 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½
 	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0);
-	thunder = new Thunder;
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -27,7 +26,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½
 		for (int j = 0; j < MAP_SIZE; j++) {
 			work[j] = LoadMap[StageNum][i][j];
 		}
-		// ï¿½Ç‚İï¿½ï¿½ñ‚¾ï¿½ï¿½Wï¿½ï¿½ï¿½ã‰ºï¿½Aï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ç‚ï¿½ï¿½ï¿½Æ‚ï¿½0ï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½È‚ç‘«ï¿½ï¿½Éï¿½ï¿½ï¿½nï¿½ï¿½
+		// “Ç‚İ‚ñ‚¾À•W‚ªã‰ºA¶‰E‘«‚µ‚Ä‚Ç‚¿‚ç‚Æ‚à0‚æ‚è‘å‚«‚¢‚È‚ç‘«ê‚Éî•ñ‚ğ“n‚·
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
 			stage.emplace_back(work[0], work[1], work[2], work[3],imagework);
 		}
@@ -40,12 +39,12 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½
 
 }
 
-GameMain::~GameMain()				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½deleteï¿½È‚Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½
+GameMain::~GameMain()				// ‚±‚±‚Ådelete‚È‚Ç‚ğ‚·‚é
 {
 	StopSoundMem(Sounds::BGM_Trip);
 }
 
-AbstractScene* GameMain::Update()	// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+AbstractScene* GameMain::Update()	// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚ÌXV‚ğ‚·‚é
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
@@ -66,7 +65,7 @@ AbstractScene* GameMain::Update()	// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿
 	return this;
 }
 
-void GameMain::Draw() const			// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Ì•`ï¿½ï¿½
+void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 {
 	int PlayerLife = player->GetLife();
 
@@ -79,8 +78,6 @@ void GameMain::Draw() const			// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½
 		}
 	}
 
-	thunder->Draw();
-
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
@@ -91,6 +88,7 @@ void GameMain::Draw() const			// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½
 		enemy.at(i).Draw();
 	}
 
+	fish->Draw();
 
 	for (size_t i = 0; i < bubble.size(); i++) {
 		bubble.at(i).Draw();
@@ -113,7 +111,7 @@ void GameMain::Draw() const			// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½
 	ui->Draw();
 }
 
-void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 {
 	if (CheckSoundMem(Sounds::BGM_Trip) == 0) {
 		PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
@@ -131,7 +129,7 @@ void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï
 		player->Miss(0);
 	}
 
-	// ï¿½ï¿½Ê‰ï¿½ï¿½Ésï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½~ï¿½X
+	// ‰æ–Ê‰º‚És‚Á‚½ê‡ƒ~ƒX
 	if (player->GetY() > SCREEN_HEIGHT && !player->GetSpawnFlg()) {
 		player->SetSpawnFlg(true);
 		StopSoundMem(Sounds::SE_Falling);
@@ -141,24 +139,41 @@ void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï
 		ui->GameOver();
 	}
 
-	// ï¿½Gï¿½Ìï¿½ï¿½ï¿½
+	if (fish != nullptr) {
+		fish->Update();
+	}
+
+	// ‹›‚Ìˆ—
+	if (player->GetY() > SCREEN_HEIGHT - 93 && player->GetX() > 170 && player->GetX() < 460 && player->GetFlg() == true) {
+		player->Miss(1);
+		fishflg = true;
+		fish = new Fish(player->GetX(), fishflg);
+		fish->GetFlg();
+		StopSoundMem(Sounds::SE_Falling);
+	}
+	else if (player->GetY() < SCREEN_HEIGHT - 94) {
+		fishflg = false;
+	}
+
+
+	// “G‚Ìˆ—
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
 		if (!enemy.at(i).GetDeathFlg()) {
-			// ï¿½Gï¿½ÆƒXï¿½eï¿½[ï¿½Wï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
+			// “G‚ÆƒXƒe[ƒW‚Ì“–‚½‚è”»’è
 			for (size_t j = 0; j < stage.size(); j++) {
 				if (enemy.at(i).IsFly(stage.at(j))) {
 					break;
 				}
 			}
-			// ï¿½Gï¿½ï¿½ï¿½mï¿½ï¿½ï¿½Ë•Ô‚ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½
+			// “G“¯m’µ‚Ë•Ô‚é‚æ‚¤‚É‚·‚é
 			for (size_t j = 0; j < enemy.size(); j++) {
 				if (!enemy.at(j).GetDeathFlg()) {
 					enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
 				}
 
 			}
-			// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½È‚ç“–ï¿½ï¿½ï¿½è”»ï¿½è‚ªï¿½ï¿½ï¿½ï¿½
+			// ƒvƒŒƒCƒ„[‚Ìƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚È‚ç“–‚½‚è”»’è‚ª‚ ‚é
 			if (player->GetFlg()) {
 				int Hit = player->HitEnemy(enemy.at(i),enemy.at(i).GetState());
 				if (Hit != 0) {
@@ -179,7 +194,7 @@ void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï
 							enemy.at(i).BallonBreak(1);
 						}
 					}
-					// ï¿½nï¿½Ê‚É—ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Í’ï¿½ï¿½Ë•Ô‚ç‚¸ï¿½É“|ï¿½ï¿½ï¿½
+					// ’n–Ê‚É—§‚Á‚Ä‚¢‚é‚Æ‚«‚Í’µ‚Ë•Ô‚ç‚¸‚É“|‚ê‚é
 					else {
 						Score += 750;
 						scoreUP.emplace_back(750, player->GetX(), player->GetY());
@@ -196,13 +211,13 @@ void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï
 			parachuteflg = true;
 			continue;
 		}
-		// ï¿½ï¿½ÊŠOï¿½Ésï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½Ô‚ï¿½ï¿½Æ–Aï¿½ï¿½ï¿½Å‚ï¿½
+		// ‰æ–ÊŠO‚És‚Á‚½‚ç‚µ‚Ô‚«‚Æ–A‚ª‚Å‚é
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
 			splash.emplace_back(enemy.at(i).GetX());
 			bubble.emplace_back(enemy.at(i).GetX());
 			enemy.at(i).SetFlg(false);
 		}
-		// ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚È‚ï¿½ï¿½È‚ï¿½íœ
+		// ƒtƒ‰ƒO‚ª‚½‚Á‚Ä‚È‚¢‚È‚çíœ
 		if (!enemy.at(i).GetFlg()) {
 			enemy.erase(enemy.begin() + i);
 			continue;
@@ -266,6 +281,4 @@ void GameMain::Game()				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒQï¿½[ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï
 	}
 
 	ui->Update(Score,StageNum + 1);
-	thunder->Update();
-
 }
