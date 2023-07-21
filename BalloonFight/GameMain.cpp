@@ -9,6 +9,7 @@ GameMain::GameMain(int _score, int _stage)				// ここで初期化
 	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
 	ui = new UI;
+	thunder = new Thunder;
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -52,6 +53,8 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 		Game();
 	}
 	return this;
+
+	
 }
 
 void GameMain::Draw() const			// ここでゲームメインの描画
@@ -70,6 +73,7 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
 	}
+	thunder->Draw();
 
 	player->Draw();
 
@@ -189,5 +193,5 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	}
 
 	ui->Update(Score,StageNum + 1);
-
+	thunder->Update();
 }

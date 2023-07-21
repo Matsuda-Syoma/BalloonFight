@@ -3,6 +3,7 @@
 Thunder::Thunder()
 {
 	FlashCount = 0;
+	BallCount = 0;
 	LoadImages();
 }
 
@@ -15,6 +16,13 @@ void Thunder::Update()
 	
 	if (FlashCount < 100) {
 		FlashCount++;
+	}
+	if (BallCount < 3){
+		BallCount++;
+	
+		if (BallCount == 3) {
+		BallCount = 0;
+		}
 	}
 }
 
@@ -30,6 +38,17 @@ void Thunder::Draw() const
 		(DrawGraph(200, 100, CloudImg[0], TRUE));
 	}
 
+	if (FlashCount == 100) {
+		if (BallCount == 3) {
+			DrawGraph(400, 100, ThunBallImg[1], TRUE);
+		}
+		else if (BallCount == 2) {
+			(DrawGraph(400, 100, ThunBallImg[2], TRUE));
+		}
+		else {
+			(DrawGraph(400, 100, ThunBallImg[0], TRUE));
+		}
+	} 
 }
 
 //‰æ‘œ“Çž

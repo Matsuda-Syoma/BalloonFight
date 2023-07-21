@@ -6,6 +6,7 @@
 #include"Enemy.h"
 #include "Stage.h"
 #include"bubble.h"
+#include"Thunder.h"
 #include"UI.h"
 #include "ScoreUP.h"
 #include "Splash.h"
@@ -20,6 +21,7 @@ private:
 	std::vector<Splash>splash;
 	std::vector<Enemy>enemy;
 	std::vector<Bubble>bubble;
+	//std::vector<Thunder>thunder;
 
 	int Score;
 	bool Pause;
@@ -32,6 +34,7 @@ public:
 	// クラスのオブジェクト
 	Player* player;		// プレイヤーのクラス
 	UI* ui;
+	Thunder* thunder;
 
 	//Stage* stage;		// ステージのクラス
 	virtual AbstractScene* Update() override;	// 描画以外の更新を実行
