@@ -11,6 +11,7 @@ GameMain::GameMain(int _score, int _stage)				// ‚±‚±‚Å‰Šú‰»
 	player = new Player;
 	ui = new UI;
 	fish = new Fish(0,0);
+	thunder = new Thunder;
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -68,6 +69,8 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 			DrawGraph(150 - (15 * i), 30, LifeImg, TRUE);
 		}
 	}
+
+	thunder->Draw();
 
 	for (size_t i = 0; i < stage.size(); i++) {
 		stage.at(i).Draw();
@@ -210,5 +213,5 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	}
 
 	ui->Update(Score,StageNum + 1);
-
+	thunder->Update();
 }
