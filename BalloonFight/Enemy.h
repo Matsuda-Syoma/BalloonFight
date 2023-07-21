@@ -16,8 +16,8 @@ private:
 	bool groundflg;					// 着地したか
 
 	bool deathflg;					// ミスしたときのフラグ
-	bool animflg;					// ミスしたときのフラグ
 	int balloon;					// 風船の数
+	int color;						// 色
 	int HitStage;					// どこに当たったか
 	float x, y;						// 座標
 	float w, h;						// 大きさ
@@ -28,7 +28,7 @@ private:
 	float inertiaX, inertiaY;		// 慣性
 	float imageX, imageY;			// 画像の座標
 	bool imageReverse;				// 向いてる方向
-	int images[40];
+	int images[40][3];
 	int AnimImg;
 	int MoveX;
 	int MoveY;

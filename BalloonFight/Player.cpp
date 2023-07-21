@@ -90,7 +90,6 @@ void Player::Update()		// プレイヤーの更新処理
 		if (jumpdelay > 0) {
 			--jumpdelay;
 		}
-
 		// Aボタンを押したときに上に加速、Bで1回のみ
 		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0 || PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_B) && jumpdelay <= 0) {
 			AnimFlg = 0;
@@ -111,7 +110,7 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaY = -150;
 			}
 			// 右方向に入力したままAボタンを押したなら右に加速
-			if (inputX() >= 0.1) {
+			if (inputX() >= 0.3) {
 				inertiaX += 1.0f;
 				// 加速したときに速度上限なら速度を上限で固定
 				if (inertiaX > FlyspeedMax) {
@@ -119,7 +118,7 @@ void Player::Update()		// プレイヤーの更新処理
 				}
 			}
 			// 左方向に入力したままAボタンを押したなら左に加速
-			if (inputX() <= -0.1) {
+			if (inputX() <= -0.3) {
 				inertiaX -= 1.0f;
 				// 加速したときに速度上限なら速度を上限で固定
 				if (inertiaX < -FlyspeedMax) {
@@ -129,7 +128,7 @@ void Player::Update()		// プレイヤーの更新処理
 		}
 
 		// 右入力
-		if (inputX() >= 0.1) {
+		if (inputX() >= 0.3) {
 			imageReverse = true;
 			if (inertiaX < FlyspeedMax && !landingflg) {
 				inertiaX += 0.001f;
@@ -146,7 +145,7 @@ void Player::Update()		// プレイヤーの更新処理
 		}
 
 		// 左入力
-		if (inputX() <= -0.1) {
+		if (inputX() <= -0.3) {
 			imageReverse = false;
 			if (inertiaX > -FlyspeedMax && !landingflg) {
 				inertiaX -= 0.001f;
@@ -156,13 +155,13 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaX += -startX + 0.05f;
 			}
 		}
-		else if (inputX() == 0 && inertiaX < 0 && landingflg) {
+		else if (fabsf(inputX()) < 0.1 && inertiaX < 0 && landingflg) {
 			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX += startX;
 		}
 
-		if (inputX() == 0 && inertiaX < 0.15f && inertiaX > -0.15f && landingflg) {
+		if (fabsf(inputX()) < 0.1 && inertiaX < 0.15f && inertiaX > -0.15f && landingflg) {
 			AnimFlg = 0;
 			state = STATE::stay;
 			inertiaX = 0;
@@ -241,20 +240,20 @@ bool Player::IsFly(Stage box){
 	if (HitStage == 2) {
 		//y = GetBoxSide(box, 2) - (y - GetBoxSide(box, 2));
 		y = GetBoxSide(box, 2) + 1;
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 	}
 	// 左にあたった時の判定
 	if (HitStage == 3) {
 		x = GetBoxSide(box, 3) - (w + 1);
 		imageReverse = !imageReverse;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 	}
 	// 右にあたった時の判定
 	if (HitStage == 4) {
 		//x = GetBoxSide(box, 4) - (x - GetBoxSide(box, 4));
 		x = GetBoxSide(box, 4) + 1;
 		imageReverse = !imageReverse;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 	}
 	landingflg = false;
 	return false;
@@ -521,22 +520,22 @@ int Player::HitEnemy(BoxCollider _enemy,int _state) {
 	{
 	case 1:
 		y = GetBoxSide(_enemy, 1) - (h + 1);
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 		return 1;
 		break;
 	case 2:
 		y = GetBoxSide(_enemy, 2) + 1;
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 		return 2;
 		break;
 	case 3:
 		x = GetBoxSide(_enemy, 3) - (w + 1);
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 		return 3;
 		break;
 	case 4:
 		x = GetBoxSide(_enemy, 4) + 1;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 		return 4;
 		break;
 	default:

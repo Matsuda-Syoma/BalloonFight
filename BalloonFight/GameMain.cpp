@@ -47,6 +47,7 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
+		Sounds::AllStop();
 		return new GameMain(Score,++StageNum,player->GetLife());
 	}
 	if (!Pause) {
@@ -54,7 +55,7 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 	}
 	if (StageSwitch) {
 		Pause = true;
-		StopSoundMem(Sounds::BGM_Trip);
+		Sounds::AllStop();
 		PlaySoundMem(Sounds::SE_StageClear, DX_PLAYTYPE_BACK, false);
 		if (++StageSwitchTime > 120) {
 			return new GameMain(Score, ++StageNum,player->GetLife());

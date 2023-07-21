@@ -12,7 +12,6 @@ Enemy::Enemy(float _x,float _y)
 	AnimImg = 0;
 
 	flg = true;
-	animflg = false;
 	imageReverse = true;
 	deathflg = false;
 
@@ -20,6 +19,7 @@ Enemy::Enemy(float _x,float _y)
 	y = _y - WIDTH;
 
 	balloon = 1;
+	color = GetRand(2);
 
 	FlyspeedMax = 2;
 	inertiaX = 0;
@@ -145,29 +145,17 @@ void Enemy::Update()
 void Enemy::Draw() const
 {
 	// 画像設定　画像表示番号　画像種別フラグ
-	DrawRotaGraph(imageX, imageY, 1.0f, 0, images[AnimImg], true, imageReverse);
+	DrawRotaGraph(imageX, imageY, 1.0f, 0, images[color][AnimImg], true, imageReverse);
 	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xffffff, false);
 	DrawFormatString((int)box.left + 14, (int)box.top,0xffffff, "%d", balloon);
+	DrawFormatString((int)box.left + 14, (int)box.top - 20,0xffffff, "%d", color);
 }
 
 void Enemy::LoadImages()
 {
-	switch (GetRand(2))
-	{
-	case 0:
-		LoadDivGraph("Resources/images/Enemy/Enemy_G_Animation.png", 18, 6, 3, 64, 64, images);
-		break;
-	case 1:
-		LoadDivGraph("Resources/images/Enemy/Enemy_P_Animation.png", 18, 6, 3, 64, 64, images);
-		break;
-	case 2:
-		LoadDivGraph("Resources/images/Enemy/Enemy_R_Animation.png", 18, 6, 3, 64, 64, images);
-		break;
-	default:
-		break;
-	}
-	//	分割画像のimages値の画像を表示
-	// 敵の画像実装されたらEnemy_P_Animation.png
+	LoadDivGraph("Resources/images/Enemy/Enemy_G_Animation.png", 18, 6, 3, 64, 64, images[0]);
+	LoadDivGraph("Resources/images/Enemy/Enemy_R_Animation.png", 18, 6, 3, 64, 64, images[1]);
+	LoadDivGraph("Resources/images/Enemy/Enemy_P_Animation.png", 18, 6, 3, 64, 64, images[2]);
 }
 
 bool Enemy::IsFly(Stage box) {
@@ -252,19 +240,19 @@ void Enemy::ChangeInertia(BoxCollider _player, int i) {
 	{
 	case 1:
 		y = GetBoxSide(_player, 2) + 1;
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 		break;
 	case 2:
 		y = GetBoxSide(_player, 1) - (h + 1);
-		inertiaY *= -0.8f;
+		inertiaY *= -RESTITUTION_COEFFICIENT;
 		break;
 	case 3:
 		x = GetBoxSide(_player, 4) + 1;
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 		break;
 	case 4:
 		x = GetBoxSide(_player, 3) - (w + 1);
-		inertiaX *= -0.8f;
+		inertiaX *= -RESTITUTION_COEFFICIENT;
 		break;
 	default:
 		break;
