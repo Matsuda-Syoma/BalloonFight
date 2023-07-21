@@ -13,6 +13,7 @@ Enemy::Enemy(float _x,float _y)
 
 	flg = true;
 	imageReverse = true;
+	deathflg = false;
 
 	x = _x;
 	y = _y - WIDTH;
@@ -31,6 +32,8 @@ Enemy::Enemy(float _x,float _y)
 	MaxRandomMoveX = GetRand(5) + 1 * FRAMERATE;
 	MaxRandomMoveY = GetRand(2) + 2* FRAMERATE;
 	jumpdelay = 0;
+
+	state = STATE::stay;
 
 	LoadImages();
 }
@@ -57,12 +60,15 @@ void Enemy::Update()
 	box.top = y;
 	box.bottom = y + h;
 
-	if (inertiaY < 75 && !landingflg || missflg) {
-		if (flg && groundflg) {
+	if (inertiaY < 150 / (2 - balloon) && !landingflg || deathflg) {
+		if (!deathflg && groundflg) {
 			//AnimFlg = 0;
 			state = STATE::fly;
 		}
 		inertiaY += 1.0;
+		if (deathflg) {
+			inertiaY += 4.0;
+		}
 	}
 
 	groundflg = landingflg;
@@ -77,7 +83,9 @@ void Enemy::Update()
 		MaxRandomMoveX = GetRand(2) + 3 * FRAMERATE;
 	}
 	// 横移動する
-	inertiaX += MoveX * 0.01;
+	if (state == STATE::fly) {
+		inertiaX += MoveX * 0.01;
+	}
 	// 速度上限を超えたら速度を固定する
 	if (inertiaX > FlyspeedMax) {
 		inertiaX = FlyspeedMax;
@@ -92,7 +100,7 @@ void Enemy::Update()
 		MaxRandomMoveY = GetRand(3) + 2 * FRAMERATE;
 	}
 	// 上昇する
-	if (MoveY == 1 && jumpdelay <= 0) {
+	if (MoveY == 1 && jumpdelay <= 0 && balloon == 1) {
 		//AnimFlg = 0;
 		state = STATE::fly;
 		if (!CheckSoundMem(Sounds::SE_EnemyMove)) {
@@ -113,7 +121,6 @@ void Enemy::Update()
 		if (inertiaY < -75) {
 			inertiaY = -75;
 		}
-
 	}
 
 	// 画面外に出たら反対側から出てくる
@@ -158,8 +165,14 @@ bool Enemy::IsFly(Stage box) {
 		landingflg = true;
 		if (!groundflg && jumpdelay <= 0) {
 			inertiaY = 0;
-			//inertiaX = 0;
+			MoveY = 1;
+			RandomMoveY = 0;
+			MaxRandomMoveY = GetRand(3) + 2 * FRAMERATE;
 			groundflg = true;
+			if (balloon != 1) {
+				state = STATE::stay;
+				inertiaX = 0;
+			}
 		}
 		if (jumpdelay <= DELAY - 1) {
 			y = GetBoxSide(box, 1) - h;
@@ -208,6 +221,18 @@ bool Enemy::GetFlg() {
 
 void Enemy::SetFlg(bool _flg) {
 	flg = _flg;
+}
+
+bool Enemy::GetDeathFlg() {
+	return deathflg;
+}
+
+int Enemy::GetBalloon() {
+	return balloon;
+}
+
+int Enemy::GetState() {
+	return (int)state;
 }
 
 void Enemy::ChangeInertia(BoxCollider _player, int i) {
@@ -282,13 +307,57 @@ int Enemy::HitEnemy(BoxCollider _enemy) {
 
 }
 
+void Enemy::BallonBreak(int i) {
+	PlaySoundMem(Sounds::SE_Splash, DX_PLAYTYPE_BACK, true);
+	//AnimUpdateTime = 31;
+	if (state == STATE::stay) {
+		//AnimImg += 3;
+	}
+	if (state == STATE::fly) {
+		//AnimImg += 5;
+	}
+	balloon -= i;
+	inertiaX = 0;
+	inertiaY = 0;
+	if (balloon < 0) {
+		Death(0);
+	}
+}
+
+
+// 0が落下、1がさかな
+void Enemy::Death(int i) {
+	switch (i) {
+	case 0:
+		if (!deathflg) {
+			//AnimUpdateTime = 0;
+			//AnimFlg = 0;
+			state = STATE::miss;
+			inertiaX = 0.0f;
+			inertiaY = -100.0f;
+			deathflg = true;
+		}
+		break;
+	case 1:
+		if (!deathflg) {
+			//AnimUpdateTime = 0;
+			//AnimFlg = 0;
+			//state = STATE::thunder;
+			inertiaX = 0.0f;
+			inertiaY = 0.0f;
+			deathflg = true;
+		}
+		break;
+	}
+}
+
+
+
 void Enemy::AnimUpdate()
 {
 	switch (state)
 	{
 	case STATE::stay:
-		break;
-	case STATE::walk:
 		break;
 	case STATE::fly:
 		break;

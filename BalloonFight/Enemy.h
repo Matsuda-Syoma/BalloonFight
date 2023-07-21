@@ -10,23 +10,12 @@ class Enemy : public BoxCollider
 {
 private:
 
-	enum class STATE {
-		stay = 0,
-		walk,
-		fly,
-		miss,
-	};
-	STATE state;
-
 	bool flg;
 
-	bool landingflg;					// 適が地面に立っているか
-	bool groundflg;					// 適が着地したか
+	bool landingflg;				// 地面に立っているか
+	bool groundflg;					// 着地したか
 
 	bool missflg;				// ミスしたときのフラグ
-	bool animflg;				// ミスしたときのフラグ
-	int life;					// 適の残機
-	int ballon;					// 適の風船の数
 	bool deathflg;					// ミスしたときのフラグ
 	int balloon;					// 風船の数
 	int color;						// 色
@@ -56,6 +45,15 @@ private:
 	static const int DELAY = 9;
 
 public:
+
+	enum class STATE : int {
+		stay = 0,
+		balloonspawn,
+		fly,
+		miss,
+	};
+	STATE state;
+
 	// コンストラクタ
 
 	Enemy(float _x, float _y);
@@ -73,8 +71,13 @@ public:
 	float GetY();
 	bool GetFlg();
 	void SetFlg(bool _flg);
+	bool GetDeathFlg();
+	int GetBalloon();
+	int GetState();
 	void ChangeInertia(BoxCollider _player, int i);
 	int HitEnemy(BoxCollider _enemy);
+	void BallonBreak(int i);
+	void Death(int i);
 	void AnimUpdate();					// アニメーションの更新
 };
 
