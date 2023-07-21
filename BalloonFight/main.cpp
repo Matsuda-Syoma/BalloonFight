@@ -10,7 +10,7 @@
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
 
-	SetMainWindowText("タイトル名");		// タイトルを設定
+	SetMainWindowText("BalloonFight");		// タイトルを設定
 	ChangeWindowMode(true);					// ウィンドウモードで起動
 
 	// ウィンドウサイズの設定

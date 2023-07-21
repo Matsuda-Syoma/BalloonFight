@@ -48,10 +48,19 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
-		return new GameMain(Score,++StageNum);
+		Sounds::AllStop();
+		return new GameMain(Score,++StageNum,player->GetLife());
 	}
 	if (!Pause) {
 		Game();
+	}
+	if (StageSwitch) {
+		Pause = true;
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_StageClear, DX_PLAYTYPE_BACK, false);
+		if (++StageSwitchTime > 120) {
+			return new GameMain(Score, ++StageNum,player->GetLife());
+		}
 	}
 	return this;
 }
