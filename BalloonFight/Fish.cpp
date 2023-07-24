@@ -1,20 +1,20 @@
 #include "Fish.h"
-#include"Player.h"
 #include"DxLib.h"
+#include"common.h"
+#include"LoadSounds.h"
 
 // コンストラクタ
-Fish::Fish(float _x,int anim_f)
+Fish::Fish()
 {
 	imagecnt = -1;
 	WeitTime = 0;
 	flg = false;
-	Animflg = anim_f;
-
-	x = _x;
+	Animflg = false;
+	x = 0;
 	y = 400;
 	w = WIDTH;
 	h = HEIGHT;
-
+	EatChanceTime = FRAMERATE;
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
 
 	
@@ -27,8 +27,25 @@ Fish::~Fish()
 
 void Fish::Update()
 {
+	//if (player->GetY() > SCREEN_HEIGHT - 93 && player->GetX() > 170 && player->GetX() < 460 && player->GetFlg() == true) {
+	//	player->Miss(1);
+	//	Animflg= true; // アニメーション
+
+	//	PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+	//	StopSoundMem(Sounds::SE_Falling);
+	//}
+	//else if (player->GetY() < SCREEN_HEIGHT - 94) {
+	//	Animflg = false;
+	//}
+
 	if (++WeitTime % 11 == 0 && Animflg == true) {
-		imagecnt = imagecnt+1;
+		if (imagecnt < 5) {
+			imagecnt++;
+		}
+		else {
+			imagecnt = -1;
+			Animflg = false;
+		}
 	}
 	/*if (imagecnt >= 5) {
 		imagecnt = 0;
@@ -43,15 +60,17 @@ void Fish::Update()
 	box.top = y;
 	box.bottom = y + h;
 
-	
+	if (--EatChanceTime < 0) {
+		EatChanceTime = FRAMERATE ;
+		EatChance = GetRand(9);
+	}
 
 }
 
 void Fish::Draw() const
 {
-	DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, false);
+	//DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, false);
 	DrawRotaGraph(imageX, imageY, 1.0f, 0, image[imagecnt], true);
-	DrawBox(150, 400, 500, 480, 0x00ff00, 0);
 }
 
 bool Fish::GetFlg() {
@@ -60,15 +79,30 @@ bool Fish::GetFlg() {
 
 void Fish::LoadImage()
 {
-	/*第一引数はファイル名を指定します。
-		第二引数は画像の分割総数を指定します。今回ならば１２個なので１２を指定します。
-		第三、第四引数は横と縦向きに対する画像の分割数です。
-		今回であれば、横は３列、縦は４行になっているので、３と４を指定します。
-		第５、第６引数は分割画像一つ分の大きさを指定します。
-		第７引数は、分割された画像一つ一つのグラフィックハンドルを保存するint型の配列へのポインタを指定します。
-		今回は１２個分読むので、int image[12]などという配列を作り、そのポインタを渡します。
-		配列の中には以下のようにグラフィックハンドルが格納されます。数字は配列の添字を表しています。*/
 
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
 }
 
+bool Fish::EatFlg(BoxCollider box) {
+	if ((SCREEN_HEIGHT - 93) - box.GetSide(2) < 0 && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Fish::Eat(BoxCollider box) {
+	if (EatChance >= 7) {
+		Animflg = true; // アニメーション
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void Fish::GetPlayerVector(float _x, float _y) {
+	x = _x;
+	//y = _y;
+}
