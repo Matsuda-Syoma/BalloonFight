@@ -11,9 +11,10 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0);
-	enemy.emplace_back(0,150);
-	enemy.emplace_back(100,150);
-	enemy.emplace_back(200,150);
+	enemy.emplace_back(200, 250);
+	//enemy.emplace_back(0,150);
+	//enemy.emplace_back(100,150);
+	//enemy.emplace_back(200,150);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -47,9 +48,8 @@ GameMain::~GameMain()				// ここでdeleteなどをする
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
-		//Pause = !Pause;
+		Pause = !Pause;
 		Sounds::AllStop();
-		return new GameMain(Score,++StageNum,player->GetLife());
 	}
 	if (!Pause) {
 		Game();
@@ -155,7 +155,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		fishflg = false;
 	}
 
-
 	// 敵の処理
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
@@ -185,11 +184,11 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 						if (player->DamageCheck(enemy.at(i), enemy.at(i).GetBalloon(), enemy.at(i).GetState())) {
 							if (enemy.at(i).GetBalloon() != 0) {
 								Score += 500;
-								scoreUP.emplace_back(500, player->GetX(), player->GetY());
+								scoreUP.emplace_back(500, enemy.at(i).GetX(), enemy.at(i).GetY() - 24);
 							}
 							else {
 								Score += 1000;
-								scoreUP.emplace_back(1000, player->GetX(), player->GetY());
+								scoreUP.emplace_back(1000, enemy.at(i).GetX(), enemy.at(i).GetY() - 24);
 							}
 							enemy.at(i).BallonBreak(1);
 						}
@@ -197,7 +196,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 					// 地面に立っているときは跳ね返らずに倒れる
 					else {
 						Score += 750;
-						scoreUP.emplace_back(750, player->GetX(), player->GetY());
+						scoreUP.emplace_back(750, enemy.at(i).GetX(), enemy.at(i).GetY() - 24);
 						enemy.at(i).BallonBreak(1);
 					}
 				}
@@ -209,7 +208,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 		else {
 			parachuteflg = true;
-			continue;
 		}
 		// 画面外に行ったらしぶきと泡がでる
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {

@@ -29,8 +29,14 @@ private:
 	float inertiaX, inertiaY;		// Šµ«
 	float imageX, imageY;			// ‰æ‘œ‚ÌÀ•W
 	bool imageReverse;				// Œü‚¢‚Ä‚é•ûŒü
-	int images[40][3];
+	int imagesG[18];
+	int imagesR[18];
+	int imagesP[18];
 	int AnimImg;
+	int AnimFlg;
+	int AnimWork;
+	int AnimSelect;
+	int AnimUpdateTime;
 	int MoveX;
 	int MoveY;
 	int RandomMoveX;
