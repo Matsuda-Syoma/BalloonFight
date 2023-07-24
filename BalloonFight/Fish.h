@@ -26,6 +26,7 @@ public:
 
 	//コンストラクタ
 	Fish();
+	Fish(float _x, int _flg);
 	//デストラクタ
 	~Fish();
 

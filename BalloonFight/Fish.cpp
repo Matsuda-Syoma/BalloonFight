@@ -4,13 +4,13 @@
 #include"LoadSounds.h"
 
 // コンストラクタ
-Fish::Fish()
+Fish::Fish(float _x, int _flg)
 {
 	imagecnt = -1;
 	WeitTime = 0;
 	flg = false;
-	Animflg = false;
-	x = 0;
+	Animflg = _flg;
+	x = _x;
 	y = 400;
 	w = WIDTH;
 	h = HEIGHT;
