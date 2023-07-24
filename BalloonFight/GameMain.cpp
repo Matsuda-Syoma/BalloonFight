@@ -1,16 +1,16 @@
 #include "GameMain.h"
 #include "Map.h"
-#include"DxLib.h"
-
-GameMain::GameMain(int _score, int _stage)				// ここで初期化
+GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 {
+	StageSwitch = false;
+	StageSwitchTime = 0;
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
-	PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	player = new Player;
+	player->SetLife(_life);
 	ui = new UI;
-	fish = new Fish();
+	fish = new Fish(0,0);
 	enemy.emplace_back(0,150);
 	enemy.emplace_back(100,150);
 	enemy.emplace_back(200,150);
@@ -48,10 +48,19 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		//Pause = !Pause;
-		return new GameMain(Score,++StageNum);
+		Sounds::AllStop();
+		return new GameMain(Score,++StageNum,player->GetLife());
 	}
 	if (!Pause) {
 		Game();
+	}
+	if (StageSwitch) {
+		Pause = true;
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_StageClear, DX_PLAYTYPE_BACK, false);
+		if (++StageSwitchTime > 120) {
+			return new GameMain(Score, ++StageNum,player->GetLife());
+		}
 	}
 	return this;
 }
@@ -79,6 +88,7 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		enemy.at(i).Draw();
 	}
 
+	fish->Draw();
 
 	for (size_t i = 0; i < bubble.size(); i++) {
 		bubble.at(i).Draw();
@@ -89,8 +99,6 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		scoreUP.at(i).Draw();
 	}
 
-	fish->Draw();
-
 	DrawGraph(-80, 455, StageImages::Image[4], true);
 	DrawGraph(400, 455, StageImages::Image[4], true);
 
@@ -100,12 +108,15 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 		splash.at(i).Draw();
 	}
 
-
 	ui->Draw();
 }
 
 void GameMain::Game()				// ここでゲームの判定などの処理をする
 {
+	if (CheckSoundMem(Sounds::BGM_Trip) == 0) {
+		PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
+	}
+	
 	player->Update();
 	if (player->GetFlg()) {
 		for (size_t i = 0; i < stage.size(); i++) {
@@ -130,39 +141,101 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 
 	if (fish != nullptr) {
 		fish->Update();
-		if (fish->EatFlg(*player)) {
-			if (fish->Eat(*player)) {
-				fish->GetPlayerVector(player->GetX(), player->GetY());
-				player->Miss(1);
-				if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-					PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
-				}
-				StopSoundMem(Sounds::SE_Falling);
-			}
-		}
 	}
 
+	// 魚の処理
+	if (player->GetY() > SCREEN_HEIGHT - 93 && player->GetX() > 170 && player->GetX() < 460 && player->GetFlg() == true) {
+		player->Miss(1);
+		fishflg = true;
+		fish = new Fish(player->GetX(), fishflg);
+		fish->GetFlg();
+		StopSoundMem(Sounds::SE_Falling);
+	}
+	else if (player->GetY() < SCREEN_HEIGHT - 94) {
+		fishflg = false;
+	}
+
+
+	// 敵の処理
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
-		for (size_t j = 0; j < stage.size(); j++) {
-			if (enemy.at(i).IsFly(stage.at(j))) {
-				break;
+		if (!enemy.at(i).GetDeathFlg()) {
+			// 敵とステージの当たり判定
+			for (size_t j = 0; j < stage.size(); j++) {
+				if (enemy.at(i).IsFly(stage.at(j))) {
+					break;
+				}
+			}
+			// 敵同士跳ね返るようにする
+			for (size_t j = 0; j < enemy.size(); j++) {
+				if (!enemy.at(j).GetDeathFlg()) {
+					enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
+				}
+
+			}
+			// プレイヤーのフラグが立っているなら当たり判定がある
+			if (player->GetFlg()) {
+				int Hit = player->HitEnemy(enemy.at(i),enemy.at(i).GetState());
+				if (Hit != 0) {
+					if (Hit != 5) {
+						if (enemy.at(i).GetBalloon() != 0) {
+							enemy.at(i).ChangeInertia(*player, Hit);
+						}
+						
+						if (player->DamageCheck(enemy.at(i), enemy.at(i).GetBalloon(), enemy.at(i).GetState())) {
+							if (enemy.at(i).GetBalloon() != 0) {
+								Score += 500;
+								scoreUP.emplace_back(500, player->GetX(), player->GetY());
+							}
+							else {
+								Score += 1000;
+								scoreUP.emplace_back(1000, player->GetX(), player->GetY());
+							}
+							enemy.at(i).BallonBreak(1);
+						}
+					}
+					// 地面に立っているときは跳ね返らずに倒れる
+					else {
+						Score += 750;
+						scoreUP.emplace_back(750, player->GetX(), player->GetY());
+						enemy.at(i).BallonBreak(1);
+					}
+				}
 			}
 		}
-		if (player->GetFlg()) {
-			enemy.at(i).ChangeInertia(*player, player->HitEnemy(enemy.at(i)));
+
+		if (enemy.at(i).GetBalloon() != 0) {
+			parachuteflg = false;
 		}
-		for (size_t j = 0; j < enemy.size(); j++) {
-			enemy.at(i).ChangeInertia(enemy.at(j), enemy.at(j).HitEnemy(enemy.at(i)));
+		else {
+			parachuteflg = true;
+			continue;
 		}
+		// 画面外に行ったらしぶきと泡がでる
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
 			splash.emplace_back(enemy.at(i).GetX());
 			bubble.emplace_back(enemy.at(i).GetX());
 			enemy.at(i).SetFlg(false);
 		}
+		// フラグがたってないなら削除
 		if (!enemy.at(i).GetFlg()) {
 			enemy.erase(enemy.begin() + i);
 			continue;
+		}
+	}
+	if (parachuteflg) {
+		if (CheckSoundMem(Sounds::SE_parachute) == 0) {
+			PlaySoundMem(Sounds::SE_parachute, DX_PLAYTYPE_BACK, true);
+		}
+	}
+	else {
+		StopSoundMem(Sounds::SE_parachute);
+	}
+
+	StageSwitch = true;
+	for (size_t i = 0; i < enemy.size(); i++) {
+		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
+			StageSwitch = false;
 		}
 	}
 
@@ -208,5 +281,4 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	}
 
 	ui->Update(Score,StageNum + 1);
-
 }

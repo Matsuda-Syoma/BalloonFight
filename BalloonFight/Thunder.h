@@ -15,4 +15,6 @@ private:
 	int ThunBallImg[3];
 
 	int FlashCount;
+	int BallCount;
+
 };

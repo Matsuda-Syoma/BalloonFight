@@ -151,3 +151,6 @@ float BoxCollider::GetSide(int i) // 1:è„2:â∫3:ç∂4:âE
 
 }
 
+float BoxCollider::GetCenterY() {
+	return box.top - (box.bottom - box.top) / 2;
+}

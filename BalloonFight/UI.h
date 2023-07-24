@@ -19,6 +19,7 @@ public:
 private:
 	int NowScore;					//現在のスコア
 	int HighScore;					//ハイスコア
+	int HighScoreWork;				//ハイスコア処理用
 
 	int TmpScore;					//スコア
 	int PosX;
@@ -32,6 +33,7 @@ private:
 	bool GameOverFlg;
 
 	int Score[6];
+	int HiScore[6];
 	int NumImg[10];
 	int ScoreImg;
 	int HighScoreImg;

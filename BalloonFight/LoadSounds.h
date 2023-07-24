@@ -20,5 +20,6 @@ public:
 	static int SE_Start;
 
 	static void LoadSounds();
+	static void AllStop();
 };
 
