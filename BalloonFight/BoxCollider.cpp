@@ -125,7 +125,7 @@ void BoxCollider::DrawCollider() const {
 	DrawBox(box.left, box.top, box.right, box.bottom, 0xFF, TRUE);
 }
 
-float BoxCollider::GetSide(int i)
+float BoxCollider::GetSide(int i) // 1:è„2:â∫3:ç∂4:âE
 {
 	switch (i)
 	{

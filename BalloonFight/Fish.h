@@ -19,11 +19,14 @@ private:
 	float imageX, imageY;
 	int WeitTime;
 	int Animflg;
+	int EatChanceTime;
+	int EatChance = 0;
 
 public:
 
 	//コンストラクタ
-	Fish(float _x ,int anim_f);
+	Fish();
+	Fish(float _x, int _flg);
 	//デストラクタ
 	~Fish();
 
@@ -34,5 +37,8 @@ public:
 	bool GetFlg();
 
 	void LoadImage();
+	bool EatFlg(BoxCollider box);
+	bool Eat(BoxCollider box);
+	void GetPlayerVector(float _x, float _y);
 };
 

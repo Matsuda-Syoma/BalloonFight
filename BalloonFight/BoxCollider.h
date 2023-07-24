@@ -22,6 +22,7 @@ public:
 	int HitBox(BoxCollider boxCollider) const;								// 上、下、右、左
 	bool HitSphere(SphereCollider sphereCollider) const;
 	void DrawCollider() const;
+	// 1:上2:下3:左4:右
 	float GetSide(int i);
 	float GetCenterY();
 };
