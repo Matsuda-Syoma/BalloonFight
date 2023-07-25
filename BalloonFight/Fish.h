@@ -21,12 +21,13 @@ private:
 	int Animflg;
 	int EatChanceTime;
 	int EatChance = 0;
+	int PlayerEat;
 
 public:
 
 	//コンストラクタ
 	Fish();
-	Fish(float _x, int _flg);
+	Fish(float _x, int _flg ,int _pflg);
 	//デストラクタ
 	~Fish();
 

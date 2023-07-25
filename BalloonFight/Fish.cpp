@@ -4,12 +4,13 @@
 #include"LoadSounds.h"
 
 // コンストラクタ
-Fish::Fish(float _x, int _flg)
+Fish::Fish(float _x, int _flg,int _pflg)
 {
 	imagecnt = -1;
 	WeitTime = 0;
 	flg = false;
 	Animflg = _flg;
+	PlayerEat = TRUE;
 	x = _x;
 	y = 400;
 	w = WIDTH;
@@ -27,24 +28,22 @@ Fish::~Fish()
 
 void Fish::Update()
 {
-	//if (player->GetY() > SCREEN_HEIGHT - 93 && player->GetX() > 170 && player->GetX() < 460 && player->GetFlg() == true) {
-	//	player->Miss(1);
-	//	Animflg= true; // アニメーション
-
-	//	PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
-	//	StopSoundMem(Sounds::SE_Falling);
-	//}
-	//else if (player->GetY() < SCREEN_HEIGHT - 94) {
-	//	Animflg = false;
-	//}
-
-	if (++WeitTime % 11 == 0 && Animflg == true) {
+	clsDx();
+	printfDx("%d", imagecnt);
+	if (++WeitTime % 11 == 0 && imagecnt != 5 && Animflg) {
+		if (imagecnt >= 6) {
+			imagecnt = 3;
+		}
 		if (imagecnt < 5) {
 			imagecnt++;
 		}
 		else {
 			imagecnt = -1;
 			Animflg = false;
+		}
+		// プレイヤーが食べられた判定になったら
+		if (PlayerEat == TRUE && imagecnt == 2) {
+			imagecnt = 6;
 		}
 	}
 	/*if (imagecnt >= 5) {
@@ -60,10 +59,12 @@ void Fish::Update()
 	box.top = y;
 	box.bottom = y + h;
 
+	// 1秒経ったら入る
 	if (--EatChanceTime < 0) {
-		EatChanceTime = FRAMERATE ;
-		EatChance = GetRand(9);
+		EatChanceTime = FRAMERATE ;// カウントを戻す
+		EatChance = GetRand(9);// 0~9のどれかを代入
 	}
+
 
 }
 
@@ -93,7 +94,7 @@ bool Fish::EatFlg(BoxCollider box) {
 }
 
 bool Fish::Eat(BoxCollider box) {
-	if (EatChance >= 7) {
+	if (EatChance >= 0) {
 		Animflg = true; // アニメーション
 		return true;
 	}
