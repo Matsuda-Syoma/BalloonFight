@@ -320,7 +320,7 @@ void Player::Miss(int i) {
 				AnimFlg = 0;
 				state = STATE::miss;
 				inertiaX = 0.0f;
-				inertiaY = -150.0f;
+				inertiaY = 50.0f;
 				missflg = true;
 			}
 			break;
