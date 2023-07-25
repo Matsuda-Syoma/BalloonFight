@@ -23,7 +23,7 @@ Enemy::Enemy(float _x,float _y)
 	FlyspeedMax = 2;
 	inertiaX = 0;
 	inertiaY = 0;
-	MoveX = 0;
+	MoveX = 1;
 	MoveY = GetRand(1);
 	RandomMoveX = 0;
 	RandomMoveY = 0;
@@ -151,7 +151,7 @@ void Enemy::Update()
 
 	AnimUpdate();
 
-	if (balloon != 1 && AnimUpdateTime > 210) {
+	if (balloon != 1 && AnimUpdateTime > 210 && state == STATE::stay) {
 		// •—‘D‚Ì”‚ð‘‚â‚·
 		balloon = 1;
 		MoveY = 1;
@@ -382,7 +382,7 @@ void Enemy::Death(int i) {
 void Enemy::AnimUpdate()
 {
 	clsDx();
-	printfDx("%d %d ", AnimUpdateTime,balloondelay);
+	printfDx("%d ", AnimImg);
 	AnimUpdateTime++;
 	switch (state)
 	{
@@ -402,7 +402,7 @@ void Enemy::AnimUpdate()
 			if (AnimUpdateTime > 60 && AnimUpdateTime < 210) {
 				if (AnimWork % 2 == 0) {
 					if (balloondelay < 3) {
-						if (GetRand(10) < 4 || AnimUpdateTime % 60 == 0) {
+						if (GetRand(10) < 4 || AnimWork % 6 == 0) {
 							balloondelay++;
 						}
 					}
@@ -428,7 +428,6 @@ void Enemy::AnimUpdate()
 				if (balloon == 1) {
 					AnimImg = 10;
 				}
-				AnimUpdateTime = 50;
 			}
 		}
 		if (AnimUpdateTime < 6) {

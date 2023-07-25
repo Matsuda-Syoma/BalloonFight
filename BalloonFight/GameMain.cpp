@@ -11,10 +11,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0);
-	enemy.emplace_back(200, 250);
 	//enemy.emplace_back(0,150);
-	//enemy.emplace_back(100,150);
-	//enemy.emplace_back(200,150);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -30,6 +27,15 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 		// “Ç‚Ýž‚ñ‚¾À•W‚ªã‰ºA¶‰E‘«‚µ‚Ä‚Ç‚¿‚ç‚Æ‚à0‚æ‚è‘å‚«‚¢‚È‚ç‘«ê‚Éî•ñ‚ð“n‚·
 		if (work[0] + work[2] > 0 && work[1] + work[3] > 0) {
 			stage.emplace_back(work[0], work[1], work[2], work[3],imagework);
+		}
+	}
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		float work[2];
+		for (int j = 0; j < 2; j++) {
+			work[j] = LoadEnemy[StageNum][i][j];
+		}
+		if (work[0] != 0 && work[1] != 0) {
+			enemy.emplace_back(work[0], work[1]);
 		}
 	}
 
