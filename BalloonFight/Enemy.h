@@ -14,10 +14,10 @@ private:
 
 	bool landingflg;				// 地面に立っているか
 	bool groundflg;					// 着地したか
-
-	bool missflg;				// ミスしたときのフラグ
 	bool deathflg;					// ミスしたときのフラグ
+	bool startflg;
 	int balloon;					// 風船の数
+	int balloondelay;				// 
 	int color;						// 色
 	int HitStage;					// どこに当たったか
 	float x, y;						// 座標

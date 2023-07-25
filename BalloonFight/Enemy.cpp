@@ -13,7 +13,7 @@ Enemy::Enemy(float _x,float _y)
 	flg = true;
 	imageReverse = true;
 	deathflg = false;
-
+	startflg = false;
 	x = _x;
 	y = _y - WIDTH;
 
@@ -29,7 +29,7 @@ Enemy::Enemy(float _x,float _y)
 	RandomMoveY = 0;
 
 	MaxRandomMoveX = GetRand(5) + 1 * FRAMERATE;
-	MaxRandomMoveY = GetRand(2) + 2* FRAMERATE;
+	MaxRandomMoveY = GetRand(2) + 2 * FRAMERATE;
 	jumpdelay = 0;
 
 	state = STATE::stay;
@@ -150,6 +150,15 @@ void Enemy::Update()
 	x += inertiaX;
 
 	AnimUpdate();
+
+	if (balloon != 1 && AnimUpdateTime > 210) {
+		// •—‘D‚Ì”‚ð‘‚â‚·
+		balloon = 1;
+		MoveY = 1;
+		RandomMoveY = 0;
+		MaxRandomMoveY = 3 * FRAMERATE;
+		state = STATE::fly;
+	}
 }
 
 void Enemy::Draw() const
@@ -169,8 +178,6 @@ void Enemy::Draw() const
 		break;
 	}
 	//DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xffffff, false);
-	DrawFormatString((int)box.left + 14, (int)box.top,0xffffff, "%d", balloon);
-	DrawFormatString((int)box.left + 14, (int)box.top - 20,0xffffff, "%d", color);
 }
 
 void Enemy::LoadImages()
@@ -375,7 +382,7 @@ void Enemy::Death(int i) {
 void Enemy::AnimUpdate()
 {
 	clsDx();
-	printfDx("%d %d ", AnimUpdateTime,AnimWork);
+	printfDx("%d %d ", AnimUpdateTime,balloondelay);
 	AnimUpdateTime++;
 	switch (state)
 	{
@@ -383,16 +390,28 @@ void Enemy::AnimUpdate()
 		if (AnimFlg == 0b0000) {
 			AnimImg = 0;
 			AnimUpdateTime = 0;
+			balloondelay = 0;
 			AnimFlg = 0b0001;
+			if (!startflg) {
+				AnimUpdateTime = 60;
+				startflg = true;
+			}
 		}
-		if (AnimUpdateTime > 60 && AnimUpdateTime % 4 == 0) {
-			if (AnimWork % 2 == 0) {
-				AnimImg = 1;
-			}
-			else {
-				AnimImg++;
-			}
+		if (AnimUpdateTime % 10 == 0) {
 			AnimWork++;
+			if (AnimUpdateTime > 60 && AnimUpdateTime < 210) {
+				if (AnimWork % 2 == 0) {
+					if (balloondelay < 3) {
+						if (GetRand(10) < 4 || AnimUpdateTime % 60 == 0) {
+							balloondelay++;
+						}
+					}
+					AnimImg = balloondelay * 2;
+				}
+				else {
+					AnimImg++;
+				}
+			}
 		}
 		break;
 	case STATE::fly:

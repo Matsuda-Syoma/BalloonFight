@@ -7,7 +7,6 @@ enum class STATE {
 	walk,
 	fly,
 	thunder,
-	fish,
 	miss,
 };
 STATE state;
@@ -36,7 +35,7 @@ void Player::Init(int _life) {
 	life = _life;
 	balloon = 2;
 	x = 40;
-	y = 410 - WIDTH;
+	y = 400 - WIDTH;
 	inertiaX = 0;
 	inertiaY = 0;
 	speedX = 0;
@@ -319,9 +318,9 @@ void Player::Miss(int i) {
 		case 1:
 			if (!missflg) {
 				AnimFlg = 0;
-				state = STATE::fish;
+				state = STATE::miss;
 				inertiaX = 0.0f;
-				inertiaY = 50.0f;
+				inertiaY = -150.0f;
 				missflg = true;
 			}
 			break;
@@ -515,11 +514,6 @@ void Player::AnimUpdate() {
 			AnimUpdateTime = 0;
 		}
 		break;
-
-	case STATE::fish:
-		AnimImg = -1;
-		break;
-
 	default:
 		break;
 	}
