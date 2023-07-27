@@ -58,7 +58,7 @@ void Fish::Update()
 		}
 	}
 
-		if (imagecnt <= -1) {
+	if (imagecnt <= -1) {
 		Animflg = false;
 	}
 
