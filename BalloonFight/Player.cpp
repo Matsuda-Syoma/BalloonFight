@@ -2,16 +2,6 @@
 #include "Player.h"
 #include "LoadSounds.h"
 
-enum class STATE {
-	stay = 0,
-	walk,
-	fly,
-	thunder,
-	fish,
-	miss,
-};
-STATE state;
-
 Player::Player()			// コンストラクタ
 {
 	w = WIDTH;
@@ -27,16 +17,10 @@ Player::~Player()			// デストラクタ
 
 // 数値の初期化
 void Player::Init(int _life) {
-	flg = true;
-	landingflg = false;
-	groundflg = false;
-	missflg = false;
-	misssoundflg = false;
-	spawnflg = false;
 	life = _life;
 	balloon = 2;
 	x = 40;
-	y = 410 - WIDTH;
+	y = 400 - WIDTH;
 	inertiaX = 0;
 	inertiaY = 0;
 	speedX = 0;
@@ -48,6 +32,12 @@ void Player::Init(int _life) {
 	AnimImg = 0;
 	AnimWork = 0;
 	imageReverse = true;
+	flg = true;
+	landingflg = false;
+	groundflg = false;
+	missflg = false;
+	misssoundflg = false;
+	spawnflg = false;
 }
 
 void Player::Update()		// プレイヤーの更新処理
@@ -321,7 +311,8 @@ void Player::Miss(int i) {
 				AnimFlg = 0;
 				state = STATE::fish;
 				inertiaX = 0.0f;
-				inertiaY = 50.0f;
+				inertiaY = 0.0f;
+				y = 480;
 				missflg = true;
 			}
 			break;
@@ -390,7 +381,7 @@ void Player::AnimUpdate() {
 			}
 			if (balloon == 1) {
 				AnimImg = 11 + 5;
-			}	
+			}
 			AnimUpdateTime = 0;
 			AnimFlg = 0b0010;
 		}
@@ -482,31 +473,34 @@ void Player::AnimUpdate() {
 			AnimWork++;
 		}
 		break;
-		case STATE::thunder:
-			if (AnimFlg == 0b0000) {
+	case STATE::thunder:
+		if (AnimFlg == 0b0000) {
+			AnimImg = 30;
+			AnimUpdateTime = 0;
+			AnimFlg = 0b01000;
+		}
+		if (AnimFlg == 0b01000) {
+			if (AnimUpdateTime % 2 == 0) {
+				if (AnimWork % 2 == 0) {
+					AnimImg = 29;
+				}
+				else {
 					AnimImg = 30;
-				AnimUpdateTime = 0;
-				AnimFlg = 0b01000;
-			}
-			if (AnimFlg == 0b01000) {
-				if (AnimUpdateTime % 2 == 0) {
-					if (AnimWork % 2 == 0) {
-						AnimImg = 29;
-					}
-					else {
-						AnimImg = 30;
-					}
-					AnimWork++;
 				}
-				if (AnimUpdateTime > 60) {
-					state = STATE::miss;
-				}
+				AnimWork++;
 			}
-			break;
+			if (AnimUpdateTime > 60) {
+				state = STATE::miss;
+			}
+		}
+		break;
+	case STATE::fish:
+		AnimImg = -1;
+		break;
 	case STATE::miss:
 		if (AnimUpdateTime > 2) {
 			if (AnimWork % 3 == 0) {
-					AnimImg = 29;
+				AnimImg = 29;
 			}
 			else {
 				AnimImg--;
@@ -515,11 +509,6 @@ void Player::AnimUpdate() {
 			AnimUpdateTime = 0;
 		}
 		break;
-
-	case STATE::fish:
-		AnimImg = -1;
-		break;
-
 	default:
 		break;
 	}

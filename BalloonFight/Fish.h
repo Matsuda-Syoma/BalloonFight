@@ -21,7 +21,12 @@ private:
 	int Animflg;
 	int EatChanceTime;
 	int EatChance = 0;
-	int PlayerEat;
+	int EatTime;
+	int EatY;
+	bool EatFlg;
+	bool PlayerEat;
+	int ImageReverse;
+	BoxCollider EatTarget;
 
 public:
 
@@ -38,8 +43,8 @@ public:
 	bool GetFlg();
 
 	void LoadImage();
-	bool EatFlg(BoxCollider box);
 	bool Eat(BoxCollider box);
+	void GetTarget(BoxCollider box);
 	void GetPlayerVector(float _x, float _y);
 };
 

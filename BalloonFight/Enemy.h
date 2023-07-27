@@ -14,10 +14,10 @@ private:
 
 	bool landingflg;				// 地面に立っているか
 	bool groundflg;					// 着地したか
-
-	bool missflg;				// ミスしたときのフラグ
 	bool deathflg;					// ミスしたときのフラグ
+	bool startflg;
 	int balloon;					// 風船の数
+	int balloondelay;				// 
 	int color;						// 色
 	int HitStage;					// どこに当たったか
 	float x, y;						// 座標
@@ -29,8 +29,14 @@ private:
 	float inertiaX, inertiaY;		// 慣性
 	float imageX, imageY;			// 画像の座標
 	bool imageReverse;				// 向いてる方向
-	int images[40][3];
+	int imagesG[18];
+	int imagesR[18];
+	int imagesP[18];
 	int AnimImg;
+	int AnimFlg;
+	int AnimWork;
+	int AnimSelect;
+	int AnimUpdateTime;
 	int MoveX;
 	int MoveY;
 	int RandomMoveX;
@@ -50,6 +56,7 @@ public:
 		stay = 0,
 		balloonspawn,
 		fly,
+		fish,
 		miss,
 	};
 	STATE state;

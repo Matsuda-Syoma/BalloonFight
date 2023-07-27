@@ -10,3 +10,5 @@
 #define MAP 5
 #define MAP_COUNT 10  //Œ³‚Í10
 #define MAP_SIZE 5
+
+#define ENEMY_COUNT 6

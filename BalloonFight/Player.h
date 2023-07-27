@@ -39,6 +39,16 @@ private:
 	
 public:
 
+	enum class STATE {
+		stay = 0,
+		walk,
+		fly,
+		thunder,
+		fish,
+		miss,
+	};
+	STATE state;
+
 	Player();							// コンストラクタ
 	~Player();							// デストラクタ
 	void Init(int _life);				// 数値の初期化

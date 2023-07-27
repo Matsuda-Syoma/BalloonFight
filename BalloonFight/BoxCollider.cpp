@@ -31,7 +31,7 @@ int BoxCollider::HitBox(BoxCollider boxCollider) const {
 	if (other.left > box.right) {
 		return 0;
 	}
-	if (fabsf(box.bottom - other.top) < epsilon) {	// ã‚É“–‚½‚Á‚½‚Æ‚«1‚ð•Ô‚·
+	if (fabsf(box.bottom - other.top) < epsilon / 2) {	// ã‚É“–‚½‚Á‚½‚Æ‚«1‚ð•Ô‚·
 		return 1;
 	}
 	if (fabsf(box.right - other.left) < epsilon) {	// ¶‚É“–‚½‚Á‚½‚Æ‚«3‚ð•Ô‚·

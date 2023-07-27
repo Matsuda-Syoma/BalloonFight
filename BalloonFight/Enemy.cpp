@@ -9,31 +9,35 @@ Enemy::Enemy(float _x,float _y)
 {
 	w = WIDTH;
 	h = HEIGHT;
-	AnimImg = 0;
 
 	flg = true;
 	imageReverse = true;
 	deathflg = false;
-
+	startflg = false;
 	x = _x;
 	y = _y - WIDTH;
 
-	balloon = 1;
+	balloon = 0;
 	color = GetRand(2);
 
 	FlyspeedMax = 2;
 	inertiaX = 0;
 	inertiaY = 0;
-	MoveX = 0;
+	MoveX = 1;
 	MoveY = GetRand(1);
 	RandomMoveX = 0;
 	RandomMoveY = 0;
 
 	MaxRandomMoveX = GetRand(5) + 1 * FRAMERATE;
-	MaxRandomMoveY = GetRand(2) + 2* FRAMERATE;
+	MaxRandomMoveY = GetRand(2) + 2 * FRAMERATE;
 	jumpdelay = 0;
 
 	state = STATE::stay;
+
+	AnimFlg = 0;
+	AnimUpdateTime = 0;
+	AnimImg = 0;
+	AnimWork = 0;
 
 	LoadImages();
 }
@@ -61,7 +65,7 @@ void Enemy::Update()
 	box.bottom = y + h;
 
 	if (inertiaY < 150 / (2 - balloon) && !landingflg || deathflg) {
-		if (!deathflg && groundflg) {
+		if (!deathflg && !groundflg) {
 			//AnimFlg = 0;
 			state = STATE::fly;
 		}
@@ -101,7 +105,7 @@ void Enemy::Update()
 	}
 	// 上昇する
 	if (MoveY == 1 && jumpdelay <= 0 && balloon == 1) {
-		//AnimFlg = 0;
+		AnimFlg = 0;
 		state = STATE::fly;
 		if (!CheckSoundMem(Sounds::SE_EnemyMove)) {
 			PlaySoundMem(Sounds::SE_EnemyMove, DX_PLAYTYPE_BACK, true);
@@ -137,25 +141,50 @@ void Enemy::Update()
 		inertiaY *= -0.8f;
 	}
 
+	if (state == STATE::fly) {
+		imageReverse = MoveX + 1;
+	}
+
 
 	y += inertiaY / FRAMERATE;		// 仮の重力(フレーム数 * 風船の数)
 	x += inertiaX;
+
+	AnimUpdate();
+
+	if (balloon != 1 && AnimUpdateTime > 210 && state == STATE::stay) {
+		// 風船の数を増やす
+		balloon = 1;
+		MoveY = 1;
+		RandomMoveY = 0;
+		MaxRandomMoveY = 3 * FRAMERATE;
+		state = STATE::fly;
+	}
 }
 
 void Enemy::Draw() const
 {
-	// 画像設定　画像表示番号　画像種別フラグ
-	DrawRotaGraph(imageX, imageY, 1.0f, 0, images[color][AnimImg], true, imageReverse);
-	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xffffff, false);
-	DrawFormatString((int)box.left + 14, (int)box.top,0xffffff, "%d", balloon);
-	DrawFormatString((int)box.left + 14, (int)box.top - 20,0xffffff, "%d", color);
+	switch (color)
+	{
+	case 0:
+		DrawRotaGraph(imageX, imageY, 1.0f, 0, imagesP[AnimImg], true, imageReverse);
+		break;
+	case 1:
+		DrawRotaGraph(imageX, imageY, 1.0f, 0, imagesG[AnimImg], true, imageReverse);
+		break;
+	case 2:
+		DrawRotaGraph(imageX, imageY, 1.0f, 0, imagesR[AnimImg], true, imageReverse);
+		break;
+	default:
+		break;
+	}
+	//DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, 0xffffff, false);
 }
 
 void Enemy::LoadImages()
 {
-	LoadDivGraph("Resources/images/Enemy/Enemy_G_Animation.png", 18, 6, 3, 64, 64, images[0]);
-	LoadDivGraph("Resources/images/Enemy/Enemy_R_Animation.png", 18, 6, 3, 64, 64, images[1]);
-	LoadDivGraph("Resources/images/Enemy/Enemy_P_Animation.png", 18, 6, 3, 64, 64, images[2]);
+	LoadDivGraph("Resources/images/Enemy/Enemy_G_Animation.png", 18, 6, 3, 64, 64, imagesG);
+	LoadDivGraph("Resources/images/Enemy/Enemy_R_Animation.png", 18, 6, 3, 64, 64, imagesR);
+	LoadDivGraph("Resources/images/Enemy/Enemy_P_Animation.png", 18, 6, 3, 64, 64, imagesP);
 }
 
 bool Enemy::IsFly(Stage box) {
@@ -170,6 +199,7 @@ bool Enemy::IsFly(Stage box) {
 			MaxRandomMoveY = GetRand(3) + 2 * FRAMERATE;
 			groundflg = true;
 			if (balloon != 1) {
+				AnimFlg = 0;
 				state = STATE::stay;
 				inertiaX = 0;
 			}
@@ -309,17 +339,13 @@ int Enemy::HitEnemy(BoxCollider _enemy) {
 
 void Enemy::BallonBreak(int i) {
 	PlaySoundMem(Sounds::SE_Splash, DX_PLAYTYPE_BACK, true);
-	//AnimUpdateTime = 31;
-	if (state == STATE::stay) {
-		//AnimImg += 3;
-	}
-	if (state == STATE::fly) {
-		//AnimImg += 5;
-	}
+	AnimFlg = 0;
+	AnimUpdateTime = 0;
 	balloon -= i;
 	inertiaX = 0;
 	inertiaY = 0;
 	if (balloon < 0) {
+		AnimImg = 14;
 		Death(0);
 	}
 }
@@ -330,8 +356,8 @@ void Enemy::Death(int i) {
 	switch (i) {
 	case 0:
 		if (!deathflg) {
-			//AnimUpdateTime = 0;
-			//AnimFlg = 0;
+			AnimUpdateTime = 0;
+			AnimFlg = 0;
 			state = STATE::miss;
 			inertiaX = 0.0f;
 			inertiaY = -100.0f;
@@ -340,11 +366,12 @@ void Enemy::Death(int i) {
 		break;
 	case 1:
 		if (!deathflg) {
-			//AnimUpdateTime = 0;
-			//AnimFlg = 0;
-			//state = STATE::thunder;
+			AnimUpdateTime = 0;
+			AnimFlg = 0;
+			state = STATE::fish;
 			inertiaX = 0.0f;
 			inertiaY = 0.0f;
+			y = 480;
 			deathflg = true;
 		}
 		break;
@@ -355,13 +382,104 @@ void Enemy::Death(int i) {
 
 void Enemy::AnimUpdate()
 {
+	AnimUpdateTime++;
 	switch (state)
 	{
 	case STATE::stay:
+		if (AnimFlg == 0b0000) {
+			AnimImg = 0;
+			AnimUpdateTime = 0;
+			balloondelay = 0;
+			AnimFlg = 0b0001;
+			if (!startflg) {
+				AnimUpdateTime = 60;
+				startflg = true;
+			}
+		}
+		if (AnimUpdateTime % 10 == 0) {
+			AnimWork++;
+			if (AnimUpdateTime > 60 && AnimUpdateTime < 210) {
+				if (AnimWork % 2 == 0) {
+					if (balloondelay < 3) {
+						if (GetRand(10) < 4 || AnimWork % 6 == 0) {
+							balloondelay++;
+						}
+					}
+					AnimImg = balloondelay * 2;
+				}
+				else {
+					AnimImg++;
+				}
+			}
+		}
 		break;
 	case STATE::fly:
+		if (AnimFlg == 0b0000) {
+			if (balloon == 1) {
+				AnimImg = 11;
+			}
+			if (balloon == 0) {
+				AnimImg = 14;
+			}
+			AnimUpdateTime = 0;
+			AnimFlg = 0b0100;
+			if (!groundflg && jumpdelay <= 0) {
+				if (balloon == 1) {
+					AnimImg = 10;
+				}
+			}
+		}
+		if (AnimUpdateTime < 6) {
+			if (AnimUpdateTime % 2 == 0) {
+				if (balloon == 1) {
+					AnimImg--;
+				}
+				if (balloon == 0) {
+					AnimImg++;
+				}
+			}
+		}
+		else if (AnimUpdateTime < 12) {
+			if (AnimUpdateTime % 2 == 0) {
+				if (balloon == 1) {
+					AnimImg++;
+				}
+			}
+		}
+
+		else if (AnimUpdateTime % 17 == 0) {
+			if (AnimWork % 2 == 0) {
+				if (balloon == 1) {
+					AnimImg = 11;
+				}
+			}
+			else if (AnimWork % 4 == 1) {
+				if (balloon == 1) {
+					AnimImg = 12;
+				}
+			}
+			else {
+				if (balloon == 1) {
+					AnimImg = 10;
+				}
+			}
+			AnimWork++;
+		}
+		break;
+	case STATE::fish:
+		AnimImg = -1;
 		break;
 	case STATE::miss:
+		if (AnimUpdateTime > 2) {
+			if (AnimWork % 2 == 0) {
+				AnimImg = 14;
+			}
+			else {
+				AnimImg--;
+			}
+			AnimWork++;
+			AnimUpdateTime = 0;
+		}
 		break;
 	default:
 		break;
