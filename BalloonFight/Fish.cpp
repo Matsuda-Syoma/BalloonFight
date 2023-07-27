@@ -128,3 +128,4 @@ bool Fish::Eat(BoxCollider box) {
 void Fish::GetTarget(BoxCollider box) {
 	box.GetSide(3);
 }
+

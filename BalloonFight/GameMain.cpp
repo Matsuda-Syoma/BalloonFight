@@ -165,8 +165,18 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
 					}
 				}
-				
+
 				StopSoundMem(Sounds::SE_Falling);
+			}
+		}
+		for (size_t i = 0; i < enemy.size(); i++) {
+			if (enemy.at(i).state != Enemy::STATE::fish) {
+				if (fish->Eat(enemy.at(i))) {
+					enemy.at(i).Death(1);
+					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+					}
+				}
 			}
 		}
 	}
