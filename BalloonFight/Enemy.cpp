@@ -366,11 +366,12 @@ void Enemy::Death(int i) {
 		break;
 	case 1:
 		if (!deathflg) {
-			//AnimUpdateTime = 0;
-			//AnimFlg = 0;
-			//state = STATE::thunder;
+			AnimUpdateTime = 0;
+			AnimFlg = 0;
+			state = STATE::fish;
 			inertiaX = 0.0f;
 			inertiaY = 0.0f;
+			y = 480;
 			deathflg = true;
 		}
 		break;
@@ -464,6 +465,9 @@ void Enemy::AnimUpdate()
 			}
 			AnimWork++;
 		}
+		break;
+	case STATE::fish:
+		AnimImg = -1;
 		break;
 	case STATE::miss:
 		if (AnimUpdateTime > 2) {

@@ -56,6 +56,7 @@ public:
 		stay = 0,
 		balloonspawn,
 		fly,
+		fish,
 		miss,
 	};
 	STATE state;
