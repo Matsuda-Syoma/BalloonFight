@@ -24,7 +24,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SetDrawScreen(DX_SCREEN_BACK);			// ï`âÊêÊâÊñ Çó†Ç…Ç∑ÇÈ
 
-	SceneManager scene = (dynamic_cast<AbstractScene*>(new GameMain(0,4,3)));
+	SceneManager scene = (dynamic_cast<AbstractScene*>(new GameMain(0,0,3)));
 
 	FpsController FPSct(FRAMERATE,UPDATETIME);
 
@@ -40,11 +40,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		FPSct.All();
 
-		clsDx();
-		int i;
-		int j;
-		GetMousePoint(&i, &j);
-		printfDx("%d %d", i,j);
 
 		ScreenFlip();						// ó†âÊñ ÇÃì‡óeÇï\Ç…ï\é¶Ç∑ÇÈ
 	}
