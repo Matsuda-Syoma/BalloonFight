@@ -38,14 +38,13 @@ void Fish::Update()
 	if (x > 460) {
 		x = 460;
 	}
-
+	
 	if (PlayerEat && imagecnt == 2) {
 		imagecnt = 6;
 		PlayerEat = false;
 	}
 	if (++WeitTime % 15 == 0 && imagecnt == 5) {
 		imagecnt = -1;
-		Animflg = false;
 	}
 	if (++WeitTime % 15 == 0 && imagecnt != 5 && Animflg) {
 		if (imagecnt >= 6) {
@@ -56,9 +55,13 @@ void Fish::Update()
 		}
 		else {
 			imagecnt = -1;
-			Animflg = false;
 		}
 	}
+
+		if (imagecnt <= -1) {
+		Animflg = false;
+	}
+
 
 	y = SCREEN_HEIGHT - 40 + EatY;
 
@@ -66,23 +69,13 @@ void Fish::Update()
 		EatY = 0;
 	}
 
-	//if (imagecnt < 3 && EatY > -30) {
-	//	EatY--;
-	//}
-	//else if(EatY < 0 || !EatFlg) {
-	//	EatY++;
-	//}
-
-	clsDx();
-	printfDx("%d %d ", EatY,EatFlg);
-
 	if (EatFlg) {
 		if (EatY > -30 && imagecnt < 3) {
 			EatY+= -2;
 		}
 	}
 	else if (EatY < 0 && !EatFlg) {
-		EatY+=2;
+		EatY+=1;
 	}
 
 	imageX = x + (w / 2);
