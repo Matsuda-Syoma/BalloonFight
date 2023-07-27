@@ -381,8 +381,6 @@ void Enemy::Death(int i) {
 
 void Enemy::AnimUpdate()
 {
-	clsDx();
-	printfDx("%d ", AnimImg);
 	AnimUpdateTime++;
 	switch (state)
 	{

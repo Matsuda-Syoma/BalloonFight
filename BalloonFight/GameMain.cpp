@@ -11,6 +11,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0,0);
+	SpawnDelay = 0;
 	//enemy.emplace_back(0,150);
 	StageNum = _stage;
 	if (StageNum > 4) {
@@ -134,12 +135,21 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	else {
 		player->Miss(0);
 	}
+	if (player->GetSpawnFlg()) {
+		player->Init(player->GetLife() - 1);
+		PlaySoundMem(Sounds::SE_Restart, DX_PLAYTYPE_BACK, true);
+	}
 
 	// 画面下に行った場合ミス
 	if (player->GetY() > SCREEN_HEIGHT && !player->GetSpawnFlg()) {
-		player->SetSpawnFlg(true);
 		StopSoundMem(Sounds::SE_Falling);
-		splash.emplace_back(player->GetX());
+		if (player->state != Player::STATE::fish && SpawnDelay == 1) {
+			splash.emplace_back(player->GetX());
+		}
+		if (++SpawnDelay > 90) {
+			SpawnDelay = 0;
+			player->SetSpawnFlg(true);
+		}
 	}
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
@@ -147,13 +157,15 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 
 	if (fish != nullptr) {
 		fish->Update();
-		if (fish->EatFlg(*player)) {
+		if (player->state != Player::STATE::fish) {
 			if (fish->Eat(*player)) {
-				fish->GetPlayerVector(player->GetX(), player->GetY());
-				player->Miss(1);
-				if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-					PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+				if (player->state != Player::STATE::miss) {
+					player->Miss(1);
+					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+					}
 				}
+				
 				StopSoundMem(Sounds::SE_Falling);
 			}
 		}
@@ -224,14 +236,15 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 			continue;
 		}
 	}
-	if (parachuteflg) {
-		if (CheckSoundMem(Sounds::SE_parachute) == 0) {
-			PlaySoundMem(Sounds::SE_parachute, DX_PLAYTYPE_BACK, true);
-		}
-	}
-	else {
-		StopSoundMem(Sounds::SE_parachute);
-	}
+	// パラシュート状態
+	//if (parachuteflg) {
+	//	if (CheckSoundMem(Sounds::SE_parachute) == 0) {
+	//		PlaySoundMem(Sounds::SE_parachute, DX_PLAYTYPE_BACK, true);
+	//	}
+	//}
+	//else {
+	//	StopSoundMem(Sounds::SE_parachute);
+	//}
 
 	StageSwitch = true;
 	for (size_t i = 0; i < enemy.size(); i++) {
@@ -272,10 +285,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 
 	for (size_t i = 0; i < splash.size(); i++) {
 		if (splash.at(i).Update()) {
-			if (player->GetSpawnFlg()) {
-				player->Init(player->GetLife() - 1);
-				PlaySoundMem(Sounds::SE_Restart, DX_PLAYTYPE_BACK, true);
-			}
 			splash.erase(splash.begin() + i);
 			continue;
 		}
