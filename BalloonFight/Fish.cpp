@@ -106,7 +106,9 @@ void Fish::LoadImage()
 }
 
 bool Fish::Eat(BoxCollider box) {
-	EatTarget = box;
+	if (!EatFlg) {
+		EatTarget = box;
+	}
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
 		EatFlg = true;
 		if(EatChance < 9){
