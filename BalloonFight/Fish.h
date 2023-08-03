@@ -27,6 +27,8 @@ private:
 	bool PlayerEat;
 	int ImageReverse;
 	BoxCollider EatTarget;
+	bool flg1;
+
 
 public:
 

@@ -19,7 +19,7 @@ Fish::Fish(float _x, int _flg,int _pflg)
 	h = HEIGHT;
 	EatChanceTime = FRAMERATE;
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
-
+	flg1 = false;
 	
 }
 
@@ -86,6 +86,8 @@ void Fish::Update()
 		EatChanceTime = FRAMERATE ;// ƒJƒEƒ“ƒg‚ð–ß‚·
 		EatChance = GetRand(9);// 0~9‚Ì‚Ç‚ê‚©‚ð‘ã“ü
 	}
+	clsDx();
+	printfDx("%d",EatFlg);
 
 }
 
@@ -106,7 +108,7 @@ void Fish::LoadImage()
 }
 
 bool Fish::Eat(BoxCollider box) {
-	if (!EatFlg) {
+	if (EatFlg) {
 		EatTarget = box;
 	}
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
