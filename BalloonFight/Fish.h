@@ -26,7 +26,7 @@ private:
 	bool EatFlg;
 	bool PlayerEat;
 	int ImageReverse;
-	BoxCollider EatTarget;
+	BoxCollider *EatTarget;
 	bool flg1;
 
 
@@ -45,7 +45,7 @@ public:
 	bool GetFlg();
 
 	void LoadImage();
-	bool Eat(BoxCollider box);
+	bool Eat(BoxCollider *box);
 	void GetTarget(BoxCollider box);
 	void GetPlayerVector(float _x, float _y);
 };

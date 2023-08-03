@@ -12,6 +12,7 @@ Fish::Fish(float _x, int _flg,int _pflg)
 	Animflg = _flg;
 	PlayerEat = false;
 	EatFlg = false;
+	EatTarget = nullptr;
 	EatTime = 0;
 	EatY = 0;
 	x = _x;
@@ -31,7 +32,7 @@ Fish::~Fish()
 void Fish::Update()
 {
 
-	x = EatTarget.GetSide(3);
+	//x = EatTarget->GetSide(3);
 	if (x < 170) {
 		x = 170;
 	}
@@ -67,6 +68,7 @@ void Fish::Update()
 
 	if (imagecnt == -1) {
 		EatY = 0;
+		flg1 = false;
 	}
 
 	if (EatFlg) {
@@ -75,7 +77,7 @@ void Fish::Update()
 		}
 	}
 	else if (EatY < 0 && !EatFlg) {
-		EatY+=1;
+		EatY += 1;
 	}
 
 	imageX = x + (w / 2);
@@ -87,8 +89,10 @@ void Fish::Update()
 		EatChance = GetRand(9);// 0~9‚Ì‚Ç‚ê‚©‚ð‘ã“ü
 	}
 	clsDx();
-	printfDx("%d",EatFlg);
-
+	printfDx("%f ", EatTarget->GetCenterY());
+	if (&EatTarget == NULL) {
+		printfDx("1");
+	}
 }
 
 void Fish::Draw() const
@@ -107,29 +111,34 @@ void Fish::LoadImage()
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
 }
 
-bool Fish::Eat(BoxCollider box) {
-	if (EatFlg) {
-		EatTarget = box;
-	}
-	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
-		EatFlg = true;
-		if(EatChance < 9){
-			Animflg = true;
-		}
-		if (imagecnt == 2) {
-			if (((SCREEN_HEIGHT - 60) + EatY) - box.GetSide(2) < 0) {
-				PlayerEat = true;
-				return true;
-			}
-		}
-	}
-	else {
-		EatFlg = false;
-	}
+bool Fish::Eat(BoxCollider *box) {
+	//if ((SCREEN_HEIGHT - 90) - box->GetSide(2) < 0 && SCREEN_HEIGHT > box->GetSide(1) && box->GetSide(3) > 170 && box->GetSide(4) < 460) {
+	//	EatFlg = true;
+	//	EatTarget = box;
+	//	if(EatChance < 9){		//	Šm—¦
+	//		Animflg = true;
+	//		flg1 = true;
+	//	}
+	//	if (imagecnt == 2) {
+	//		if (((SCREEN_HEIGHT - 60) + EatY) - box->GetSide(2) < 0) {
+	//			PlayerEat = true;
+	//			return true;
+	//		}
+	//	}
+	//}
+	//else {
+	//	EatFlg = false;
+	//}
 	return false;
 }
 
 void Fish::GetTarget(BoxCollider box) {
-	box.GetSide(3);
+	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
+		EatFlg = true;
+		if (EatChance < 9) {		//	Šm—¦
+			Animflg = true;
+			flg1 = true;
+		}
+	}
 }
 

@@ -158,7 +158,7 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	if (fish != nullptr) {
 		fish->Update();
 		if (player->state != Player::STATE::fish) {
-			if (fish->Eat(*player)) {
+			if (fish->Eat(player)) {
 				if (player->state != Player::STATE::miss) {
 					player->Miss(1);
 					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
