@@ -157,28 +157,32 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 
 	if (fish != nullptr) {
 		fish->Update();
-		if (player->state != Player::STATE::fish) {
-			if (fish->Eat(*player)) {
-				if (player->state != Player::STATE::miss) {
-					player->Miss(1);
-					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+		if (fish->name != 'e') {
+			if (player->state != Player::STATE::fish) {
+				if (fish->Eat(*player)) {
+					if (player->state != Player::STATE::miss) {
+						player->Miss(1);
+						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+						}
 					}
-				}
 
-				StopSoundMem(Sounds::SE_Falling);
+					StopSoundMem(Sounds::SE_Falling);
+				}
 			}
 		}
-		//for (size_t i = 0; i < enemy.size(); i++) {
-		//	if (enemy.at(i).state != Enemy::STATE::fish) {
-		//		if (fish->Eat(enemy.at(i))) {
-		//			enemy.at(i).Death(1);
-		//			if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-		//				PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
-		//			}
-		//		}
-		//	}
-		//}
+		for (size_t i = 0; i < enemy.size(); i++) {
+			if (fish->name != 'p') {
+				if (enemy.at(i).state != Enemy::STATE::fish) {
+					if (fish->Eat(enemy.at(i))) {
+						enemy.at(i).Death(1);
+						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+						}
+					}
+				}
+			}
+		}
 	}
 	// ìGÇÃèàóù
 	for (size_t i = 0; i < enemy.size(); i++) {

@@ -60,6 +60,8 @@ void Fish::Update()
 
 	if (imagecnt <= -1) {
 		Animflg = false;
+		flg1 = false;
+		EatTarget.name = 'n';
 	}
 
 
@@ -87,7 +89,7 @@ void Fish::Update()
 		EatChance = GetRand(9);// 0~9‚Ì‚Ç‚ê‚©‚ð‘ã“ü
 	}
 	clsDx();
-	printfDx("%d",EatFlg);
+	printfDx("%c",EatTarget.name);
 
 }
 
@@ -108,16 +110,16 @@ void Fish::LoadImage()
 }
 
 bool Fish::Eat(BoxCollider box) {
-	if (EatFlg) {
-		EatTarget = box;
-	}
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
+		EatTarget = box;
+		EatTarget = const_cast<BoxCollider*>(&box);
 		EatFlg = true;
 		if(EatChance < 9){
 			Animflg = true;
+			flg1 = true;
 		}
 		if (imagecnt == 2) {
-			if (((SCREEN_HEIGHT - 60) + EatY) - box.GetSide(2) < 0) {
+			if (((SCREEN_HEIGHT - 60) + EatY) - EatTarget.GetSide(2) < 0) {
 				PlayerEat = true;
 				return true;
 			}
