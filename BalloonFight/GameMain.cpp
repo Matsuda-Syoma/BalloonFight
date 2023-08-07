@@ -14,7 +14,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 	ui = new UI;
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	enemy.emplace_back(200,250);
+	//enemy.emplace_back(200,250);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
