@@ -3,7 +3,7 @@
 #include "DxLib.h"
 #include <vector>
 BoxCollider::BoxCollider() {
-
+	name = 'n';
 }
 
 // Box‚Ì‘å‚«‚³‚ðGet

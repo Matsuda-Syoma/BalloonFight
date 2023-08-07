@@ -1,5 +1,6 @@
 #include "GameMain.h"
 #include "Map.h"
+#include <string>
 GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 {
 	StageSwitch = false;
@@ -13,7 +14,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	ui = new UI;
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	//enemy.emplace_back(0,150);
+	enemy.emplace_back(200,250);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -163,32 +164,43 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 
 	if (fish != nullptr) {
 		fish->Update();
-		if (player->state != Player::STATE::fish) {
-			if (fish->Eat(*player)) {
-				if (player->state != Player::STATE::miss) {
-					player->Miss(1);
-					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+		fish->GetTarget(*player);
+		//if (fish->GetTarget(*player)) {
+		//	printfDx(" 1");
+		//}
+		if (fish->name != 'e') {
+			if (player->state != Player::STATE::fish) {
+				if (fish->Eat(*player)) {
+					if (player->state != Player::STATE::miss) {
+						player->Miss(1);
+						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+						}
 					}
-				}
 
-				StopSoundMem(Sounds::SE_Falling);
+					StopSoundMem(Sounds::SE_Falling);
+				}
 			}
 		}
 		for (size_t i = 0; i < enemy.size(); i++) {
-			if (enemy.at(i).state != Enemy::STATE::fish) {
-				if (fish->Eat(enemy.at(i))) {
-					enemy.at(i).Death(1);
-					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+			if (fish->name != 'p') {
+				if (enemy.at(i).state != Enemy::STATE::fish) {
+					if (fish->Eat(enemy.at(i))) {
+						enemy.at(i).Death(1);
+						printfDx("");
+						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+						}
 					}
 				}
 			}
 		}
 	}
 	// 敵の処理
+	clsDx();
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
+		printfDx("%d ", enemy.at(i).state);
 		if (!enemy.at(i).GetDeathFlg()) {
 			// 敵とステージの当たり判定
 			for (size_t j = 0; j < stage.size(); j++) {
@@ -242,8 +254,10 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 		// 画面外に行ったらしぶきと泡がでる
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
-			splash.emplace_back(enemy.at(i).GetX());
-			bubble.emplace_back(enemy.at(i).GetX());
+			if (enemy.at(i).state != Enemy::STATE::fish) {
+				splash.emplace_back(enemy.at(i).GetX());
+				bubble.emplace_back(enemy.at(i).GetX());
+			}
 			enemy.at(i).SetFlg(false);
 		}
 		// フラグがたってないなら削除

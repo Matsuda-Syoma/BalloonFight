@@ -7,6 +7,8 @@
 // コンストラクタ
 Enemy::Enemy(float _x,float _y)
 {
+	name = 'e';
+
 	w = WIDTH;
 	h = HEIGHT;
 
