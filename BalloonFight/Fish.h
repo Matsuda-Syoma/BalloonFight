@@ -27,8 +27,12 @@ private:
 	bool PlayerEat;
 	int ImageReverse;
 	BoxCollider EatTarget;
+	BoxCollider EatTargetWork;
+
 
 public:
+
+	bool flg1;
 
 	//コンストラクタ
 	Fish();

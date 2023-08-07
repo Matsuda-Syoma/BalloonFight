@@ -4,6 +4,8 @@
 
 Player::Player()			// コンストラクタ
 {
+	name = 'p';
+
 	w = WIDTH;
 	h = HEIGHT;
 	GroundspeedMax = 3.0f;
