@@ -6,8 +6,12 @@ Thunder::Thunder()
 	thunderball = new ThunderBall;
 	FlashCount = 0;
 	BallCount = 0;
-	ThAnimImg;
+	
 	CloudX = 200, CloudY = 100;
+	thunderball->BallX = CloudX + 50;
+	thunderball->BallY = CloudY;
+
+	
 	LoadImages();
 }
 
@@ -17,29 +21,19 @@ Thunder::~Thunder()
 
 void Thunder::Update()
 {
-
+	//“_–Å
 	if (FlashCount < 100) {
 		++FlashCount;
 	}
 
-	if (FlashCount >= 100) {
-		ThAnimImg++;
-			//printfDx("1");
-			
-			//BallAngle(0);
-	}
-	thunderball->Update();
-
-	/*switch (Stage) {
-	case 1:
-		CloudX = 200, CloudY = 100;
-		break;
-	}*/
-
+	//thunderball->Update();
 }
 
 void Thunder::Draw() const
 {
+	
+		DrawGraph(100, 200, ThunderImg[0], TRUE);
+
 	
 		if (FlashCount % 4) {
 			DrawGraph(CloudX, CloudY, CloudImg[1], TRUE);
@@ -53,6 +47,7 @@ void Thunder::Draw() const
 		
 		
 		thunderball->Draw();
+
 }
 
 //‰æ‘œ“Çž
@@ -65,4 +60,12 @@ void Thunder::LoadImages()
 
 int Thunder::BallAngle(int _i) {
 	return _i;
+}
+
+bool Thunder::ThunderSpawn() {
+	if (FlashCount >= 100 && !ThFlg) {
+		ThFlg = true; 
+		return true;
+	}
+	return false;
 }

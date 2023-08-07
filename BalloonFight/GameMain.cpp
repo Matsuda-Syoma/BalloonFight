@@ -8,6 +8,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 	StageImages::LoadImages();
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	player = new Player;
+	thunder = new Thunder;
 	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0,0);
@@ -76,6 +77,10 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 {
 	int PlayerLife = player->GetLife();
 
+	thunder->Draw();
+	if (thunderball != nullptr) {
+		thunderball->Draw();
+	}
 	if (PlayerLife > 0) {
 		for (int i = 0; i < PlayerLife - 1; i++) {
 			/*DrawBox(60 + (15 * i), 30, 70 + (15 * i)
@@ -116,6 +121,7 @@ void GameMain::Draw() const			// ‚±‚±‚ÅƒQ[ƒ€ƒƒCƒ“‚Ì•`‰æ
 	}
 
 	ui->Draw();
+	
 }
 
 void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
@@ -255,7 +261,17 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	//else {
 	//	StopSoundMem(Sounds::SE_parachute);
 	//}
-
+	thunder->Update();
+	if (thunder->ThunderSpawn()) {
+		thunderball = new ThunderBall;
+	}
+	if (thunderball != nullptr) {
+		thunderball->Update();
+		for (size_t i = 0; i < stage.size(); i++) {
+			if (thunderball->Hit(stage.at(i))) {
+			}
+		}
+	}
 	StageSwitch = true;
 	for (size_t i = 0; i < enemy.size(); i++) {
 		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
@@ -301,4 +317,5 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ð‚·‚é
 	}
 
 	ui->Update(Score,StageNum + 1);
+	
 }

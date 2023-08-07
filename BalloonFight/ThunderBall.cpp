@@ -6,8 +6,8 @@
 
 ThunderBall::ThunderBall()
 {
-	BallX = 50;
-	BallY = 200;
+	BallX = 350;
+	BallY = 400;
 
 	MoveX = 1;
 	MoveY = -2;
@@ -16,7 +16,8 @@ ThunderBall::ThunderBall()
 	BallAngle = 0.625f;
 
 	FlashCount = 0;
-	BallCount = 1;
+	BallCount = -1;
+	
 	LoadImages();
 }
 
@@ -26,19 +27,16 @@ ThunderBall::~ThunderBall()
 
 void ThunderBall::Update()
 {
-	//â_ÇÃì_ñ≈
-	if (FlashCount < 100) {
-		FlashCount++;
-	}
-
-	//ì_ñ≈Ç™èIÇÌÇÈÇ∆
-	if (FlashCount == 100) {
 		BallX += MoveX;
 		BallY += MoveY;
-	}
+		box.top = BallY;
+		box.bottom = BallY + HEIGHT;
+		box.left = BallX;
+		box.right = BallX + WIDTH;
 
-	if (BallCount < 3 && FlashCount >= 100) {
+	if (BallCount < 3) {
 		BallCount++;
+		
 		
 
 		if (BallCount >= 3) {
@@ -70,9 +68,8 @@ void ThunderBall::Update()
 
 void ThunderBall::Draw() const
 {
-	if(BallCount == 0){
-			DrawGraph(BallX, BallY, ThunBallImg[1], TRUE);
-	}
+			DrawGraph(BallX, BallY, ThunBallImg[BallCount], TRUE);
+	
 }
 
 //âÊëúì«çû
@@ -87,4 +84,46 @@ void ThunderBall::ChangeAngle()
 	float rad = BallAngle * (float)M_PI * 0.5;
 	MoveX = (int)(Speed * cosf(rad));
 	MoveY = (int)(Speed * sinf(rad));
+}
+
+float ThunderBall::GetBoxSide(BoxCollider box, int i) {
+	return box.GetSide(i);
+}
+
+
+int ThunderBall::Hit(BoxCollider _stage) {
+	clsDx();
+	printfDx("%f", BallAngle);
+	int HitEnemy = HitBox(_stage);
+	switch (HitEnemy)
+	{
+	case 1:
+		BallY = GetBoxSide(_stage, 1) - (HEIGHT + 1);
+		BallAngle = (1 - BallAngle);
+		ChangeAngle();
+		return 1;
+		break;
+	case 2:
+		BallY = GetBoxSide(_stage, 2) + 1;
+		BallAngle = (1 - BallAngle);
+		ChangeAngle();
+		return 2;
+		break;
+	case 3:
+		BallX = GetBoxSide(_stage, 3) - (WIDTH + 1);
+		BallAngle = (1 - BallAngle) + 0.5f;
+		ChangeAngle();
+		return 3;
+		break;
+	case 4:
+		BallX = GetBoxSide(_stage, 4) + 1;
+		BallAngle = (1 - BallAngle) + 0.5f;
+		ChangeAngle();
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+
 }

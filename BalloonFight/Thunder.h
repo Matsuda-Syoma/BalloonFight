@@ -15,6 +15,8 @@ public:
 
 	int BallAngle(int _i);
 
+	bool ThunderSpawn();
+
 private:
 	int CloudImg[3];
 	int ThunderImg[6];
@@ -25,8 +27,7 @@ private:
 
 	int WaitTime;
 	int ThAnimImg;
-	int kw;
-
+	
 	int CloudX, CloudY;
 
 	bool ThFlg;
