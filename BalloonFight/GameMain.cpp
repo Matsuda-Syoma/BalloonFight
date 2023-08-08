@@ -12,9 +12,9 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	thunder = new Thunder;
 	player->SetLife(_life);
 	ui = new UI;
+	//enemy.emplace_back(300, 270);
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	//enemy.emplace_back(200,250);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -39,6 +39,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 		}
 		if (work[0] != 0 && work[1] != 0) {
 			enemy.emplace_back(work[0], work[1]);
+			enemy.at(i).name = '0' + i;
 		}
 	}
 
@@ -150,7 +151,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	// 画面下に行った場合ミス
 	if (player->GetY() > SCREEN_HEIGHT && !player->GetSpawnFlg()) {
 		StopSoundMem(Sounds::SE_Falling);
-		if (player->state != Player::STATE::fish && SpawnDelay == 1) {
+		if (player->state != Player::STATE::FISH && SpawnDelay == 1) {
 			splash.emplace_back(player->GetX());
 		}
 		if (++SpawnDelay > 90) {
@@ -161,46 +162,83 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
-
+	// 魚の処理
 	if (fish != nullptr) {
+		fish->flg1 = false;
+		//fish->flg2 = false;
 		fish->Update();
-		fish->GetTarget(*player);
-		//if (fish->GetTarget(*player)) {
-		//	printfDx(" 1");
-		//}
-		if (fish->name != 'e') {
-			if (player->state != Player::STATE::fish) {
-				if (fish->Eat(*player)) {
-					if (player->state != Player::STATE::miss) {
-						player->Miss(1);
-						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
-						}
+		if (!fish->flg2) {
+			for (size_t i = 0; i < enemy.size() + 1; i++) {
+				if (i == 0) {
+					if (fish->GetTarget(*player)) {
+						break;
 					}
-
-					StopSoundMem(Sounds::SE_Falling);
+				}
+				if (i >= 1) {
+					if (fish->GetTarget(enemy.at(i - 1))) {
+						break;
+					}
 				}
 			}
 		}
-		for (size_t i = 0; i < enemy.size(); i++) {
-			if (fish->name != 'p') {
-				if (enemy.at(i).state != Enemy::STATE::fish) {
-					if (fish->Eat(enemy.at(i))) {
-						enemy.at(i).Death(1);
-						printfDx("");
-						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+		else {
+			for (size_t i = 0; i < enemy.size() + 1; i++) {
+				if (i == 0) {
+					if (fish->GetEatTarget().name == player->name) {
+						fish->GetTarget(*player);
+					}
+				}
+				if (i >= 1) {
+					if (fish->GetEatTarget().name == enemy.at(i - 1).name) {
+						fish->GetTarget(enemy.at(i - 1));
+					}
+				}
+			}
+		}
+
+		// 魚のメイン処理
+		for (size_t i = 0; i < enemy.size() + 1; i++) {
+			if (i == 0) {
+				// 名前がプレイヤーなら
+				if (fish->GetEatTarget().name == player->name) {
+					// 状態が魚以外の時
+					if (player->state != Player::STATE::FISH) {
+						// 判定内なら食べる
+						if (fish->Eat(*player)) {
+							if (player->state != Player::STATE::MISS) {
+								player->Miss(1);
+								if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+									PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+									break;
+								}
+							}
+							StopSoundMem(Sounds::SE_Falling);
 						}
 					}
 				}
 			}
+			if (i >= 1) {
+				// 名前が敵(n)の時
+				if (fish->GetEatTarget().name == enemy.at(i - 1).name) {
+					// 状態が魚以外の時
+					if (enemy.at(i - 1).state != Enemy::STATE::FISH) {
+						// 判定内なら食べる
+						if (fish->Eat(enemy.at(i - 1))) {
+							enemy.at(i - 1).Death(1);
+							if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+								PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+							}
+
+						}
+					}
+				}
+			}
+
 		}
 	}
 	// 敵の処理
-	clsDx();
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
-		printfDx("%d ", enemy.at(i).state);
 		if (!enemy.at(i).GetDeathFlg()) {
 			// 敵とステージの当たり判定
 			for (size_t j = 0; j < stage.size(); j++) {
@@ -254,7 +292,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 		// 画面外に行ったらしぶきと泡がでる
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
-			if (enemy.at(i).state != Enemy::STATE::fish) {
+			if (enemy.at(i).state != Enemy::STATE::FISH) {
 				splash.emplace_back(enemy.at(i).GetX());
 				bubble.emplace_back(enemy.at(i).GetX());
 			}
