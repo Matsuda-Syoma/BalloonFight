@@ -21,7 +21,7 @@ Player::~Player()			// デストラクタ
 void Player::Init(int _life) {
 	life = _life;
 	balloon = 2;
-	x = 140;
+	x = 40;
 	y = 400 - WIDTH;
 	inertiaX = 0;
 	inertiaY = 0;

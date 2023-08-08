@@ -11,10 +11,9 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	player = new Player;
 	player->SetLife(_life);
 	ui = new UI;
+	//enemy.emplace_back(300, 270);
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	enemy.emplace_back(350,380);
-	//enemy.emplace_back(450,400);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -39,6 +38,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 		}
 		if (work[0] != 0 && work[1] != 0) {
 			enemy.emplace_back(work[0], work[1]);
+			enemy.at(i).name = '0' + i;
 		}
 	}
 
@@ -156,42 +156,79 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	if (player->GetLife() <= 0) {
 		ui->GameOver();
 	}
-
 	// 魚の処理
 	if (fish != nullptr) {
 		fish->flg1 = false;
+		//fish->flg2 = false;
 		fish->Update();
-		fish->GetTarget(*player);
-		if (fish->GetEatTarget().name != 'e') {
-			// 状態が魚以外の時
-			if (player->state != Player::STATE::FISH) {
-				if (fish->Eat(*player)) {
-					if (player->state != Player::STATE::MISS) {
-						player->Miss(1);
-						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
-						}
+		if (!fish->flg2) {
+			for (size_t i = 0; i < enemy.size() + 1; i++) {
+				if (i == 0) {
+					if (fish->GetTarget(*player)) {
+						break;
 					}
-					StopSoundMem(Sounds::SE_Falling);
 				}
-			}
-		}
-		for (size_t i = 0; i < enemy.size(); i++) {
-			fish->GetTarget(enemy.at(i));
-			if (fish->GetEatTarget().name != 'p') {
-				// 状態が魚以外の時
-				if (enemy.at(i).state != Enemy::STATE::FISH) {
-					if (fish->Eat(enemy.at(i))) {
-						enemy.at(i).Death(1);
-						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
-						}
+				if (i >= 1) {
+					if (fish->GetTarget(enemy.at(i - 1))) {
+						break;
 					}
 				}
 			}
 		}
-		//clsDx();
-		//printfDx("%c ", fish->GetEatTarget().name);
+		else {
+			for (size_t i = 0; i < enemy.size() + 1; i++) {
+				if (i == 0) {
+					if (fish->GetEatTarget().name == player->name) {
+						fish->GetTarget(*player);
+					}
+				}
+				if (i >= 1) {
+					if (fish->GetEatTarget().name == enemy.at(i - 1).name) {
+						fish->GetTarget(enemy.at(i - 1));
+					}
+				}
+			}
+		}
+
+		// 魚のメイン処理
+		for (size_t i = 0; i < enemy.size() + 1; i++) {
+			if (i == 0) {
+				// 名前がプレイヤーなら
+				if (fish->GetEatTarget().name == player->name) {
+					// 状態が魚以外の時
+					if (player->state != Player::STATE::FISH) {
+						// 判定内なら食べる
+						if (fish->Eat(*player)) {
+							if (player->state != Player::STATE::MISS) {
+								player->Miss(1);
+								if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+									PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+									break;
+								}
+							}
+							StopSoundMem(Sounds::SE_Falling);
+						}
+					}
+				}
+			}
+			if (i >= 1) {
+				// 名前が敵(n)の時
+				if (fish->GetEatTarget().name == enemy.at(i - 1).name) {
+					// 状態が魚以外の時
+					if (enemy.at(i - 1).state != Enemy::STATE::FISH) {
+						// 判定内なら食べる
+						if (fish->Eat(enemy.at(i - 1))) {
+							enemy.at(i - 1).Death(1);
+							if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+								PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+							}
+
+						}
+					}
+				}
+			}
+
+		}
 	}
 	// 敵の処理
 	for (size_t i = 0; i < enemy.size(); i++) {
