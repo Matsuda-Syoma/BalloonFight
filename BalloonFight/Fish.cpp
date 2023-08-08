@@ -9,6 +9,7 @@ Fish::Fish(float _x, int _flg,int _pflg)
 	imagecnt = -1;
 	WeitTime = 0;
 	flg = false;
+	flg1 = false;
 	Animflg = _flg;
 	PlayerEat = false;
 	EatFlg = false;
@@ -104,18 +105,17 @@ void Fish::LoadImage()
 }
 
 bool Fish::Eat(BoxCollider box) {
-	clsDx();
-	//printfDx("%d %d ", EatFlg,Animflg);
-	printfDx("%c %c ", box.name,EatTargetWork.name);
 	if (PlayerEat) {
 		return false;
 	}
 	// ‚³‚©‚È‚Ìo‚Ä‚­‚é”»’è
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
-		if (box.name == EatTarget.name) {
+		if (box.name == EatTarget.name && !flg1) {
 			EatTargetWork = EatTarget;
+			//printfDx("%c ", EatTargetWork.name);
+			flg1 = true;
 		}
-		if(EatChance < 3){
+		if(EatChance < 10 || PAD_INPUT::GetNowKey(XINPUT_BUTTON_BACK)){
 			Animflg = true;
 		}
 		if (imagecnt == 2 && WeitTime % 15 == 0) {

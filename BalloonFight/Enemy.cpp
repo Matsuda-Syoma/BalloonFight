@@ -153,7 +153,7 @@ void Enemy::Update()
 
 	AnimUpdate();
 
-	if (balloon != 1 && AnimUpdateTime > 210 && state == STATE::STAY) {
+	if (balloon != 1 && AnimUpdateTime > 2100 && state == STATE::STAY) {
 		// •—‘D‚Ì”‚ğ‘‚â‚·
 		balloon = 1;
 		MoveY = 1;

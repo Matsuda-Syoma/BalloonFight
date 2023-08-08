@@ -13,7 +13,8 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ‚±‚±‚Å‰Šú‰»
 	ui = new UI;
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	enemy.emplace_back(450,390);
+	enemy.emplace_back(350,380);
+	//enemy.emplace_back(450,400);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -156,7 +157,9 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 		ui->GameOver();
 	}
 
+	// ‹›‚Ìˆ—
 	if (fish != nullptr) {
+		fish->flg1 = false;
 		fish->Update();
 		fish->GetTarget(*player);
 		if (fish->GetEatTarget().name != 'e') {
@@ -169,7 +172,6 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
 						}
 					}
-
 					StopSoundMem(Sounds::SE_Falling);
 				}
 			}
@@ -188,6 +190,8 @@ void GameMain::Game()				// ‚±‚±‚ÅƒQ[ƒ€‚Ì”»’è‚È‚Ç‚Ìˆ—‚ğ‚·‚é
 				}
 			}
 		}
+		//clsDx();
+		//printfDx("%c ", fish->GetEatTarget().name);
 	}
 	// “G‚Ìˆ—
 	for (size_t i = 0; i < enemy.size(); i++) {
