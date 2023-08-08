@@ -17,6 +17,9 @@ protected:
 	Box box; // 当たり判定
 
 public:
+
+	char name;
+
 	BoxCollider();
 	void GetSize(float& top, float& bottom, float& left, float& right);
 	int HitBox(BoxCollider boxCollider) const;								// 上、下、右、左

@@ -19,7 +19,7 @@ Fish::Fish(float _x, int _flg,int _pflg)
 	h = HEIGHT;
 	EatChanceTime = FRAMERATE;
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
-
+	flg1 = false;
 	
 }
 
@@ -30,8 +30,8 @@ Fish::~Fish()
 
 void Fish::Update()
 {
+	x = EatTargetWork.GetSide(3);
 
-	x = EatTarget.GetSide(3);
 	if (x < 170) {
 		x = 170;
 	}
@@ -41,7 +41,6 @@ void Fish::Update()
 	
 	if (PlayerEat && imagecnt == 2) {
 		imagecnt = 6;
-		PlayerEat = false;
 	}
 	if (++WeitTime % 15 == 0 && imagecnt == 5) {
 		imagecnt = -1;
@@ -59,7 +58,10 @@ void Fish::Update()
 	}
 
 	if (imagecnt <= -1) {
+		PlayerEat = false;
 		Animflg = false;
+		flg1 = false;
+		EatTarget.name = 'n';
 	}
 
 
@@ -91,7 +93,7 @@ void Fish::Update()
 
 void Fish::Draw() const
 {
-	DrawBox(box.left, box.top, box.right, box.bottom, 0xffffff, false);
+	//DrawBox(imageX - 12, ((SCREEN_HEIGHT - 60) + EatY), imageX + 12, 480, 0xffffff, false);
 	DrawRotaGraph(imageX, imageY, 1.0f, 0, image[imagecnt], true,ImageReverse);
 }
 
@@ -101,31 +103,36 @@ bool Fish::GetFlg() {
 
 void Fish::LoadImage()
 {
-
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
 }
 
 bool Fish::Eat(BoxCollider box) {
 	EatTarget = box;
+	if (PlayerEat) {
+		return false;
+	}
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
-		EatFlg = true;
+		if (box.name == EatTarget.name) {
+			EatTargetWork = EatTarget;
+			EatFlg = true;
+		}
 		if(EatChance < 9){
 			Animflg = true;
+			flg1 = true;
 		}
-		if (imagecnt == 2) {
-			if (((SCREEN_HEIGHT - 60) + EatY) - box.GetSide(2) < 0) {
+		if (imagecnt == 2 && WeitTime % 15 == 0) {
+			if (((SCREEN_HEIGHT - 60) + EatY) - EatTargetWork.GetSide(2) < 0) {
 				PlayerEat = true;
 				return true;
 			}
 		}
 	}
-	else {
-		EatFlg = false;
-	}
 	return false;
 }
 
 void Fish::GetTarget(BoxCollider box) {
-	box.GetSide(3);
+	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
+		EatTarget = box;
+	}
 }
 

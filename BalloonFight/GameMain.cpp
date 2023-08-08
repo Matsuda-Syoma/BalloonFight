@@ -1,5 +1,6 @@
 #include "GameMain.h"
 #include "Map.h"
+#include <string>
 GameMain::GameMain(int _score, int _stage, int _life)				// Ç±Ç±Ç≈èâä˙âª
 {
 	StageSwitch = false;
@@ -8,11 +9,12 @@ GameMain::GameMain(int _score, int _stage, int _life)				// Ç±Ç±Ç≈èâä˙âª
 	StageImages::LoadImages();
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	player = new Player;
+	thunder = new Thunder;
 	player->SetLife(_life);
 	ui = new UI;
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	//enemy.emplace_back(0,150);
+	//enemy.emplace_back(200,250);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -76,6 +78,10 @@ void GameMain::Draw() const			// Ç±Ç±Ç≈ÉQÅ[ÉÄÉÅÉCÉìÇÃï`âÊ
 {
 	int PlayerLife = player->GetLife();
 
+	thunder->Draw();
+	if (thunderball != nullptr) {
+		thunderball->Draw();
+	}
 	if (PlayerLife > 0) {
 		for (int i = 0; i < PlayerLife - 1; i++) {
 			/*DrawBox(60 + (15 * i), 30, 70 + (15 * i)
@@ -116,6 +122,7 @@ void GameMain::Draw() const			// Ç±Ç±Ç≈ÉQÅ[ÉÄÉÅÉCÉìÇÃï`âÊ
 	}
 
 	ui->Draw();
+	
 }
 
 void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
@@ -157,32 +164,43 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 
 	if (fish != nullptr) {
 		fish->Update();
-		if (player->state != Player::STATE::fish) {
-			if (fish->Eat(*player)) {
-				if (player->state != Player::STATE::miss) {
-					player->Miss(1);
-					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+		fish->GetTarget(*player);
+		//if (fish->GetTarget(*player)) {
+		//	printfDx(" 1");
+		//}
+		if (fish->name != 'e') {
+			if (player->state != Player::STATE::fish) {
+				if (fish->Eat(*player)) {
+					if (player->state != Player::STATE::miss) {
+						player->Miss(1);
+						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+						}
 					}
-				}
 
-				StopSoundMem(Sounds::SE_Falling);
+					StopSoundMem(Sounds::SE_Falling);
+				}
 			}
 		}
 		for (size_t i = 0; i < enemy.size(); i++) {
-			if (enemy.at(i).state != Enemy::STATE::fish) {
-				if (fish->Eat(enemy.at(i))) {
-					enemy.at(i).Death(1);
-					if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
-						PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+			if (fish->name != 'p') {
+				if (enemy.at(i).state != Enemy::STATE::fish) {
+					if (fish->Eat(enemy.at(i))) {
+						enemy.at(i).Death(1);
+						printfDx("");
+						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
+							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
+						}
 					}
 				}
 			}
 		}
 	}
 	// ìGÇÃèàóù
+	clsDx();
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
+		printfDx("%d ", enemy.at(i).state);
 		if (!enemy.at(i).GetDeathFlg()) {
 			// ìGÇ∆ÉXÉeÅ[ÉWÇÃìñÇΩÇËîªíË
 			for (size_t j = 0; j < stage.size(); j++) {
@@ -236,8 +254,10 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 		}
 		// âÊñ äOÇ…çsÇ¡ÇΩÇÁÇµÇ‘Ç´Ç∆ñAÇ™Ç≈ÇÈ
 		if (enemy.at(i).GetY() > SCREEN_HEIGHT - 24) {
-			splash.emplace_back(enemy.at(i).GetX());
-			bubble.emplace_back(enemy.at(i).GetX());
+			if (enemy.at(i).state != Enemy::STATE::fish) {
+				splash.emplace_back(enemy.at(i).GetX());
+				bubble.emplace_back(enemy.at(i).GetX());
+			}
 			enemy.at(i).SetFlg(false);
 		}
 		// ÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç¢Ç»ÇÁçÌèú
@@ -255,7 +275,17 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 	//else {
 	//	StopSoundMem(Sounds::SE_parachute);
 	//}
-
+	thunder->Update();
+	if (thunder->ThunderSpawn()) {
+		thunderball = new ThunderBall;
+	}
+	if (thunderball != nullptr) {
+		thunderball->Update();
+		for (size_t i = 0; i < stage.size(); i++) {
+			if (thunderball->Hit(stage.at(i))) {
+			}
+		}
+	}
 	StageSwitch = true;
 	for (size_t i = 0; i < enemy.size(); i++) {
 		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
@@ -301,4 +331,5 @@ void GameMain::Game()				// Ç±Ç±Ç≈ÉQÅ[ÉÄÇÃîªíËÇ»Ç«ÇÃèàóùÇÇ∑ÇÈ
 	}
 
 	ui->Update(Score,StageNum + 1);
+	
 }
