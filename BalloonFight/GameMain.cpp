@@ -14,6 +14,19 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
 	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
+	enemy.emplace_back(200,250);
 	StageNum = _stage;
 	if (StageNum > 4) {
 		StageNum = 0;
@@ -181,7 +194,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 				if (enemy.at(i).state != Enemy::STATE::fish) {
 					if (fish->Eat(enemy.at(i))) {
 						enemy.at(i).Death(1);
-						printfDx("");
 						if (CheckSoundMem(Sounds::SE_Eatable) == 0) {
 							PlaySoundMem(Sounds::SE_Eatable, DX_PLAYTYPE_BACK, true);
 						}
@@ -191,10 +203,8 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 	// 敵の処理
-	clsDx();
 	for (size_t i = 0; i < enemy.size(); i++) {
 		enemy.at(i).Update();
-		printfDx("%d ", enemy.at(i).state);
 		if (!enemy.at(i).GetDeathFlg()) {
 			// 敵とステージの当たり判定
 			for (size_t j = 0; j < stage.size(); j++) {
