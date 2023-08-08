@@ -49,6 +49,7 @@ public:
 	void LoadImage();
 	bool Eat(BoxCollider box);
 	void GetTarget(BoxCollider box);
+	BoxCollider GetEatTarget();
 	void GetPlayerVector(float _x, float _y);
 };
 

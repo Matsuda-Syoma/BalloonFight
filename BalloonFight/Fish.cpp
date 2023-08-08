@@ -60,6 +60,7 @@ void Fish::Update()
 		PlayerEat = false;
 		Animflg = false;
 		EatTarget.name = 'n';
+		EatTargetWork.name = 'n';
 	}
 
 
@@ -103,20 +104,18 @@ void Fish::LoadImage()
 }
 
 bool Fish::Eat(BoxCollider box) {
-	if (Animflg == 1) {
-
-	}
-	EatTarget = box;
 	clsDx();
-	printfDx("%d %d ", EatFlg,Animflg);
+	//printfDx("%d %d ", EatFlg,Animflg);
+	printfDx("%c %c ", box.name,EatTargetWork.name);
 	if (PlayerEat) {
 		return false;
 	}
+	// Ç≥Ç©Ç»ÇÃèoÇƒÇ≠ÇÈîªíË
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
 		if (box.name == EatTarget.name) {
 			EatTargetWork = EatTarget;
 		}
-		if(EatChance < 9){
+		if(EatChance < 3){
 			Animflg = true;
 		}
 		if (imagecnt == 2 && WeitTime % 15 == 0) {
@@ -130,8 +129,12 @@ bool Fish::Eat(BoxCollider box) {
 }
 
 void Fish::GetTarget(BoxCollider box) {
+	// Ç≥Ç©Ç»ÇÃèoÇƒÇ≠ÇÈîªíË
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
-		//EatTarget = box;
+		EatTarget = box;
 	}
 }
 
+BoxCollider Fish::GetEatTarget() {
+	return EatTarget;
+}

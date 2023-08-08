@@ -53,11 +53,10 @@ private:
 public:
 
 	enum class STATE : int {
-		stay = 0,
-		balloonspawn,
-		fly,
-		fish,
-		miss,
+		STAY = 0,
+		FLY,
+		FISH,
+		MISS,
 	};
 	STATE state;
 

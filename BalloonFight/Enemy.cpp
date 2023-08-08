@@ -25,7 +25,7 @@ Enemy::Enemy(float _x,float _y)
 	FlyspeedMax = 2;
 	inertiaX = 0;
 	inertiaY = 0;
-	MoveX = 1;
+	MoveX = -1;
 	MoveY = GetRand(1);
 	RandomMoveX = 0;
 	RandomMoveY = 0;
@@ -34,7 +34,7 @@ Enemy::Enemy(float _x,float _y)
 	MaxRandomMoveY = GetRand(2) + 2 * FRAMERATE;
 	jumpdelay = 0;
 
-	state = STATE::stay;
+	state = STATE::STAY;
 
 	AnimFlg = 0;
 	AnimUpdateTime = 0;
@@ -69,7 +69,7 @@ void Enemy::Update()
 	if (inertiaY < 150 / (2 - balloon) && !landingflg || deathflg) {
 		if (!deathflg && !groundflg) {
 			//AnimFlg = 0;
-			state = STATE::fly;
+			state = STATE::FLY;
 		}
 		inertiaY += 1.0;
 		if (deathflg) {
@@ -89,7 +89,7 @@ void Enemy::Update()
 		MaxRandomMoveX = GetRand(2) + 3 * FRAMERATE;
 	}
 	// ‰¡ˆÚ“®‚·‚é
-	if (state == STATE::fly) {
+	if (state == STATE::FLY) {
 		inertiaX += MoveX * 0.01;
 	}
 	// ‘¬“xãŒÀ‚ð’´‚¦‚½‚ç‘¬“x‚ðŒÅ’è‚·‚é
@@ -108,7 +108,7 @@ void Enemy::Update()
 	// ã¸‚·‚é
 	if (MoveY == 1 && jumpdelay <= 0 && balloon == 1) {
 		AnimFlg = 0;
-		state = STATE::fly;
+		state = STATE::FLY;
 		if (!CheckSoundMem(Sounds::SE_EnemyMove)) {
 			PlaySoundMem(Sounds::SE_EnemyMove, DX_PLAYTYPE_BACK, true);
 		}
@@ -143,7 +143,7 @@ void Enemy::Update()
 		inertiaY *= -0.8f;
 	}
 
-	if (state == STATE::fly) {
+	if (state == STATE::FLY) {
 		imageReverse = MoveX + 1;
 	}
 
@@ -153,13 +153,13 @@ void Enemy::Update()
 
 	AnimUpdate();
 
-	if (balloon != 1 && AnimUpdateTime > 210 && state == STATE::stay) {
+	if (balloon != 1 && AnimUpdateTime > 210 && state == STATE::STAY) {
 		// •—‘D‚Ì”‚ð‘‚â‚·
 		balloon = 1;
 		MoveY = 1;
 		RandomMoveY = 0;
 		MaxRandomMoveY = 3 * FRAMERATE;
-		state = STATE::fly;
+		state = STATE::FLY;
 	}
 }
 
@@ -202,7 +202,7 @@ bool Enemy::IsFly(Stage box) {
 			groundflg = true;
 			if (balloon != 1) {
 				AnimFlg = 0;
-				state = STATE::stay;
+				state = STATE::STAY;
 				inertiaX = 0;
 			}
 		}
@@ -360,7 +360,7 @@ void Enemy::Death(int i) {
 		if (!deathflg) {
 			AnimUpdateTime = 0;
 			AnimFlg = 0;
-			state = STATE::miss;
+			state = STATE::MISS;
 			inertiaX = 0.0f;
 			inertiaY = -100.0f;
 			deathflg = true;
@@ -370,7 +370,7 @@ void Enemy::Death(int i) {
 		if (!deathflg) {
 			AnimUpdateTime = 0;
 			AnimFlg = 0;
-			state = STATE::fish;
+			state = STATE::FISH;
 			inertiaX = 0.0f;
 			inertiaY = 0.0f;
 			y = 480;
@@ -387,7 +387,7 @@ void Enemy::AnimUpdate()
 	AnimUpdateTime++;
 	switch (state)
 	{
-	case STATE::stay:
+	case STATE::STAY:
 		if (AnimFlg == 0b0000) {
 			AnimImg = 0;
 			AnimUpdateTime = 0;
@@ -415,7 +415,7 @@ void Enemy::AnimUpdate()
 			}
 		}
 		break;
-	case STATE::fly:
+	case STATE::FLY:
 		if (AnimFlg == 0b0000) {
 			if (balloon == 1) {
 				AnimImg = 11;
@@ -468,10 +468,10 @@ void Enemy::AnimUpdate()
 			AnimWork++;
 		}
 		break;
-	case STATE::fish:
+	case STATE::FISH:
 		AnimImg = -1;
 		break;
-	case STATE::miss:
+	case STATE::MISS:
 		if (AnimUpdateTime > 2) {
 			if (AnimWork % 2 == 0) {
 				AnimImg = 14;
