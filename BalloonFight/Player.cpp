@@ -29,7 +29,7 @@ void Player::Init(int _life) {
 	startX = 0.15f;
 	jumpdelay = 0;
 	AnimFlg = 0;
-	state = STATE::stay;
+	state = STATE::STAY;
 	AnimUpdateTime = 0;
 	AnimImg = 0;
 	AnimWork = 0;
@@ -59,9 +59,9 @@ void Player::Update()		// プレイヤーの更新処理
 	if (inertiaY < 150 && !landingflg || missflg) {
 		if (flg && groundflg) {	
 			AnimFlg = 0;
-			state = STATE::fly;
+			state = STATE::FLY;
 		}
-		if (state != STATE::thunder) {
+		if (state != STATE::THUNDER) {
 			inertiaY += 2.0 * (3 - balloon);
 		}
 	}
@@ -86,7 +86,7 @@ void Player::Update()		// プレイヤーの更新処理
 		// Aボタンを押したときに上に加速、Bで1回のみ
 		if (PAD_INPUT::GetNowKey(XINPUT_BUTTON_A) && jumpdelay <= 0 || PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_B) && jumpdelay <= 0) {
 			AnimFlg = 0;
-			state = STATE::fly;
+			state = STATE::FLY;
 			PlaySoundMem(Sounds::SE_PlayerJump, DX_PLAYTYPE_BACK, true);
 			jumpdelay = DELAY;
 			if (groundflg) {
@@ -127,13 +127,13 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaX += 0.001f;
 			}
 			else if (inertiaX < GroundspeedMax && landingflg) {
-				state = STATE::walk;
+				state = STATE::WALK;
 				inertiaX += startX - 0.05f;
 			}
 		}
 		else if (inputX() == 0 && inertiaX > 0 && landingflg) {
 			AnimFlg = 0;
-			state = STATE::stay;
+			state = STATE::STAY;
 			inertiaX += -startX;
 		}
 
@@ -144,19 +144,19 @@ void Player::Update()		// プレイヤーの更新処理
 				inertiaX -= 0.001f;
 			}
 			else if (inertiaX > -GroundspeedMax && landingflg) {
-				state = STATE::walk;
+				state = STATE::WALK;
 				inertiaX += -startX + 0.05f;
 			}
 		}
 		else if (fabsf(inputX()) < 0.1 && inertiaX < 0 && landingflg) {
 			AnimFlg = 0;
-			state = STATE::stay;
+			state = STATE::STAY;
 			inertiaX += startX;
 		}
 
 		if (fabsf(inputX()) < 0.1 && inertiaX < 0.15f && inertiaX > -0.15f && landingflg) {
 			AnimFlg = 0;
-			state = STATE::stay;
+			state = STATE::STAY;
 			inertiaX = 0;
 		}
 
@@ -182,7 +182,7 @@ void Player::Update()		// プレイヤーの更新処理
 	}
 
 
-	if (state == STATE::miss && !misssoundflg) {
+	if (state == STATE::MISS && !misssoundflg) {
 			PlaySoundMem(Sounds::SE_Falling, DX_PLAYTYPE_BACK, true);
 			misssoundflg = true;
 	}
@@ -282,10 +282,10 @@ float Player::GetBoxSide(BoxCollider box ,int i) {
 void Player::BallonBreak(int i) {
 	PlaySoundMem(Sounds::SE_Splash, DX_PLAYTYPE_BACK, true);
 	AnimUpdateTime = 31;
-	if (state == STATE::stay) {
+	if (state == STATE::STAY) {
 		AnimImg += 3;
 	}
-	if (state == STATE::fly) {
+	if (state == STATE::FLY) {
 		AnimImg += 5;
 	}
 	balloon -= i;
@@ -302,7 +302,7 @@ void Player::Miss(int i) {
 			if (!missflg) {
 				AnimUpdateTime = 0;
 				AnimFlg = 0;
-				state = STATE::miss;
+				state = STATE::MISS;
 				inertiaX = 0.0f;
 				inertiaY = -150.0f;
 				missflg = true;
@@ -311,7 +311,7 @@ void Player::Miss(int i) {
 		case 1:
 			if (!missflg) {
 				AnimFlg = 0;
-				state = STATE::fish;
+				state = STATE::FISH;
 				inertiaX = 0.0f;
 				inertiaY = 0.0f;
 				y = 480;
@@ -322,7 +322,7 @@ void Player::Miss(int i) {
 			if (!missflg) {
 				AnimUpdateTime = 0;
 				AnimFlg = 0;
-				state = STATE::thunder;
+				state = STATE::THUNDER;
 				inertiaX = 0.0f;
 				inertiaY = 0.0f;
 				missflg = true;
@@ -345,7 +345,7 @@ void Player::AnimUpdate() {
 	AnimUpdateTime++;
 	switch (state)
 	{
-	case STATE::stay:
+	case STATE::STAY:
 		AnimFlg = 0;
 		if (AnimUpdateTime % 17 == 0) {
 			if (AnimWork % 2 == 0) {
@@ -376,7 +376,7 @@ void Player::AnimUpdate() {
 			AnimUpdateTime = 0;
 		}
 		break;
-	case STATE::walk:
+	case STATE::WALK:
 		if (AnimFlg == 0b0000) {
 			if (balloon == 2) {
 				AnimImg = 11;
@@ -403,7 +403,7 @@ void Player::AnimUpdate() {
 			AnimFlg = 0b0000;
 		}
 		break;
-	case STATE::fly:
+	case STATE::FLY:
 		if (AnimFlg == 0b0000) {
 			if (balloon == 2) {
 				AnimImg = 20;
@@ -424,7 +424,7 @@ void Player::AnimUpdate() {
 			}
 		}
 		if (AnimFlg == 0b0100 && groundflg) {
-			state = STATE::walk;
+			state = STATE::WALK;
 		}
 		if (AnimUpdateTime < 6) {
 			if (AnimUpdateTime % 2 == 0) {
@@ -475,7 +475,7 @@ void Player::AnimUpdate() {
 			AnimWork++;
 		}
 		break;
-	case STATE::thunder:
+	case STATE::THUNDER:
 		if (AnimFlg == 0b0000) {
 			AnimImg = 30;
 			AnimUpdateTime = 0;
@@ -492,14 +492,14 @@ void Player::AnimUpdate() {
 				AnimWork++;
 			}
 			if (AnimUpdateTime > 60) {
-				state = STATE::miss;
+				state = STATE::MISS;
 			}
 		}
 		break;
-	case STATE::fish:
+	case STATE::FISH:
 		AnimImg = -1;
 		break;
-	case STATE::miss:
+	case STATE::MISS:
 		if (AnimUpdateTime > 2) {
 			if (AnimWork % 3 == 0) {
 				AnimImg = 29;

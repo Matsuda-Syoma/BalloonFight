@@ -2,7 +2,6 @@
 #include "BoxCollider.h"
 #include "DxLib.h" 
 #include "Player.h"
-
 class Fish: public BoxCollider
 {
 private:
@@ -27,12 +26,12 @@ private:
 	bool PlayerEat;
 	int ImageReverse;
 	BoxCollider EatTarget;
-	BoxCollider EatTargetWork;
 
 
 public:
 
 	bool flg1;
+	bool flg2;
 
 	//コンストラクタ
 	Fish();
@@ -48,7 +47,8 @@ public:
 
 	void LoadImage();
 	bool Eat(BoxCollider box);
-	void GetTarget(BoxCollider box);
+	bool GetTarget(BoxCollider box);
+	BoxCollider GetEatTarget();
 	void GetPlayerVector(float _x, float _y);
 };
 

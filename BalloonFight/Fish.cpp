@@ -2,13 +2,14 @@
 #include"DxLib.h"
 #include"common.h"
 #include"LoadSounds.h"
-
 // コンストラクタ
 Fish::Fish(float _x, int _flg,int _pflg)
 {
 	imagecnt = -1;
 	WeitTime = 0;
 	flg = false;
+	flg1 = false;
+	flg2 = false;
 	Animflg = _flg;
 	PlayerEat = false;
 	EatFlg = false;
@@ -19,7 +20,6 @@ Fish::Fish(float _x, int _flg,int _pflg)
 	h = HEIGHT;
 	EatChanceTime = FRAMERATE;
 	LoadDivGraph("Resources/images/Enemy/Enemy_FishAnimation.png", 10, 5, 2, 64, 64, image);
-	flg1 = false;
 	
 }
 
@@ -30,7 +30,7 @@ Fish::~Fish()
 
 void Fish::Update()
 {
-	x = EatTargetWork.GetSide(3);
+	x = EatTarget.GetSide(3);
 
 	if (x < 170) {
 		x = 170;
@@ -60,7 +60,7 @@ void Fish::Update()
 	if (imagecnt <= -1) {
 		PlayerEat = false;
 		Animflg = false;
-		flg1 = false;
+		flg2 = false;
 		EatTarget.name = 'n';
 	}
 
@@ -71,12 +71,10 @@ void Fish::Update()
 		EatY = 0;
 	}
 
-	if (EatFlg) {
 		if (EatY > -30 && imagecnt < 3) {
 			EatY+= -2;
-		}
 	}
-	else if (EatY < 0 && !EatFlg) {
+	else if (EatY < 0 && imagecnt >= 3) {
 		EatY+=1;
 	}
 
@@ -107,21 +105,24 @@ void Fish::LoadImage()
 }
 
 bool Fish::Eat(BoxCollider box) {
-	EatTarget = box;
 	if (PlayerEat) {
 		return false;
 	}
+	if (box.name != EatTarget.name) {
+		return false;
+	}
+
+	// さかなの出てくる判定
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
-		if (box.name == EatTarget.name) {
-			EatTargetWork = EatTarget;
-			EatFlg = true;
-		}
-		if(EatChance < 9){
-			Animflg = true;
+		if (box.name == EatTarget.name && !flg1) {
 			flg1 = true;
 		}
+		// 確率
+		if(EatChance < 3){
+			Animflg = true;
+		}
 		if (imagecnt == 2 && WeitTime % 15 == 0) {
-			if (((SCREEN_HEIGHT - 60) + EatY) - EatTargetWork.GetSide(2) < 0) {
+			if (((SCREEN_HEIGHT - 60) + EatY) - EatTarget.GetSide(2) < 0) {
 				PlayerEat = true;
 				return true;
 			}
@@ -130,9 +131,18 @@ bool Fish::Eat(BoxCollider box) {
 	return false;
 }
 
-void Fish::GetTarget(BoxCollider box) {
+bool Fish::GetTarget(BoxCollider box) {
+
+	// さかなの出てくる判定
+	
 	if ((SCREEN_HEIGHT - 90) - box.GetSide(2) < 0 && SCREEN_HEIGHT > box.GetSide(1) && box.GetSide(3) > 170 && box.GetSide(4) < 460) {
 		EatTarget = box;
+		flg2 = true;
+		return true;
 	}
+	return false;
 }
 
+BoxCollider Fish::GetEatTarget() {
+	return EatTarget;
+}

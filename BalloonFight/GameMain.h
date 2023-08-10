@@ -32,8 +32,8 @@ private:
 	bool parachuteflg;
 	int SpawnDelay;
 public:
-	GameMain(int _score, int _stage, int _life);
-	// コンストラクタ
+	GameMain(int _score, int _stage, int _life);// コンストラクタ
+
 	~GameMain();								// デストラクタ
 
 	// クラスのオブジェクト

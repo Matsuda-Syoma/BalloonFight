@@ -40,12 +40,12 @@ private:
 public:
 
 	enum class STATE {
-		stay = 0,
-		walk,
-		fly,
-		thunder,
-		fish,
-		miss,
+		STAY = 0,
+		WALK,
+		FLY,
+		THUNDER,
+		FISH,
+		MISS,
 	};
 	STATE state;
 
