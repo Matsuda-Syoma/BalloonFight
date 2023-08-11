@@ -4,10 +4,13 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-ThunderBall::ThunderBall()
+ThunderBall::ThunderBall(bool p_flg)
 {
-	BallX = 550;
-	BallY = 300;
+
+	Hitflg = p_flg;
+
+	BallX = 300;
+	BallY = 100;
 
 	MoveX = 1;
 	MoveY = -2;
@@ -23,46 +26,50 @@ ThunderBall::ThunderBall()
 
 ThunderBall::~ThunderBall()
 {
+	BallX = -100;
+	BallY = -100;
+	BallCount = -1;
+	thunder_flg = TRUE;
 }
 
 void ThunderBall::Update()
 {
 		BallX += MoveX;
 		BallY += MoveY;
+
 		box.top = BallY;
 		box.bottom = BallY + HEIGHT;
 		box.left = BallX;
 		box.right = BallX + WIDTH;
 
-	if (BallCount < 3) {
-		BallCount++;
-		
-		
+		if (BallCount < 3) {
+			BallCount++;
 
-		if (BallCount >= 3) {
-			BallCount = 0;
-		}
-	}
 
-	// 壁・天井での反射
-	if (BallX < 0 || BallX > 640 - 25) { // 横の壁
-		if (BallX < 0) {
-			BallX = 0;
-			
-		}
-		else {
-			BallX = 640 - 25;
-		}
-		BallAngle = (1 - BallAngle) + 0.5f;
-		if (BallAngle > 1) BallAngle -= 1.0f;
-		ChangeAngle();
-	}
-	if (BallY < 4) { // 上の壁
-		BallAngle = (1 - BallAngle);
-		
-		ChangeAngle();
-	}
 
+			if (BallCount >= 3) {
+				BallCount = 0;
+			}
+		}
+
+		// 壁・天井での反射
+		if (BallX < 0 || BallX > 640 - 25) { // 横の壁
+			if (BallX < 0) {
+				BallX = 0;
+
+			}
+			else {
+				BallX = 640 - 25;
+			}
+			BallAngle = (1 - BallAngle) + 0.5f;
+			if (BallAngle > 1) BallAngle -= 1.0f;
+			ChangeAngle();
+		}
+		if (BallY < 4) { // 上の壁
+			BallAngle = (1 - BallAngle);
+
+			ChangeAngle();
+		}
 }
 
 void ThunderBall::Draw() const
@@ -76,6 +83,12 @@ void ThunderBall::LoadImages()
 {
 	LoadDivGraph("Resources/images/Stage/Stage_ThunderEffectAnimation.png", 3, 3, 1, 32, 32, ThunBallImg);
 }
+
+//void ThunderBall::SetXY(float _x, float _y)
+//{
+//	BallX = _x;
+//	BallY = _y;
+//}
 
 void ThunderBall::ChangeAngle()
 {
@@ -94,7 +107,6 @@ float ThunderBall::GetBoxSide(BoxCollider box, int i) {
 
 int ThunderBall::Hit(BoxCollider _stage) {
 	clsDx();
-	printfDx("%f", BallAngle);
 	int HitEnemy = HitBox(_stage);
 	switch (HitEnemy)
 	{
@@ -128,3 +140,44 @@ int ThunderBall::Hit(BoxCollider _stage) {
 	}
 
 }
+
+int ThunderBall::HitPlayer(BoxCollider _player)
+{
+	// 入ってきた値を代入
+	int HitEnemy = HitBox(_player);
+
+	switch (HitEnemy)
+	{
+	case 1:
+		BallY = GetBoxSide(_player, 1) - (HEIGHT + 1);
+		return 1;
+		break;
+	case 2:
+		BallY = GetBoxSide(_player, 2) + 1;
+		return 2;
+		break;
+	case 3:
+		BallX = GetBoxSide(_player, 3) - (WIDTH + 1);
+		return 3;
+		break;
+	case 4:
+		BallX = GetBoxSide(_player, 4) + 1;
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+	return 0;
+}
+
+int ThunderBall::GetX()
+{
+	return BallX;
+}
+
+int ThunderBall::GetY()
+{
+	return BallY;
+}
+
