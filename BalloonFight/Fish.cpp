@@ -38,9 +38,9 @@ void Fish::Update()
 	if (x > 460) {
 		x = 460;
 	}
-	
+	// playerを食べてる＆カウント2
 	if (PlayerEat && imagecnt == 2) {
-		imagecnt = 6;
+		imagecnt = 6;// 6にする
 	}
 	if (++WeitTime % 15 == 0 && imagecnt == 5) {
 		imagecnt = -1;
@@ -116,10 +116,11 @@ bool Fish::Eat(BoxCollider box) {
 			EatTargetWork = EatTarget;
 			EatFlg = true;
 		}
-		if(EatChance < 9){
+		if(EatChance < 3){
 			Animflg = true;
 			flg1 = true;
 		}
+
 		if (imagecnt == 2 && WeitTime % 15 == 0) {
 			if (((SCREEN_HEIGHT - 60) + EatY) - EatTargetWork.GetSide(2) < 0) {
 				PlayerEat = true;

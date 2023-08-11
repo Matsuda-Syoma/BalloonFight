@@ -77,7 +77,6 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
 	int PlayerLife = player->GetLife();
-
 	thunder->Draw();
 	if (thunderball != nullptr) {
 		thunderball->Draw();
@@ -275,21 +274,27 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	//else {
 	//	StopSoundMem(Sounds::SE_parachute);
 	//}
-	thunder->Update();
+	
+		thunder->Update();
+		//thunderball->SetXY(thunder->CloudX, thunder->CloudY);		// 雷座標設定
+
 	if (thunder->ThunderSpawn()) {
-		thunderball = new ThunderBall;
+		thunderball = new ThunderBall(player->GetFlg());		// カウントが達成されたらコンストラクタ読み込み
 	}
+	if (player->GetFlg() == FALSE) {
+		thunderball->~ThunderBall();
+	}
+
 	if (thunderball != nullptr) {
-		thunderball->Update();
+		thunderball->Update();// コンストラクタ読み込みされていたらUpdate処理
+		if (thunderball->HitPlayer(*player)!=0) {
+			player->Miss(2);
+
+		}
+
 		for (size_t i = 0; i < stage.size(); i++) {
 			if (thunderball->Hit(stage.at(i))) {
 			}
-		}
-	}
-	StageSwitch = true;
-	for (size_t i = 0; i < enemy.size(); i++) {
-		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
-			StageSwitch = false;
 		}
 	}
 
@@ -322,6 +327,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 			continue;
 		}
 	}
+	ui->Update(Score, StageNum + 1);
 
 	for (size_t i = 0; i < splash.size(); i++) {
 		if (splash.at(i).Update()) {
@@ -330,6 +336,11 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 
-	ui->Update(Score,StageNum + 1);
+	StageSwitch = true;
+	for (size_t i = 0; i < enemy.size(); i++) {
+		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
+			StageSwitch = false;
+		}
+	}
 	
 }

@@ -3,7 +3,7 @@
 #include <DxLib.h>
 Thunder::Thunder()
 {
-	thunderball = new ThunderBall;
+	thunderball = new ThunderBall(0);
 	FlashCount = 0;
 	BallCount = 0;
 	
