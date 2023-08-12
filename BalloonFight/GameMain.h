@@ -10,6 +10,7 @@
 #include"Thunder.h"
 #include"ThunderBall.h"
 #include"UI.h"
+#include"Title.h"
 #include "ScoreUP.h"
 #include "Splash.h"
 #include <vector>

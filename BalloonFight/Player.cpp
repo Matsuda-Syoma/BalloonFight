@@ -5,7 +5,6 @@
 Player::Player()			// コンストラクタ
 {
 	name = 'p';
-
 	w = WIDTH;
 	h = HEIGHT;
 	GroundspeedMax = 3.0f;
@@ -476,6 +475,7 @@ void Player::AnimUpdate() {
 		}
 		break;
 	case STATE::THUNDER:
+		ThunderHit = true;
 		if (AnimFlg == 0b0000) {
 			AnimImg = 30;
 			AnimUpdateTime = 0;

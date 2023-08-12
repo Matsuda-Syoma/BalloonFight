@@ -15,10 +15,14 @@ public:
 	void DeleteImages();
 
 	void GameOver();
+	int GetHighScore();
+	bool Title_flg;
+	
 
 private:
 	int NowScore;					//現在のスコア
 	int HighScore;					//ハイスコア
+
 	int HighScoreWork;				//ハイスコア処理用
 
 	int TmpScore;					//スコア
@@ -28,9 +32,11 @@ private:
 
 	int Stage;
 	int PhaseCount;
+	int OverCount;
 
 	bool PhaseFlg;
 	bool GameOverFlg;
+	
 
 	int Score[6];
 	int HiScore[6];

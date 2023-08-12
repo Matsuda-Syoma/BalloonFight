@@ -1,38 +1,78 @@
 #include "Thunder.h"
 #include"ThunderBall.h"
 #include <DxLib.h>
+#include "common.h"
+
 Thunder::Thunder()
 {
-	thunderball = new ThunderBall(0);
+	thunderball = new ThunderBall(0,0,0,0);
 	FlashCount = 0;
 	BallCount = 0;
-	
+	cu_Cnt= 0;
 	CloudX = 200, CloudY = 100;
-	thunderball->BallX = CloudX + 50;
-	thunderball->BallY = CloudY;
-
-	
+	CloudX2 = 200;
+	CloudY2 = 100;
+	FlFlg = false;
+	current_flg = false;
 	LoadImages();
 }
 
 Thunder::~Thunder()
 {
+
 }
 
 void Thunder::Update()
 {
-	//点滅
-	if (FlashCount < 100) {
-		++FlashCount;
+	
+	/*printfDx("  %d  ", Th_rund);*/
+	// 10秒
+	if (BallCount < FRAMERATE * 3) {
+		Th_rund = GetRand(3);
+		++BallCount;
 	}
 
-	//thunderball->Update();
+	if (BallCount / 60 == 3) {
+		FlFlg = true;
+	}
+
+	if (FlFlg == true) {
+		//点滅
+		if (FlashCount < 100) {
+			++FlashCount;
+		}
+	}
+	// 落雷処理
+	if (current_flg == true) {
+		if (++WaitTime % 5 == 0) {
+			cu_Cnt = cu_Cnt + 1;
+		}
+	}
 }
 
 void Thunder::Draw() const
 {
-	
-		DrawGraph(100, 200, ThunderImg[0], TRUE);
+	DrawGraph(CloudX + 20, CloudY, ThunderImg[3], TRUE);
+		
+		switch (cu_Cnt)
+		{
+		case 1:
+			DrawGraph(CloudX+20, CloudY, ThunderImg[0], TRUE);
+			break;
+		case 2:
+			DrawGraph(CloudX+20, CloudY, ThunderImg[1], TRUE);
+			break;
+		case 3:
+			DrawGraph(CloudX+20, CloudY, ThunderImg[2], TRUE);
+			break;
+		case 4:
+			DrawGraph(CloudX+20, CloudY, ThunderImg[3], TRUE);
+			break;
+		case 5:
+			DrawGraph(CloudX+20, CloudY, ThunderImg[4], TRUE);
+			break;
+		}
+
 
 	
 		if (FlashCount % 4) {
@@ -44,8 +84,6 @@ void Thunder::Draw() const
 		else {
 			(DrawGraph(CloudX, CloudY, CloudImg[0], TRUE));
 		}
-		
-		
 		thunderball->Draw();
 
 }
@@ -54,7 +92,7 @@ void Thunder::Draw() const
 void Thunder::LoadImages()
 {
 	LoadDivGraph("Resources/images/Stage/Stage_CloudAnimation.png", 3, 3, 1, 128, 64, CloudImg);
-	LoadDivGraph("Resources/images/Stage/Stage_ThunderAnimation.png", 6, 3, 1, 64, 64, ThunderImg);
+	LoadDivGraph("Resources/images/Stage/Stage_ThunderAnimation.png", 6, 6, 1, 64, 64, ThunderImg);
 	LoadDivGraph("Resources/images/Stage/Stage_ThunderEffectAnimation.png", 3, 3, 1, 32, 32, ThunBallImg);
 }
 
@@ -64,8 +102,43 @@ int Thunder::BallAngle(int _i) {
 
 bool Thunder::ThunderSpawn() {
 	if (FlashCount >= 100 && !ThFlg) {
+		//thunderball->BallX = CloudX + 50;
+		//thunderball->BallY = CloudY;
 		ThFlg = true; 
+		current_flg = true;
 		return true;
 	}
 	return false;
 }
+int Thunder::GetRandSpawn()
+{
+	return Th_rund;
+}
+
+void Thunder::RandSpawn()
+{
+	switch (Th_rund)
+	{
+		// 右上
+	case 0:
+		CloudX2 = CloudX + 100;
+		break;
+		// 右下
+	case 1:
+		CloudX2 = CloudX + 100;
+		CloudY2 = CloudY + 80;
+		break;
+		// 左下
+	case 2:
+		CloudX2 = CloudX-100;
+		CloudY2 = CloudY + 80;
+		break;
+		// 左上
+	case 3:
+		CloudX2 = CloudX;
+		CloudY2 = CloudY;
+		break;
+	}
+}
+
+

@@ -57,6 +57,11 @@ GameMain::~GameMain()				// ここでdeleteなどをする
 
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
+	if (ui->Title_flg == true) {
+		return new Title();
+	}
+	
+
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		Pause = !Pause;
 		Sounds::AllStop();
@@ -127,6 +132,7 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 
 void GameMain::Game()				// ここでゲームの判定などの処理をする
 {
+
 	if (CheckSoundMem(Sounds::BGM_Trip) == 0) {
 		PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	}
@@ -317,10 +323,13 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		//thunderball->SetXY(thunder->CloudX, thunder->CloudY);		// 雷座標設定
 
 	if (thunder->ThunderSpawn()) {
-		thunderball = new ThunderBall(player->GetFlg());		// カウントが達成されたらコンストラクタ読み込み
+		thunder->RandSpawn();
+		thunderball = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX2, thunder->CloudY2);		// カウントが達成されたらコンストラクタ読み込み
 	}
-	if (player->GetFlg() == FALSE) {
-		thunderball->~ThunderBall();
+	
+	if (player->ThunderHit== true) {
+		thunderball->BallX = -100;
+		thunderball->BallY = -100;
 	}
 
 	if (thunderball != nullptr) {

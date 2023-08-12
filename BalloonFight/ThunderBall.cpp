@@ -4,19 +4,47 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-ThunderBall::ThunderBall(bool p_flg)
+ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 {
+	// memo
+	// spownの受け渡しがうまくいっていないのでバグっている
 
 	Hitflg = p_flg;
+	spownAngle = spown;
+	printfDx("%d", spownAngle);
 
-	BallX = 300;
-	BallY = 100;
 
-	MoveX = 1;
-	MoveY = -2;
+	BallX = _x;
+	BallY = _y;
+
+	/*MoveX = 1;
+	MoveY = -2;*/
 
 	Speed = 3;
-	BallAngle = 0.65f;
+
+	switch (spownAngle)
+	{
+	case 0:// 右上
+		BallAngle = 0.875f;
+		MoveX = 1;
+		MoveY = -2;
+		break;
+	case 1:// 右下
+		BallAngle = 0.125f;
+		MoveX = 1;
+		MoveY = +2;
+		break;
+	case 2:// 左下
+		BallAngle = 0.375f;
+		MoveX = -1;
+		MoveY = +2;
+		break;
+	case 3:// 左上
+		BallAngle = 0.625f;
+		MoveX = -1;
+		MoveY = -2;
+		break;
+	}
 
 	FlashCount = 0;
 	BallCount = -1;
@@ -26,14 +54,13 @@ ThunderBall::ThunderBall(bool p_flg)
 
 ThunderBall::~ThunderBall()
 {
-	BallX = -100;
-	BallY = -100;
 	BallCount = -1;
 	thunder_flg = TRUE;
 }
 
 void ThunderBall::Update()
 {
+	
 		BallX += MoveX;
 		BallY += MoveY;
 
@@ -84,10 +111,15 @@ void ThunderBall::LoadImages()
 	LoadDivGraph("Resources/images/Stage/Stage_ThunderEffectAnimation.png", 3, 3, 1, 32, 32, ThunBallImg);
 }
 
-//void ThunderBall::SetXY(float _x, float _y)
+//int ThunderBall::SetXY(float _x, float _y)
 //{
-//	BallX = _x;
-//	BallY = _y;
+//	float Cloud_X = _x;
+//	float Cloud_Y = _y;
+//
+//	BallX = Cloud_X;
+//	BallY = Cloud_Y;
+//
+//	return TRUE;
 //}
 
 void ThunderBall::ChangeAngle()
@@ -171,13 +203,5 @@ int ThunderBall::HitPlayer(BoxCollider _player)
 	return 0;
 }
 
-int ThunderBall::GetX()
-{
-	return BallX;
-}
 
-int ThunderBall::GetY()
-{
-	return BallY;
-}
 
