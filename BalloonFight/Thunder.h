@@ -19,10 +19,12 @@ public:
 	void RandSpawn();
 	int GetRandSpawn();
 
+	//bool Re_Thunder();// 再スポーン関数
+
 	float CloudX2, CloudY2;
 private:
 	float CloudX, CloudY;
-	
+	float thunder_x, thunder_y;		// 落雷画像回転時に起こるずれを修正するための変数
 
 	int CloudImg[3];
 	int ThunderImg[6];
@@ -37,6 +39,7 @@ private:
 	int ThAnimImg;
 	
 
+	float thunderRota;
 	bool ThFlg;
 	bool FlFlg;
 	bool current_flg;

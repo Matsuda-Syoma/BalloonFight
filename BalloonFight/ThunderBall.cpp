@@ -102,7 +102,6 @@ void ThunderBall::Update()
 void ThunderBall::Draw() const
 {
 	DrawGraph(BallX, BallY, ThunBallImg[BallCount], TRUE);
-	
 }
 
 //‰æ‘œ“Ç

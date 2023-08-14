@@ -32,6 +32,8 @@ private:
 	int StageSwitchTime;
 	bool parachuteflg;
 	int SpawnDelay;
+
+	int th_Bcnt;
 public:
 	GameMain(int _score, int _stage, int _life);// コンストラクタ
 

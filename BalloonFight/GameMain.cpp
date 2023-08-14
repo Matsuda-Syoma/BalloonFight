@@ -320,7 +320,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	//}
 	
 		thunder->Update();
-		//thunderball->SetXY(thunder->CloudX, thunder->CloudY);		// 雷座標設定
 
 	if (thunder->ThunderSpawn()) {
 		thunder->RandSpawn();
@@ -336,7 +335,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		thunderball->Update();// コンストラクタ読み込みされていたらUpdate処理
 		if (thunderball->HitPlayer(*player)!=0) {
 			player->Miss(2);
-
 		}
 
 		for (size_t i = 0; i < stage.size(); i++) {

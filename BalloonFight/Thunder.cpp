@@ -5,6 +5,7 @@
 
 Thunder::Thunder()
 {
+	thunderRota = 0;
 	thunderball = new ThunderBall(0,0,0,0);
 	FlashCount = 0;
 	BallCount = 0;
@@ -41,39 +42,62 @@ void Thunder::Update()
 		if (FlashCount < 100) {
 			++FlashCount;
 		}
+		else
+		{
+			current_flg = true;
+		}
 	}
+	//printfDx("%d", Th_rund);
+	switch (Th_rund)
+	{
+		// 右上
+	case 0:
+		thunderRota = 4.0f;
+		thunder_x = 90;
+		thunder_y;
+		break;
+		// 右下
+	case 1:
+		thunderRota = 5.0f;
+		thunder_x = 100;
+		thunder_y = 50;
+		break;
+		// 左下
+	case 2:
+		thunderRota = 1.0f;
+		thunder_x = 40;
+		thunder_y = 60;
+		break;
+		// 左上
+	case 3:
+		thunderRota = 2.0f;
+		thunder_x = 20;
+		thunder_y = 10;
+		break;
+	}
+
 	// 落雷処理
 	if (current_flg == true) {
 		if (++WaitTime % 5 == 0) {
 			cu_Cnt = cu_Cnt + 1;
 		}
 	}
+	printfDx("%d", BallCount);
+	// 再スポーン処理
+	if (BallCount > FRAMERATE * 10) {
+		BallCount = 0;
+		cu_Cnt = 0;
+		ThFlg = false;
+		FlFlg = false;
+		current_flg = false;
+
+	}
+
 }
 
 void Thunder::Draw() const
 {
 	DrawGraph(CloudX + 20, CloudY, ThunderImg[3], TRUE);
-		
-		switch (cu_Cnt)
-		{
-		case 1:
-			DrawGraph(CloudX+20, CloudY, ThunderImg[0], TRUE);
-			break;
-		case 2:
-			DrawGraph(CloudX+20, CloudY, ThunderImg[1], TRUE);
-			break;
-		case 3:
-			DrawGraph(CloudX+20, CloudY, ThunderImg[2], TRUE);
-			break;
-		case 4:
-			DrawGraph(CloudX+20, CloudY, ThunderImg[3], TRUE);
-			break;
-		case 5:
-			DrawGraph(CloudX+20, CloudY, ThunderImg[4], TRUE);
-			break;
-		}
-
-
 	
 		if (FlashCount % 4) {
 			DrawGraph(CloudX, CloudY, CloudImg[1], TRUE);
@@ -84,6 +108,13 @@ void Thunder::Draw() const
 		else {
 			(DrawGraph(CloudX, CloudY, CloudImg[0], TRUE));
 		}
+
+		// 落雷処理
+		// thunderRotaがTh_rundの１から４で値が変わる
+		if (current_flg) {
+			DrawRotaGraph(CloudX + thunder_x, CloudY + thunder_y, 1.0f, thunderRota, ThunderImg[cu_Cnt], true);
+		}
+
 		thunderball->Draw();
 
 }
@@ -101,13 +132,13 @@ int Thunder::BallAngle(int _i) {
 }
 
 bool Thunder::ThunderSpawn() {
-	if (FlashCount >= 100 && !ThFlg) {
+	if (cu_Cnt >= 7 && !ThFlg) {
 		//thunderball->BallX = CloudX + 50;
 		//thunderball->BallY = CloudY;
 		ThFlg = true; 
-		current_flg = true;
 		return true;
 	}
+	
 	return false;
 }
 int Thunder::GetRandSpawn()
@@ -121,22 +152,23 @@ void Thunder::RandSpawn()
 	{
 		// 右上
 	case 0:
-		CloudX2 = CloudX + 100;
+		CloudX2 = CloudX + 110;
+		CloudY2 = CloudY - 25;
 		break;
 		// 右下
 	case 1:
-		CloudX2 = CloudX + 100;
-		CloudY2 = CloudY + 80;
+		CloudX2 = CloudX + 110;
+		CloudY2 = CloudY + 65;
 		break;
 		// 左下
 	case 2:
-		CloudX2 = CloudX-100;
-		CloudY2 = CloudY + 80;
+		CloudX2 = CloudX-10;
+		CloudY2 = CloudY + 65;
 		break;
 		// 左上
 	case 3:
-		CloudX2 = CloudX;
-		CloudY2 = CloudY;
+		CloudX2 = CloudX-20;
+		CloudY2 = CloudY-20;
 		break;
 	}
 }
