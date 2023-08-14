@@ -23,6 +23,7 @@ ThunderBall::ThunderBall()
 
 ThunderBall::~ThunderBall()
 {
+	
 }
 
 void ThunderBall::Update()

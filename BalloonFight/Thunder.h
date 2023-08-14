@@ -18,19 +18,21 @@ public:
 	bool ThunderSpawn();
 
 private:
-	int CloudImg[3];
-	int ThunderImg[6];
-	int ThunBallImg[3];
+	int CloudImg[3];		//雲の画像
+	int ThunderImg[6];		//稲妻の画像
+	int ThunBallImg[3];		//雷の球の画像
 
-	int FlashCount;
-	int BallCount;
+	int FlashCount;			//点滅のかうんと
+	int BallCount;			//球のカウント
 
-	int WaitTime;
-	int ThAnimImg;
+	int WaitTime;			//待つ
+	int FlWait;				//点滅を待つ
+	int ThAnimImg;			//稲妻を出す
 	
-	int CloudX, CloudY;
+	int CloudX, CloudY;		//雲の座標
+	int ThX, ThY;			//稲妻の座標
 
-	bool ThFlg;
+	bool ThFlg;				//
 	bool FlFlg;
 
 };
