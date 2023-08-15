@@ -16,6 +16,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	SpawnDelay = 0;
 	//enemy.emplace_back(200,250);
 	StageNum = _stage;
+	//StageNum = 4;
 	if (StageNum > 4) {
 		StageNum = 0;
 	}
@@ -42,10 +43,36 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 		}
 	}
 
+	//ステージごとに雲の座標
+	switch (StageNum) {
+	case 0:
+		thunder->CloudX = 295, thunder->CloudY = 86;	//ステージ１
+		break;
+	case 1:
+		thunder->CloudX = 55, thunder->CloudY = 222;	//ステージ２
+		break;
+	case 2:
+		thunder->CloudX = 55, thunder->CloudY = 120;	//ステージ３
+		break;
+	case 3:
+		thunder->CloudX = 135, thunder->CloudY = 85;	//ステージ４
+		break;
+	case 4:
+		thunder->CloudX = 55, thunder->CloudY = 85;		//ステージ５
+		break;
+	}
+
+	thunder->ThX = thunder->CloudX + 10, thunder->ThY = thunder->CloudY + 50;
+
 	HighScore = 10000;
 
 	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
+	AImg = LoadGraph("Resources/images/StageSample/Stage_1.png");
+	BImg = LoadGraph("Resources/images/StageSample/Stage_2.png");
+	CImg = LoadGraph("Resources/images/StageSample/Stage_3.png");
+	DImg = LoadGraph("Resources/images/StageSample/Stage_4.png");
+	EImg = LoadGraph("Resources/images/StageSample/Stage_5.png");
 
 }
 
@@ -76,6 +103,25 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
+	////ステージサンプル
+	//switch (StageNum) {
+	//case 0:
+	//	DrawGraph(0, 0, AImg, FALSE);
+	//	break;
+	//case 1:
+	//	DrawGraph(0, 0, BImg, FALSE);
+	//	break;
+	//case 2:
+	//	DrawGraph(0, 0, CImg, FALSE);
+	//	break;
+	//case 3:
+	//	DrawGraph(0, 0, DImg, FALSE);
+	//	break;
+	//case 4:
+	//	DrawGraph(0, 0, EImg, FALSE);
+	//	break;
+	//}
+
 	int PlayerLife = player->GetLife();
 	thunder->Draw();
 	if (thunderball != nullptr) {
@@ -287,10 +333,10 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 
 	if (thunderball != nullptr) {
 		thunderball->Update();// コンストラクタ読み込みされていたらUpdate処理
-		if (thunderball->HitPlayer(*player)!=0) {
+		/*if (thunderball->HitPlayer(*player)!=0) {
 			player->Miss(2);
 
-		}
+		}*/
 
 		for (size_t i = 0; i < stage.size(); i++) {
 			if (thunderball->Hit(stage.at(i))) {

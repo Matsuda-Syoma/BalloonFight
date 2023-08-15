@@ -8,10 +8,9 @@ Thunder::Thunder()
 	BallCount = 0;
 	ThAnimImg = 0;
 	WaitTime = 0;
-	FlWait = 0;
 	
-	CloudX = 200, CloudY = 100;
-	ThX = CloudX + 10, ThY = CloudY + 50;
+	//CloudX = 200, CloudY = 100;
+	
 
 	thunderball->BallX = CloudX + 50;
 	thunderball->BallY = CloudY;

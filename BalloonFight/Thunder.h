@@ -17,6 +17,9 @@ public:
 
 	bool ThunderSpawn();
 
+	int CloudX, CloudY, CloudX2, CloudY2;		//雲の座標
+	int ThX, ThY;			//稲妻の座標
+
 private:
 	int CloudImg[3];		//雲の画像
 	int ThunderImg[6];		//稲妻の画像
@@ -29,8 +32,7 @@ private:
 	int FlWait;				//点滅を待つ
 	int ThAnimImg;			//稲妻を出す
 	
-	int CloudX, CloudY;		//雲の座標
-	int ThX, ThY;			//稲妻の座標
+	
 
 	bool ThFlg;				//
 	bool FlFlg;

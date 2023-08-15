@@ -11,7 +11,7 @@ public:
 	void ChangeAngle();
 	float GetBoxSide(BoxCollider box, int i);
 	int Hit(BoxCollider _stage);
-	int HitPlayer(BoxCollider _player);
+	//int HitPlayer(BoxCollider _player);
 	int GetX();
 	int GetY();
 	void LoadImages();

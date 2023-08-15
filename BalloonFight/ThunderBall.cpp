@@ -4,7 +4,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-ThunderBall::ThunderBall()
+ThunderBall::ThunderBall(bool p_flg)
 {
 	BallX = 550;
 	BallY = 300;
