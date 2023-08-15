@@ -1,11 +1,10 @@
 #pragma once
 #include "BoxCollider.h"
-#include"ThunderBall.h"
+//#include"ThunderBall.h"
 
 
 class Thunder : public BoxCollider{
 public:
-	ThunderBall* thunderball;
 	Thunder();							// コンストラクタ
 	~Thunder();							// デストラクタ
 	void Update();				//描画以外の更新を実行
@@ -38,7 +37,7 @@ private:
 	int WaitTime;
 	int ThAnimImg;
 	
-
+	int Spawn_Cnt;
 	float thunderRota;
 	bool ThFlg;
 	bool FlFlg;

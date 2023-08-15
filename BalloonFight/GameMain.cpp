@@ -47,7 +47,11 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 
 	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
+	th_Bcnt = 0;
 
+	for (int t = 0; t <= 3; t++) {
+		thunderball[t] = nullptr;
+	}
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -84,9 +88,13 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 {
 	int PlayerLife = player->GetLife();
 	thunder->Draw();
-	if (thunderball != nullptr) {
-		thunderball->Draw();
+
+	for (int i = 0; i <= 3; i++) {
+		if (thunderball[i] != nullptr) {
+			thunderball[i]->Draw();
+		}
 	}
+
 	if (PlayerLife > 0) {
 		for (int i = 0; i < PlayerLife - 1; i++) {
 			/*DrawBox(60 + (15 * i), 30, 70 + (15 * i)
@@ -320,28 +328,34 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	//}
 	
 		thunder->Update();
-
-	if (thunder->ThunderSpawn()) {
-		thunder->RandSpawn();
-		thunderball = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX2, thunder->CloudY2);		// カウントが達成されたらコンストラクタ読み込み
-	}
-	
-	if (player->ThunderHit== true) {
-		thunderball->BallX = -100;
-		thunderball->BallY = -100;
-	}
-
-	if (thunderball != nullptr) {
-		thunderball->Update();// コンストラクタ読み込みされていたらUpdate処理
-		if (thunderball->HitPlayer(*player)!=0) {
-			player->Miss(2);
-		}
-
-		for (size_t i = 0; i < stage.size(); i++) {
-			if (thunderball->Hit(stage.at(i))) {
+		if (th_Bcnt < 2) {
+			if (thunder->ThunderSpawn()) {
+				thunder->RandSpawn();
+				if (thunderball[th_Bcnt] == nullptr) {
+					thunderball[th_Bcnt] = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX2, thunder->CloudY2);		// カウントが達成されたらコンストラクタ読み込み
+					th_Bcnt = th_Bcnt + 1;
+				}
 			}
 		}
+	
+		for (int i = 0; i <= 3; i++) {
+		if (player->ThunderHit == true && thunderball[i] != nullptr) {
+			thunderball[i] = nullptr;
+		}
 	}
+		for (int j = 0; j <= 3; j++) {
+			if (thunderball[j] != nullptr) {
+				thunderball[j]->Update();// コンストラクタ読み込みされていたらUpdate処理
+				if (thunderball[j]->HitPlayer(*player) != 0) {
+					player->Miss(2);
+				}
+
+				for (size_t i = 0; i < stage.size(); i++) {
+					if (thunderball[j]->Hit(stage.at(i))) {
+					}
+				}
+			}
+		}
 
 	for (size_t i = 0; i < bubble.size(); i++) {
 		if (player->HitBox(bubble.at(i)) && !bubble.at(i).GetHitFlg()) {

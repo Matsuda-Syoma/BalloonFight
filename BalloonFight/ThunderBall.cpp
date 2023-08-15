@@ -6,12 +6,10 @@
 
 ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 {
-	// memo
-	// spown‚ÌŽó‚¯“n‚µ‚ª‚¤‚Ü‚­‚¢‚Á‚Ä‚¢‚È‚¢‚Ì‚ÅƒoƒO‚Á‚Ä‚¢‚é
 
+	
 	Hitflg = p_flg;
 	spownAngle = spown;
-	printfDx("%d", spownAngle);
 
 
 	BallX = _x;

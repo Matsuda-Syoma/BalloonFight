@@ -1,12 +1,13 @@
 #include "Thunder.h"
-#include"ThunderBall.h"
+//#include"ThunderBall.h"
 #include <DxLib.h>
 #include "common.h"
 
 Thunder::Thunder()
 {
-	thunderRota = 0;
-	thunderball = new ThunderBall(0,0,0,0);
+	Spawn_Cnt = 0;
+
+	current_flg = 0;
 	FlashCount = 0;
 	BallCount = 0;
 	cu_Cnt= 0;
@@ -15,6 +16,7 @@ Thunder::Thunder()
 	CloudY2 = 100;
 	FlFlg = false;
 	current_flg = false;
+	ThFlg = false;
 	LoadImages();
 }
 
@@ -26,11 +28,15 @@ Thunder::~Thunder()
 void Thunder::Update()
 {
 	
+
 	/*printfDx("  %d  ", Th_rund);*/
 	// 10秒
 	if (BallCount < FRAMERATE * 3) {
 		Th_rund = GetRand(3);
 		++BallCount;
+	}
+	else {
+		++Spawn_Cnt;
 	}
 
 	if (BallCount / 60 == 3) {
@@ -82,15 +88,14 @@ void Thunder::Update()
 			cu_Cnt = cu_Cnt + 1;
 		}
 	}
-	printfDx("%d", BallCount);
-	// 再スポーン処理
-	if (BallCount > FRAMERATE * 10) {
-		BallCount = 0;
+	// 20秒たったら再スポーン処理
+	if (Spawn_Cnt > FRAMERATE * 10) {
+		Spawn_Cnt = 0;
 		cu_Cnt = 0;
 		ThFlg = false;
 		FlFlg = false;
 		current_flg = false;
-
+		printfDx("Spawn");
 	}
 
 }
@@ -115,7 +120,7 @@ void Thunder::Draw() const
 			DrawRotaGraph(CloudX + thunder_x, CloudY + thunder_y, 1.0f, thunderRota, ThunderImg[cu_Cnt], true);
 		}
 
-		thunderball->Draw();
+		/*thunderball->Draw();*/
 
 }
 
