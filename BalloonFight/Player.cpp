@@ -4,6 +4,7 @@
 
 Player::Player()			// コンストラクタ
 {
+	
 	name = 'p';
 	w = WIDTH;
 	h = HEIGHT;
@@ -39,6 +40,7 @@ void Player::Init(int _life) {
 	missflg = false;
 	misssoundflg = false;
 	spawnflg = false;
+	thunderflg = false;
 }
 
 void Player::Update()		// プレイヤーの更新処理
@@ -315,6 +317,7 @@ void Player::Miss(int i) {
 				inertiaY = 0.0f;
 				y = 480;
 				missflg = true;
+				thunderflg = true;
 			}
 			break;
 		case 2:
@@ -337,6 +340,11 @@ int Player::GetLife() {
 
 void Player::SetLife(int _life) {
 	life = _life;
+}
+
+int Player::GetthunderHit()
+{
+	return thunderflg;
 }
 
 // アニメーションの更新
@@ -475,7 +483,7 @@ void Player::AnimUpdate() {
 		}
 		break;
 	case STATE::THUNDER:
-		ThunderHit = true;
+
 		if (AnimFlg == 0b0000) {
 			AnimImg = 30;
 			AnimUpdateTime = 0;

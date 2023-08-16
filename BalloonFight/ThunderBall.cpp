@@ -95,6 +95,11 @@ void ThunderBall::Update()
 
 			ChangeAngle();
 		}
+		if (playerhit == true) {
+			BallX = 1000;
+			BallY = 1000;
+		}
+		printfDx("%d", playerhit);
 }
 
 void ThunderBall::Draw() const
@@ -106,6 +111,16 @@ void ThunderBall::Draw() const
 void ThunderBall::LoadImages()
 {
 	LoadDivGraph("Resources/images/Stage/Stage_ThunderEffectAnimation.png", 3, 3, 1, 32, 32, ThunBallImg);
+}
+
+void ThunderBall::SetplayerHit(bool _hit)
+{
+	playerhit = _hit;
+}
+
+void ThunderBall::SetY()
+{
+	BallY = -1000;
 }
 
 //int ThunderBall::SetXY(float _x, float _y)
