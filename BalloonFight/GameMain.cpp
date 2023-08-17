@@ -50,15 +50,19 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 		break;
 	case 1:
 		thunder->CloudX = 55, thunder->CloudY = 222;	//ステージ２
+		thunder->CloudX2 = 455, thunder->CloudY2 = 185;
 		break;
 	case 2:
 		thunder->CloudX = 55, thunder->CloudY = 120;	//ステージ３
+		thunder->CloudX2 = 415, thunder->CloudY2 = 255;
 		break;
 	case 3:
 		thunder->CloudX = 135, thunder->CloudY = 85;	//ステージ４
+		thunder->CloudX2 = 455, thunder->CloudY2 = 155;
 		break;
 	case 4:
 		thunder->CloudX = 55, thunder->CloudY = 85;		//ステージ５
+		thunder->CloudX2 = 335, thunder->CloudY2 = 120;
 		break;
 	}
 
@@ -68,11 +72,6 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 
 	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
-	AImg = LoadGraph("Resources/images/StageSample/Stage_1.png");
-	BImg = LoadGraph("Resources/images/StageSample/Stage_2.png");
-	CImg = LoadGraph("Resources/images/StageSample/Stage_3.png");
-	DImg = LoadGraph("Resources/images/StageSample/Stage_4.png");
-	EImg = LoadGraph("Resources/images/StageSample/Stage_5.png");
 
 }
 
@@ -103,24 +102,19 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
-	////ステージサンプル
-	//switch (StageNum) {
-	//case 0:
-	//	DrawGraph(0, 0, AImg, FALSE);
-	//	break;
-	//case 1:
-	//	DrawGraph(0, 0, BImg, FALSE);
-	//	break;
-	//case 2:
-	//	DrawGraph(0, 0, CImg, FALSE);
-	//	break;
-	//case 3:
-	//	DrawGraph(0, 0, DImg, FALSE);
-	//	break;
-	//case 4:
-	//	DrawGraph(0, 0, EImg, FALSE);
-	//	break;
-	//}
+	//雲２
+	if (StageNum > 0) {
+		//雲の点滅
+		if (thunder->FlashCount % 4 || thunder->FlashCount / 100) {
+			DrawGraph(thunder->CloudX2, thunder->CloudY2, thunder->CloudImg[0], TRUE);
+		}
+		else if (thunder->FlashCount % 2) {
+			(DrawGraph(thunder->CloudX2, thunder->CloudY2, thunder->CloudImg[2], TRUE));
+		}
+		else {
+			(DrawGraph(thunder->CloudX2, thunder->CloudY2, thunder->CloudImg[1], TRUE));
+		}
+	}
 
 	int PlayerLife = player->GetLife();
 	thunder->Draw();

@@ -53,7 +53,5 @@ private:
 	int LifeImg;
 
 	int fishflg;		// ‹›‚Ìupdateˆ——pƒtƒ‰ƒO
-
-	int AImg, BImg, CImg, DImg, EImg;
 };
 

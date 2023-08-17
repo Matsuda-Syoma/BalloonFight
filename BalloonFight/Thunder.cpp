@@ -21,7 +21,7 @@ Thunder::Thunder()
 
 Thunder::~Thunder()
 {
-
+	
 }
 
 void Thunder::Update()
@@ -72,7 +72,7 @@ void Thunder::Draw() const
 	}
 		
 	
-
+	
 	//thunderball->Draw();
 
 }

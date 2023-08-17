@@ -20,12 +20,14 @@ public:
 	int CloudX, CloudY, CloudX2, CloudY2;		//雲の座標
 	int ThX, ThY;			//稲妻の座標
 
-private:
+	int FlashCount;			//点滅のかうんと
 	int CloudImg[3];		//雲の画像
+private:
+	
 	int ThunderImg[6];		//稲妻の画像
 	int ThunBallImg[3];		//雷の球の画像
 
-	int FlashCount;			//点滅のかうんと
+	
 	int BallCount;			//球のカウント
 
 	int WaitTime;			//待つ
