@@ -398,6 +398,9 @@ void Player::AnimUpdate() {
 		}
 		else {
 			AnimImg = 10;
+			if (balloon == 1) {//•—‘D‚PŒÂ‚ÌŽž•à‚­‚Æ‚QŒÂ‚É‚È‚é‚Ì‚ð’¼‚·if
+				AnimImg = 15;
+			}
 			AnimUpdateTime = 15;
 			AnimFlg = 0b0000;
 		}
