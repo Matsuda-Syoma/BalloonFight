@@ -6,12 +6,9 @@
 
 ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 {
-	// memo
-	// spownÇÃéÛÇØìnÇµÇ™Ç§Ç‹Ç≠Ç¢Ç¡ÇƒÇ¢Ç»Ç¢ÇÃÇ≈ÉoÉOÇ¡ÇƒÇ¢ÇÈ
-
+	
 	Hitflg = p_flg;
 	spownAngle = spown;
-	printfDx("%d", spownAngle);
 
 
 	BallX = _x;
@@ -47,15 +44,14 @@ ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 	}
 
 	FlashCount = 0;
-	BallCount = -1;
+	BallCount = -1;//ñ‚ëËÇÕÇ±Ç±
 	
 	LoadImages();
 }
 
 ThunderBall::~ThunderBall()
 {
-	BallCount = -1;
-	thunder_flg = TRUE;
+	
 }
 
 void ThunderBall::Update()
@@ -97,18 +93,32 @@ void ThunderBall::Update()
 
 			ChangeAngle();
 		}
+		if (playerhit == true) {
+			BallX = 1000;
+			BallY = 1000;
+		}
+		printfDx("%d", playerhit);
 }
 
 void ThunderBall::Draw() const
 {
 	DrawGraph(BallX, BallY, ThunBallImg[BallCount], TRUE);
-	
 }
 
 //âÊëúì«çû
 void ThunderBall::LoadImages()
 {
 	LoadDivGraph("Resources/images/Stage/Stage_ThunderEffectAnimation.png", 3, 3, 1, 32, 32, ThunBallImg);
+}
+
+void ThunderBall::SetplayerHit(bool _hit)
+{
+	playerhit = _hit;
+}
+
+void ThunderBall::SetY()
+{
+	BallY = -1000;
 }
 
 //int ThunderBall::SetXY(float _x, float _y)

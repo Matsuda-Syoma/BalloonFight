@@ -3,22 +3,22 @@
 #include <string>
 GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 {
+
 	StageSwitch = false;
 	StageSwitchTime = 0;
+	Re_TitleCnt = 0;
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	player = new Player;
-	thunder = new Thunder;
+	
 	player->SetLife(_life);
 	ui = new UI;
 	//enemy.emplace_back(300, 270);
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
 	StageNum = _stage;
-	if (StageNum > 4) {
-		StageNum = 0;
-	}
+	thunder = new Thunder(StageNum);
 	Score = _score;
 	for (int i = 0; i < MAP_COUNT; i++) {
 		int imagework;
@@ -42,12 +42,19 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 			enemy.at(i).name = '0' + i;
 		}
 	}
-
-	HighScore = 10000;
+	HighScore = 500;
+	if (HighScore < HighScore_Set) {
+		HighScore = HighScore_Set;
+	}
 
 	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
+	th_Bcnt = 0;
 
+	for (int t = 0; t <= 9; t++) {
+		thunderball[t] = nullptr;
+		thunderball2[t] = nullptr;
+	}
 }
 
 GameMain::~GameMain()				// ここでdeleteなどをする
@@ -60,15 +67,33 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 	if (ui->Title_flg == true) {
 		return new Title();
 	}
-	
+	if (StageNum > 4) {
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_Perfect, DX_PLAYTYPE_BACK, false);
+		return new Title;
+	}
 
-	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
+	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)&& GameOver ==false) {
 		Pause = !Pause;
 		Sounds::AllStop();
 	}
-	if (!Pause) {
+	if (player->GetLife() == 0) {
+		if (HighScore < Score) {
+			HighScore_Set = Score;
+		}
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_GameOver, DX_PLAYTYPE_BACK, false);
+		GameOver = true;
+		if (++Re_TitleCnt > 440) {
+			return new Title();
+			GameOver = false;
+		}
+	}
+	if (!Pause && GameOver==false) {
 		Game();
 	}
+
+	
 	if (StageSwitch) {
 		Pause = true;
 		Sounds::AllStop();
@@ -84,9 +109,20 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 {
 	int PlayerLife = player->GetLife();
 	thunder->Draw();
-	if (thunderball != nullptr) {
-		thunderball->Draw();
+
+	for (int i = 0; i <= 9; i++) {
+		if (thunderball[i] != nullptr) {
+			thunderball[i]->Draw();
+
+			thunderball2[i]->Draw();
+		}
 	}
+	for (int i = 0; i <= 9; i++) {
+		if (thunderball2[i] != nullptr) {
+			thunderball2[i]->Draw();
+		}
+	}
+
 	if (PlayerLife > 0) {
 		for (int i = 0; i < PlayerLife - 1; i++) {
 			/*DrawBox(60 + (15 * i), 30, 70 + (15 * i)
@@ -125,7 +161,7 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	for (size_t i = 0; i < splash.size(); i++) {
 		splash.at(i).Draw();
 	}
-
+	
 	ui->Draw();
 	
 }
@@ -318,32 +354,76 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	//else {
 	//	StopSoundMem(Sounds::SE_parachute);
 	//}
-	
-		thunder->Update();
-		//thunderball->SetXY(thunder->CloudX, thunder->CloudY);		// 雷座標設定
 
-	if (thunder->ThunderSpawn()) {
-		thunder->RandSpawn();
-		thunderball = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX2, thunder->CloudY2);		// カウントが達成されたらコンストラクタ読み込み
-	}
-	
-	if (player->ThunderHit== true) {
-		thunderball->BallX = -100;
-		thunderball->BallY = -100;
-	}
+	for (int it = 0; it <= 9; it++) {
+		if (thunderball[it] != nullptr) {
+			thunderball[it]->Update();// コンストラクタ読み込みされていたらUpdate処理
+			if (thunderball[it]->HitPlayer(*player) != 0) {
+				player->Miss(2);
+				thunderball[it]->SetY();
+			}
+			/*if (thunderball[it]->playerhit==true) {
+				
+			}*/
+			for (size_t i = 0; i < stage.size(); i++) {
+				if (thunderball[it]->Hit(stage.at(i))) {
 
-	if (thunderball != nullptr) {
-		thunderball->Update();// コンストラクタ読み込みされていたらUpdate処理
-		if (thunderball->HitPlayer(*player)!=0) {
-			player->Miss(2);
-
-		}
-
-		for (size_t i = 0; i < stage.size(); i++) {
-			if (thunderball->Hit(stage.at(i))) {
+				}
 			}
 		}
+
 	}
+
+	for (int j = 0; j <= 9; j++) {
+		if (thunderball2[j] != nullptr) {
+			thunderball2[j]->Update();// コンストラクタ読み込みされていたらUpdate処理
+			if (thunderball2[j]->HitPlayer(*player) != 0) {
+				player->Miss(2);
+		
+				thunderball2[j]->SetY();
+			}
+
+			for (size_t i = 0; i < stage.size(); i++) {
+				if (thunderball2[j]->Hit(stage.at(i))) {
+				}
+			}
+		}
+
+	}
+		thunder->Update();
+			if (thunder->ThunderSpawn()) {
+				thunder->RandSpawn();
+				if (thunderball[th_Bcnt] == nullptr) {
+					thunderball[th_Bcnt] = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX_Set, thunder->CloudY_Set);		// カウントが達成されたらコンストラクタ読み込み
+					th_Bcnt = th_Bcnt + 1;
+					
+				}
+
+				if (thunder->WCloud_flg == true) {
+					if (thunderball2[th_Bcnt2] == nullptr) {
+						thunderball2[th_Bcnt2] = new ThunderBall(thunder->GetRandSpawn2(), player->GetFlg(), thunder->CloudX_Set2, thunder->CloudY_Set2);		// カウントが達成されたらコンストラクタ読み込み
+						th_Bcnt2 = th_Bcnt2 + 1;
+					}
+				}
+			}
+			//// 無限リスポーン処理
+			//if (th_Bcnt > 4) {// 5-9
+			//	for (int i = 0; i <= 4; i++) {
+			//		thunderball[i] = nullptr;// 0から4番目までnull
+			//	}
+			//}
+			//else// 1-4
+			//{
+			//	for (int i = 5; i <= 9; i++) {
+			//		thunderball[i] = nullptr;// 5から9番目までnull
+			//	}
+			//}
+			//if (th_Bcnt < 9) {
+			//	th_Bcnt = 0;
+			//}
+	
+
+		
 
 	for (size_t i = 0; i < bubble.size(); i++) {
 		if (player->HitBox(bubble.at(i)) && !bubble.at(i).GetHitFlg()) {
