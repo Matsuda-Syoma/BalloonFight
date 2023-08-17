@@ -16,21 +16,29 @@ public:
 	int BallAngle(int _i);
 
 	bool ThunderSpawn();
+	void RandSpawn();
+	int GetRandSpawn();
 
+	float CloudX2, CloudY2;
 private:
+	float CloudX, CloudY;
+	
+
 	int CloudImg[3];
 	int ThunderImg[6];
 	int ThunBallImg[3];
 
 	int FlashCount;
 	int BallCount;
+	int cu_Cnt;
+	int Th_rund;			// 1~4‚Å•ûŒü‚ðŒˆ‚ß‚é
 
 	int WaitTime;
 	int ThAnimImg;
 	
-	int CloudX, CloudY;
 
 	bool ThFlg;
 	bool FlFlg;
+	bool current_flg;
 
 };

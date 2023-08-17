@@ -1,13 +1,16 @@
 #include "UI.h"
 #include "DxLib.h"
+#include"common.h"
 //コンストラクタ
 UI::UI()
 {
+	OverCount = 0;
 	NowScore = 0;
 	HighScore = 10000;
 	Stage = 1;
 	PhaseCount = 0;
 	GameOverFlg = false;
+	Title_flg = false;
 	for (int i = 0; i < 6; i++) {
 		Score[i] = 0;
 	}
@@ -30,6 +33,11 @@ void UI::Update(int _score, int _stage)
 	NowScore = _score;
 	Stage = _stage;
 
+	if (GameOverFlg == true) {
+		if (++OverCount > FRAMERATE) {
+			Title_flg = true;
+		}
+	}
 	//ハイスコアを更新
 	if (NowScore > HighScore) {
 		HighScore = NowScore;
@@ -106,4 +114,9 @@ void UI::DeleteImages()
 void UI::GameOver()
 {
 	GameOverFlg = true;
+}
+
+int UI::GetHighScore()
+{
+	return HighScore;
 }

@@ -57,6 +57,11 @@ GameMain::~GameMain()				// ここでdeleteなどをする
 
 AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 {
+	if (ui->Title_flg == true) {
+		return new Title();
+	}
+	
+
 	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
 		Pause = !Pause;
 		Sounds::AllStop();
@@ -78,7 +83,6 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 void GameMain::Draw() const			// ここでゲームメインの描画
 {
 	int PlayerLife = player->GetLife();
-
 	thunder->Draw();
 	if (thunderball != nullptr) {
 		thunderball->Draw();
@@ -128,6 +132,7 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 
 void GameMain::Game()				// ここでゲームの判定などの処理をする
 {
+
 	if (CheckSoundMem(Sounds::BGM_Trip) == 0) {
 		PlaySoundMem(Sounds::BGM_Trip, DX_PLAYTYPE_BACK, true);
 	}
@@ -313,21 +318,30 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 	//else {
 	//	StopSoundMem(Sounds::SE_parachute);
 	//}
-	thunder->Update();
+	
+		thunder->Update();
+		//thunderball->SetXY(thunder->CloudX, thunder->CloudY);		// 雷座標設定
+
 	if (thunder->ThunderSpawn()) {
-		thunderball = new ThunderBall;
+		thunder->RandSpawn();
+		thunderball = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX2, thunder->CloudY2);		// カウントが達成されたらコンストラクタ読み込み
 	}
+	
+	if (player->ThunderHit== true) {
+		thunderball->BallX = -100;
+		thunderball->BallY = -100;
+	}
+
 	if (thunderball != nullptr) {
-		thunderball->Update();
+		thunderball->Update();// コンストラクタ読み込みされていたらUpdate処理
+		if (thunderball->HitPlayer(*player)!=0) {
+			player->Miss(2);
+
+		}
+
 		for (size_t i = 0; i < stage.size(); i++) {
 			if (thunderball->Hit(stage.at(i))) {
 			}
-		}
-	}
-	StageSwitch = true;
-	for (size_t i = 0; i < enemy.size(); i++) {
-		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
-			StageSwitch = false;
 		}
 	}
 
@@ -360,6 +374,7 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 			continue;
 		}
 	}
+	ui->Update(Score, StageNum + 1);
 
 	for (size_t i = 0; i < splash.size(); i++) {
 		if (splash.at(i).Update()) {
@@ -368,6 +383,11 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		}
 	}
 
-	ui->Update(Score,StageNum + 1);
+	StageSwitch = true;
+	for (size_t i = 0; i < enemy.size(); i++) {
+		if (!enemy.at(i).GetDeathFlg() && enemy.size() != 0) {
+			StageSwitch = false;
+		}
+	}
 	
 }

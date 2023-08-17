@@ -67,6 +67,8 @@ public:
 	bool IsFly(Stage box);				// ”ò‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©
 	bool GetFlg();						// ƒvƒŒƒCƒ„[‚ª¶‚«‚Ä‚¢‚é‚©
 
+	bool ThunderHit;
+
 	bool GetSpawnFlg();
 
 	void SetSpawnFlg(bool _flg);
