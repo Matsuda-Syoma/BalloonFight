@@ -11,7 +11,7 @@ Thunder::Thunder(int _Stage)
 	Stage = _Stage;
 	Spawn_Cnt = 0;
 
-	current_flg = 0;
+	
 	FlashCount = 0;
 	BallCount = 0;
 	cu_Cnt= 0;
@@ -19,34 +19,32 @@ Thunder::Thunder(int _Stage)
 	FlFlg = false;
 	current_flg = false;
 	ThFlg = false;
-
+	
 	WCloud_flg = true;
+	
 	Spawn_Cnt = 0;
 	cu_Cnt = 0;
 	BallCount = 0;
-	if (Stage > 0) {
-		WCloud_flg = true;
-	}
 	LoadImages();
 	switch (Stage)
 	{
 	case 0:
-		CloudX = 400, CloudY = 86;
+		CloudX = 295, CloudY = 86;	//ステージ１
 		break;
 	case 1:
-		CloudX = 55, CloudY = 222;
+		CloudX = 55, CloudY = 222;	//ステージ２
 		CloudX2 = 455, CloudY2 = 185;
 		break;
 	case 2:
-		CloudX = 55, CloudY = 120;
+		CloudX = 55, CloudY = 120;	//ステージ３
 		CloudX2 = 415, CloudY2 = 255;
 		break;
 	case 3:
-		CloudX = 135, CloudY = 85;
+		CloudX = 135,CloudY = 85;	//ステージ４
 		CloudX2 = 455, CloudY2 = 155;
 		break;
 	case 4:
-		CloudX = 55, CloudY = 85;
+		CloudX = 55, CloudY = 85;		//ステージ５
 		CloudX2 = 335, CloudY2 = 120;
 		break;
 	}
@@ -62,18 +60,20 @@ void Thunder::Update()
 	
 	/*printfDx("  %d  ", Th_rund);*/
 	// 10秒
-	if (BallCount < FRAMERATE * 3) {
+	if (BallCount < FRAMERATE * 10) {
+		Th_rund = GetRand(3);
 		if (BallCount < FRAMERATE * 2) {
 			Th_rund2 = GetRand(3);
 		}
-		Th_rund = GetRand(3);
+		
+		
 		++BallCount;
 	}
 	else {
 		++Spawn_Cnt;
 	}
 
-	if (BallCount / 60 == 3) {
+	if (BallCount / 60 == 10) {
 		FlFlg = true;
 	}
 
@@ -120,25 +120,25 @@ void Thunder::Update()
 	{
 		// 右上
 	case 0:
-		thunderRota2 = 4.0f;
+		thunderRota = 4.0f;
 		thunder_x = 90;
 		thunder_y;
 		break;
 		// 右下
 	case 1:
-		thunderRota2 = 5.0f;
+		thunderRota = 5.0f;
 		thunder_x = 100;
 		thunder_y = 50;
 		break;
 		// 左下
 	case 2:
-		thunderRota2 = 1.0f;
+		thunderRota = 1.0f;
 		thunder_x = 40;
 		thunder_y = 60;
 		break;
 		// 左上
 	case 3:
-		thunderRota2 = 2.0f;
+		thunderRota = 2.0f;
 		thunder_x = 20;
 		thunder_y = 10;
 		break;
@@ -188,7 +188,7 @@ void Thunder::Draw() const
 			DrawRotaGraph(CloudX + thunder_x, CloudY + thunder_y, 1.0f, thunderRota, ThunderImg[cu_Cnt], true);
 		}
 		if (current_flg && WCloud_flg==true) {
-			DrawRotaGraph(CloudX2 + thunder_x, CloudY2 + thunder_y, 1.0f, thunderRota2, ThunderImg[cu_Cnt], true);
+			DrawRotaGraph(CloudX2 + thunder_x, CloudY2 + thunder_y, 1.0f, thunderRota, ThunderImg[cu_Cnt], true);
 		}
 
 

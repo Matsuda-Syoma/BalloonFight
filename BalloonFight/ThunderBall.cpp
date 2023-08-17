@@ -6,7 +6,6 @@
 
 ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 {
-	// ‚˜‚Æ‚™‚ª—ˆ‚Ä‚¢‚È‚¢‚Ì‚ª–â‘èH
 	
 	Hitflg = p_flg;
 	spownAngle = spown;

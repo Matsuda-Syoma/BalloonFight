@@ -30,6 +30,8 @@ public:
 	float CloudX_Set, CloudY_Set;		// 値受け渡し用
 	float CloudX_Set2, CloudY_Set2;		// 値受け渡し用
 	bool WCloud_flg;
+	int Th_rund;			// 1~4で方向を決める
+	int Th_rund2;			// 1~4で方向を決める
 private:
 	int Stage;
 	float CloudX, CloudY;
@@ -49,9 +51,11 @@ private:
 	int BallCount2;
 	int cu_Cnt2;
 	
-	int Th_rund;			// 1~4で方向を決める
-	int Th_rund2;			// 1~4で方向を決める
+	
 
+	int SetTh_rund;			// 1~4で方向を決める
+	int SetTh_rund2;			// 1~4で方向を決める
+	
 	int WaitTime;
 	int WaitTime2;
 	int ThAnimImg;

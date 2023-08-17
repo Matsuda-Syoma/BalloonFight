@@ -12,12 +12,12 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
 	player = new Player;
 	
-	player->SetLife(100);
+	player->SetLife(_life);
 	ui = new UI;
 	//enemy.emplace_back(300, 270);
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	StageNum = 1;
+	StageNum = _stage;
 	thunder = new Thunder(StageNum);
 	Score = _score;
 	for (int i = 0; i < MAP_COUNT; i++) {
@@ -393,7 +393,6 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		thunder->Update();
 			if (thunder->ThunderSpawn()) {
 				thunder->RandSpawn();
-
 				if (thunderball[th_Bcnt] == nullptr) {
 					thunderball[th_Bcnt] = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX_Set, thunder->CloudY_Set);		// カウントが達成されたらコンストラクタ読み込み
 					th_Bcnt = th_Bcnt + 1;
