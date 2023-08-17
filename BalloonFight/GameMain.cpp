@@ -3,11 +3,10 @@
 #include <string>
 GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 {
-	Hitthunder = false;
-	Hitthunder2 = false;
 
 	StageSwitch = false;
 	StageSwitchTime = 0;
+	Re_TitleCnt = 0;
 	Sounds::LoadSounds();
 	StageImages::LoadImages();
 	SetSoundCurrentTime(0.0f, Sounds::BGM_Trip);
@@ -18,10 +17,7 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 	//enemy.emplace_back(300, 270);
 	fish = new Fish(0,0,0);
 	SpawnDelay = 0;
-	StageNum = _stage;
-	if (StageNum > 4) {
-		StageNum = 0;
-	}
+	StageNum = 1;
 	thunder = new Thunder(StageNum);
 	Score = _score;
 	for (int i = 0; i < MAP_COUNT; i++) {
@@ -46,8 +42,10 @@ GameMain::GameMain(int _score, int _stage, int _life)				// ここで初期化
 			enemy.at(i).name = '0' + i;
 		}
 	}
-
-	HighScore = 10000;
+	HighScore = 500;
+	if (HighScore < HighScore_Set) {
+		HighScore = HighScore_Set;
+	}
 
 	Pause = false;
 	LifeImg = LoadGraph("Resources/images/UI/UI_Stock.png");
@@ -69,15 +67,33 @@ AbstractScene* GameMain::Update()	// ここでゲームメインの更新をする
 	if (ui->Title_flg == true) {
 		return new Title();
 	}
-	
+	if (StageNum > 4) {
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_Perfect, DX_PLAYTYPE_BACK, false);
+		return new Title;
+	}
 
-	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)) {
+	if(PAD_INPUT::GetKeyFlg(XINPUT_BUTTON_START)&& GameOver ==false) {
 		Pause = !Pause;
 		Sounds::AllStop();
 	}
-	if (!Pause) {
+	if (player->GetLife() == 0) {
+		if (HighScore < Score) {
+			HighScore_Set = Score;
+		}
+		Sounds::AllStop();
+		PlaySoundMem(Sounds::SE_GameOver, DX_PLAYTYPE_BACK, false);
+		GameOver = true;
+		if (++Re_TitleCnt > 440) {
+			return new Title();
+			GameOver = false;
+		}
+	}
+	if (!Pause && GameOver==false) {
 		Game();
 	}
+
+	
 	if (StageSwitch) {
 		Pause = true;
 		Sounds::AllStop();
@@ -97,8 +113,13 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	for (int i = 0; i <= 9; i++) {
 		if (thunderball[i] != nullptr) {
 			thunderball[i]->Draw();
-			thunderball2[i]->Draw();
 
+			thunderball2[i]->Draw();
+		}
+	}
+	for (int i = 0; i <= 9; i++) {
+		if (thunderball2[i] != nullptr) {
+			thunderball2[i]->Draw();
 		}
 	}
 
@@ -140,7 +161,7 @@ void GameMain::Draw() const			// ここでゲームメインの描画
 	for (size_t i = 0; i < splash.size(); i++) {
 		splash.at(i).Draw();
 	}
-
+	
 	ui->Draw();
 	
 }
@@ -372,14 +393,16 @@ void GameMain::Game()				// ここでゲームの判定などの処理をする
 		thunder->Update();
 			if (thunder->ThunderSpawn()) {
 				thunder->RandSpawn();
+
 				if (thunderball[th_Bcnt] == nullptr) {
 					thunderball[th_Bcnt] = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX_Set, thunder->CloudY_Set);		// カウントが達成されたらコンストラクタ読み込み
 					th_Bcnt = th_Bcnt + 1;
 					
 				}
+
 				if (thunder->WCloud_flg == true) {
 					if (thunderball2[th_Bcnt2] == nullptr) {
-						thunderball2[th_Bcnt2] = new ThunderBall(thunder->GetRandSpawn(), player->GetFlg(), thunder->CloudX_Set2, thunder->CloudY_Set2);		// カウントが達成されたらコンストラクタ読み込み
+						thunderball2[th_Bcnt2] = new ThunderBall(thunder->GetRandSpawn2(), player->GetFlg(), thunder->CloudX_Set2, thunder->CloudY_Set2);		// カウントが達成されたらコンストラクタ読み込み
 						th_Bcnt2 = th_Bcnt2 + 1;
 					}
 				}

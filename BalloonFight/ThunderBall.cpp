@@ -6,7 +6,7 @@
 
 ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 {
-
+	// ‚˜‚Æ‚™‚ª—ˆ‚Ä‚¢‚È‚¢‚Ì‚ª–â‘èH
 	
 	Hitflg = p_flg;
 	spownAngle = spown;
@@ -45,15 +45,14 @@ ThunderBall::ThunderBall(int spown,bool p_flg, float _x, float _y)
 	}
 
 	FlashCount = 0;
-	BallCount = -1;
+	BallCount = -1;//–â‘è‚Í‚±‚±
 	
 	LoadImages();
 }
 
 ThunderBall::~ThunderBall()
 {
-	BallCount = -1;
-	thunder_flg = TRUE;
+	
 }
 
 void ThunderBall::Update()

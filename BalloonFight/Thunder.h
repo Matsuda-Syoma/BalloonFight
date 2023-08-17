@@ -20,6 +20,8 @@ public:
 	int GetRandSpawn2();
 
 	void Respawn();
+	void Respawn2();
+
 
 	
 
@@ -42,21 +44,32 @@ private:
 	int FlashCount;
 	int BallCount;
 	int cu_Cnt;
+
+	int FlashCount2;
+	int BallCount2;
+	int cu_Cnt2;
 	
 	int Th_rund;			// 1~4‚Å•ûŒü‚ðŒˆ‚ß‚é
 	int Th_rund2;			// 1~4‚Å•ûŒü‚ðŒˆ‚ß‚é
 
 	int WaitTime;
+	int WaitTime2;
 	int ThAnimImg;
 	
 	int Spawn_Cnt;
+	int Spawn_Cnt2;
 	int Spawn_End;
 	float thunderRota;
+	float thunderRota2;
+
 
 	
 	bool ThFlg;
+	bool ThFlg2;
 	bool FlFlg;
+	bool FlFlg2;
 	bool current_flg;
+	bool current_flg2;
 	
 
 };

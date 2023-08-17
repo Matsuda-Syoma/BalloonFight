@@ -20,33 +20,34 @@ Thunder::Thunder(int _Stage)
 	current_flg = false;
 	ThFlg = false;
 
+	WCloud_flg = true;
 	Spawn_Cnt = 0;
 	cu_Cnt = 0;
 	BallCount = 0;
-	if (Stage <= 2) {
+	if (Stage > 0) {
 		WCloud_flg = true;
 	}
 	LoadImages();
 	switch (Stage)
 	{
+	case 0:
+		CloudX = 400, CloudY = 86;
+		break;
 	case 1:
-		CloudX = 400, CloudY = 100;
+		CloudX = 55, CloudY = 222;
+		CloudX2 = 455, CloudY2 = 185;
 		break;
 	case 2:
-		CloudX = 100, CloudY = 300;
-		CloudX2 = 500, CloudY2 = 270;
+		CloudX = 55, CloudY = 120;
+		CloudX2 = 415, CloudY2 = 255;
 		break;
 	case 3:
-		CloudX = 100, CloudY = 150;
-		CloudX2 = 500, CloudY2 = 400;
+		CloudX = 135, CloudY = 85;
+		CloudX2 = 455, CloudY2 = 155;
 		break;
 	case 4:
-		CloudX = 150, CloudY = 70;
-		CloudX2 = 500, CloudY2 = 280;
-		break;
-	case 5:
-		CloudX = 100, CloudY = 100;
-		CloudX2 = 400, CloudY2 = 300;
+		CloudX = 55, CloudY = 85;
+		CloudX2 = 335, CloudY2 = 120;
 		break;
 	}
 }
@@ -59,10 +60,12 @@ Thunder::~Thunder()
 void Thunder::Update()
 {
 	
-
 	/*printfDx("  %d  ", Th_rund);*/
 	// 10秒
 	if (BallCount < FRAMERATE * 3) {
+		if (BallCount < FRAMERATE * 2) {
+			Th_rund2 = GetRand(3);
+		}
 		Th_rund = GetRand(3);
 		++BallCount;
 	}
@@ -113,10 +116,41 @@ void Thunder::Update()
 		break;
 	}
 
+	switch (Th_rund2)
+	{
+		// 右上
+	case 0:
+		thunderRota2 = 4.0f;
+		thunder_x = 90;
+		thunder_y;
+		break;
+		// 右下
+	case 1:
+		thunderRota2 = 5.0f;
+		thunder_x = 100;
+		thunder_y = 50;
+		break;
+		// 左下
+	case 2:
+		thunderRota2 = 1.0f;
+		thunder_x = 40;
+		thunder_y = 60;
+		break;
+		// 左上
+	case 3:
+		thunderRota2 = 2.0f;
+		thunder_x = 20;
+		thunder_y = 10;
+		break;
+	}
+
 	// 落雷処理
 	if (current_flg == true) {
 		if (++WaitTime % 5 == 0) {
 			cu_Cnt = cu_Cnt + 1;
+			if (cu_Cnt > 10) {
+				cu_Cnt = 11;
+			}
 		}
 	}
 
@@ -153,6 +187,10 @@ void Thunder::Draw() const
 		if (current_flg) {
 			DrawRotaGraph(CloudX + thunder_x, CloudY + thunder_y, 1.0f, thunderRota, ThunderImg[cu_Cnt], true);
 		}
+		if (current_flg && WCloud_flg==true) {
+			DrawRotaGraph(CloudX2 + thunder_x, CloudY2 + thunder_y, 1.0f, thunderRota2, ThunderImg[cu_Cnt], true);
+		}
+
 
 		/*thunderball->Draw();*/
 
@@ -172,8 +210,6 @@ int Thunder::BallAngle(int _i) {
 
 bool Thunder::ThunderSpawn() {
 	if (cu_Cnt >= 7 && !ThFlg) {
-		//thunderball->BallX = CloudX + 50;
-		//thunderball->BallY = CloudY;
 		ThFlg = true; 
 		return true;
 	}
@@ -183,6 +219,11 @@ bool Thunder::ThunderSpawn() {
 int Thunder::GetRandSpawn()
 {
 	return Th_rund;
+}
+
+int Thunder::GetRandSpawn2()
+{
+	return Th_rund2;
 }
 
 void Thunder::Respawn()
@@ -207,31 +248,48 @@ void Thunder::RandSpawn()
 		CloudX_Set = CloudX + 110;
 		CloudY_Set = CloudY - 25;
 
+		break;
+		// 右下
+	case 1:
+		CloudX_Set = CloudX + 110;
+		CloudY_Set = CloudY + 65;
+		break;
+		// 左下
+	case 2:
+		CloudX_Set = CloudX-10;
+		CloudY_Set = CloudY + 65;
+		break;
+		// 左上
+	case 3:
+		CloudX_Set = CloudX-20;
+		CloudY_Set = CloudY-20;
+		break;
+	}
+
+	switch (Th_rund2)
+	{
+		// 右上
+	case 0:
+	
 		CloudX_Set2 = CloudX2 + 110;
 		CloudY_Set2 = CloudY2 - 25;
 
 		break;
 		// 右下
 	case 1:
-		CloudX_Set = CloudX + 110;
-		CloudY_Set = CloudY + 65;
-
+		
 		CloudX_Set2 = CloudX2 + 110;
 		CloudY_Set2 = CloudY2 + 65;
 		break;
 		// 左下
 	case 2:
-		CloudX_Set = CloudX-10;
-		CloudY_Set = CloudY + 65;
-
+		
 		CloudX_Set2 = CloudX2 - 10;
 		CloudY_Set2 = CloudY2 + 65;
 		break;
 		// 左上
 	case 3:
-		CloudX_Set = CloudX-20;
-		CloudY_Set = CloudY-20;
-
+		
 		CloudX_Set2 = CloudX2 - 20;
 		CloudY_Set2 = CloudY2 - 20;
 		break;

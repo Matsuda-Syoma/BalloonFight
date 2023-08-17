@@ -35,8 +35,10 @@ private:
 
 	int th_Bcnt;
 	int th_Bcnt2;
-	bool Hitthunder;
-	bool Hitthunder2;
+
+	bool GameOver;
+	int Re_TitleCnt;
+	int HighScore_Set;
 
 public:
 	GameMain(int _score, int _stage, int _life);// コンストラクタ

@@ -20,6 +20,7 @@ public:
 	bool Hitflg;				// プレイヤーのフラグ取得用変数
 	bool thunder_flg;
 	int spownAngle;
+
 	bool playerhit;
 private:
 	
