@@ -60,7 +60,7 @@ void Thunder::Update()
 	
 	/*printfDx("  %d  ", Th_rund);*/
 	// 10•b
-	if (BallCount < FRAMERATE * 10) {
+	if (BallCount <= FRAMERATE * 30) {
 		Th_rund = GetRand(3);
 		if (BallCount < FRAMERATE * 2) {
 			Th_rund2 = GetRand(3);
@@ -73,7 +73,7 @@ void Thunder::Update()
 		++Spawn_Cnt;
 	}
 
-	if (BallCount / 60 == 10) {
+	if (BallCount / 60 == 30) {
 		FlFlg = true;
 	}
 
@@ -155,7 +155,7 @@ void Thunder::Update()
 	}
 
 	// ÄƒXƒ|[ƒ“ˆ—
-	if (Spawn_Cnt > FRAMERATE * 10) {
+	if (Spawn_Cnt > FRAMERATE * 20) {
 		
 		Respawn();
 	}
