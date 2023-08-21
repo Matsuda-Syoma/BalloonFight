@@ -36,6 +36,8 @@ private:
 	static const int WIDTH = 32;
 	static const int HEIGHT = 48;
 	static const int DELAY = 9;
+
+	bool thunderflg;
 	
 public:
 
@@ -67,7 +69,6 @@ public:
 	bool IsFly(Stage box);				// 飛んでいるかどうか
 	bool GetFlg();						// プレイヤーが生きているか
 
-	bool ThunderHit;
 
 	bool GetSpawnFlg();
 
@@ -82,6 +83,6 @@ public:
 	int GetLife();				// 残機を返す
 
 	void SetLife(int _life);
-	
+	int GetthunderHit();
 };
 

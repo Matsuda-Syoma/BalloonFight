@@ -13,17 +13,18 @@ public:
 	int Hit(BoxCollider _stage);
 	int HitPlayer(BoxCollider _player);
 	void LoadImages();
-
+	void SetplayerHit(bool _hit);
 	/*int SetXY(float _x,float _y);*/
-
+	void SetY();
 	float BallX, BallY;
 	bool Hitflg;				// プレイヤーのフラグ取得用変数
 	bool thunder_flg;
 	int spownAngle;
 
+	bool playerhit;
 private:
 	
-	
+
 	int ThunBallImg[3];
 
 	int FlashCount;
